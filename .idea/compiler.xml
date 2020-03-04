@@ -6,17 +6,20 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="microservice-mylibrary" />
         <module name="microservice-myusers" />
+        <module name="microservice-mylibrary" />
+        <module name="microservice-myclient" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="microservice-myclient" target="1.8" />
       <module name="microservice-mylibrary" target="1.8" />
       <module name="microservice-myusers" target="1.8" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="microservice-myclient" options="-parameters" />
       <module name="microservice-mylibrary" options="-parameters" />
       <module name="microservice-myusers" options="-parameters" />
     </option>
