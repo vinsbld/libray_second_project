@@ -4,9 +4,9 @@ package com.bibliotheque.microservicemyusers.model;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Entity
 public class Utilisateur {
@@ -77,6 +77,11 @@ public class Utilisateur {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public void grantAuthority(RoleEnum authority) {
+        if ( roleEnums == null ) roleEnums = new ArrayList<>();
+        roleEnums.add(authority);
     }
 
 
