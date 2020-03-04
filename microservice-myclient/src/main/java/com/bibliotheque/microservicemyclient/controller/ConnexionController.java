@@ -1,30 +1,29 @@
-package com.bibliotheque.microservicemyusers.controller;
+package com.bibliotheque.microservicemyclient.controller;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@Api("Gestion des connexions et déconnections utilisateur")
-@Controller
+
+@RestController
 public class ConnexionController {
 
     Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @ApiOperation("Connexion utilisateur")
-    @GetMapping(value = "/connexion")
+
+    @RequestMapping(value = "/connexion")
     public ModelAndView loginGet(Model model, @RequestParam(value = "error", required = false)String error, @RequestParam(value = "logout", required = false) String logout){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String errorMessage = null;
@@ -44,8 +43,8 @@ public class ConnexionController {
         return new ModelAndView("connexion");
     }
 
-    @ApiOperation("Déconnexion utilisateur")
-    @GetMapping("/logout")
+
+    @RequestMapping("/logout")
     public String logoutPage (HttpServletRequest request, HttpServletResponse response) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null){

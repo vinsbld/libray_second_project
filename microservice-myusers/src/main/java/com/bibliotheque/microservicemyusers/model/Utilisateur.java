@@ -1,10 +1,5 @@
 package com.bibliotheque.microservicemyusers.model;
 
-import com.bibliotheque.microservicemyusers.security.BCryptManager;
-import org.hibernate.validator.internal.constraintvalidators.bv.EmailValidator;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -14,7 +9,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Entity
-public class Utilisateur implements UserDetails {
+public class Utilisateur {
 
     @Id
     @GeneratedValue
@@ -65,9 +60,7 @@ public class Utilisateur implements UserDetails {
     }
 
     public void setMotDePasse(String motDePasse) {
-        if (!motDePasse.isEmpty()){
-            this.motDePasse = BCryptManager.passwordEncoder().encode(motDePasse);
-        }
+        this.motDePasse = motDePasse;
     }
 
     public List<RoleEnum> getRoleEnums() {
@@ -84,43 +77,6 @@ public class Utilisateur implements UserDetails {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    @Override
-    public List<GrantedAuthority> getAuthorities() {
-        String roles = org.springframework.util.StringUtils.collectionToCommaDelimitedString(getRoleEnums().stream()
-                .map(Enum::name).collect(Collectors.toList()));
-        return AuthorityUtils.commaSeparatedStringToAuthorityList(String.valueOf(roleEnums));
-    }
-
-    @Override
-    public String getPassword() {
-        return motDePasse;
-    }
-
-    @Override
-    public String getUsername() {
-        return pseudo;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
     }
 
 

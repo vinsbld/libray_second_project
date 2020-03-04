@@ -3,9 +3,9 @@
   <component name="MavenProjectsManager">
     <option name="originalFiles">
       <list>
-        <option value="$PROJECT_DIR$/microservice-myusers/pom.xml" />
         <option value="$PROJECT_DIR$/microservice-mylibrary/pom.xml" />
         <option value="$PROJECT_DIR$/microservice-myclient/pom.xml" />
+        <option value="$PROJECT_DIR$/microservice-myusers/pom.xml" />
       </list>
     </option>
   </component>
