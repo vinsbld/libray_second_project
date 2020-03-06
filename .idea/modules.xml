@@ -2,6 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/config-server/config-server.iml" filepath="$PROJECT_DIR$/config-server/config-server.iml" />
+      <module fileurl="file://$PROJECT_DIR$/eureka-server/eureka-server.iml" filepath="$PROJECT_DIR$/eureka-server/eureka-server.iml" />
       <module fileurl="file://$PROJECT_DIR$/microservice-myclient/microservice-myclient.iml" filepath="$PROJECT_DIR$/microservice-myclient/microservice-myclient.iml" />
       <module fileurl="file://$PROJECT_DIR$/microservice-mylibrary/microservice-mylibrary.iml" filepath="$PROJECT_DIR$/microservice-mylibrary/microservice-mylibrary.iml" />
       <module fileurl="file://$PROJECT_DIR$/microservice-myusers/microservice-myusers.iml" filepath="$PROJECT_DIR$/microservice-myusers/microservice-myusers.iml" />
