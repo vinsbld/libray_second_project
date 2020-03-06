@@ -13,6 +13,7 @@ public class BCryptManager {
 
     @Autowired
     public BCryptManager(PasswordEncoder passwordEncoder) {
+
         this.passwordEncoder = passwordEncoder;
     }
 

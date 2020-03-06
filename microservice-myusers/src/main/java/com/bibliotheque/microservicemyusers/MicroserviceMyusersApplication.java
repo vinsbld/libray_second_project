@@ -9,7 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import javax.annotation.PostConstruct;
-import java.util.Arrays;
+import java.util.Collections;
 
 @SpringBootApplication
 @EnableSwagger2
@@ -22,10 +22,15 @@ public class MicroserviceMyusersApplication {
 	@Autowired
 	UtilisateurDao utilisateurDao;
 
-
 	@PostConstruct
 	private void postConstruct(){
-		utilisateurDao.save(new Utilisateur("martin", "martin", Arrays.asList(RoleEnum.USER), "martin@gmail.com"));
+		Utilisateur utilisateur = new Utilisateur();
+		utilisateur.setPseudo("martin");
+		utilisateur.setMotDePasse("martin");
+		utilisateur.setRoleEnums(Collections.singletonList(RoleEnum.USER));
+		utilisateur.setEmail("martin@gmail.com");
+		utilisateurDao.save(utilisateur);
+
 	}
 
 }

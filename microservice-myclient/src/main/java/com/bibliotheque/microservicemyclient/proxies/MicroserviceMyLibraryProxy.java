@@ -12,7 +12,7 @@ import java.util.List;
 public interface MicroserviceMyLibraryProxy {
 
     @GetMapping(value = "/livres")
-    LivreBean ListeDeLivres();
+    List<LivreBean> ListeDeLivres();
 
     @GetMapping(value = "/livre/{id}")
     LivreBean afficherUnLivre(@PathVariable("id") Long id);
