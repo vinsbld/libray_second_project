@@ -6,7 +6,6 @@ import com.bibliotheque.microservicemylibrary.dao.ReservationDao;
 import com.bibliotheque.microservicemylibrary.model.Copie;
 import com.bibliotheque.microservicemylibrary.model.Livre;
 import com.bibliotheque.microservicemylibrary.model.Reservation;
-import com.bibliotheque.microservicemylibrary.service.ReservationService;
 import com.bibliotheque.microservicemylibrary.service.ReservationServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
