@@ -11,11 +11,13 @@ import com.bibliotheque.microservicemylibrary.service.ReservationServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
 import javax.annotation.PostConstruct;
 import java.util.Date;
 
 @SpringBootApplication
+@EnableDiscoveryClient
 public class MicroserviceMylibraryApplication {
 
 	public static void main(String[] args) {

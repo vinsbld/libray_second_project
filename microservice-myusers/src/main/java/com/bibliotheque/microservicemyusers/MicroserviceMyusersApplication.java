@@ -6,6 +6,7 @@ import com.bibliotheque.microservicemyusers.model.Utilisateur;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import javax.annotation.PostConstruct;
@@ -13,6 +14,7 @@ import java.util.Collections;
 
 @SpringBootApplication
 @EnableSwagger2
+@EnableDiscoveryClient
 public class MicroserviceMyusersApplication {
 
 	public static void main(String[] args) {

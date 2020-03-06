@@ -4,11 +4,7 @@ import com.bibliotheque.microservicemylibrary.configurations.ApplicationProperti
 import com.bibliotheque.microservicemylibrary.dao.LivreDao;
 import com.bibliotheque.microservicemylibrary.exeptions.LivresNotFoundExeption;
 import com.bibliotheque.microservicemylibrary.model.Livre;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,9 +25,7 @@ public class LivreController {
     public List<Livre> ListeDeLivres(){
         List<Livre>livres = livreDao.findAll();
         if (livres.isEmpty()) throw new LivresNotFoundExeption("Il n'y a pas de livres");
-
         //List<Livre> listeLimitee = livres.subList(0, appProperties.getLimiteDeLivres());
-
         return livres;
     }
 
