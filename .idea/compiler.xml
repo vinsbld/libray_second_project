@@ -12,6 +12,7 @@
         <module name="microservice-mylibrary" />
         <module name="zuul-server" />
         <module name="microservice-myusers" />
+        <module name="spring-admin" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -20,6 +21,7 @@
       <module name="microservice-myclient" target="1.8" />
       <module name="microservice-mylibrary" target="1.8" />
       <module name="microservice-myusers" target="1.8" />
+      <module name="spring-admin" target="1.8" />
       <module name="zuul-server" target="1.8" />
     </bytecodeTargetLevel>
   </component>
@@ -30,6 +32,7 @@
       <module name="microservice-myclient" options="-parameters" />
       <module name="microservice-mylibrary" options="-parameters" />
       <module name="microservice-myusers" options="-parameters" />
+      <module name="spring-admin" options="-parameters" />
       <module name="zuul-server" options="-parameters" />
     </option>
   </component>
