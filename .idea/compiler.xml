@@ -6,11 +6,12 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="microservice-myusers" />
-        <module name="microservice-mylibrary" />
-        <module name="config-server" />
-        <module name="eureka-server" />
         <module name="microservice-myclient" />
+        <module name="eureka-server" />
+        <module name="config-server" />
+        <module name="microservice-mylibrary" />
+        <module name="zuul-server" />
+        <module name="microservice-myusers" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -19,6 +20,7 @@
       <module name="microservice-myclient" target="1.8" />
       <module name="microservice-mylibrary" target="1.8" />
       <module name="microservice-myusers" target="1.8" />
+      <module name="zuul-server" target="1.8" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
@@ -28,6 +30,7 @@
       <module name="microservice-myclient" options="-parameters" />
       <module name="microservice-mylibrary" options="-parameters" />
       <module name="microservice-myusers" options="-parameters" />
+      <module name="zuul-server" options="-parameters" />
     </option>
   </component>
 </project>

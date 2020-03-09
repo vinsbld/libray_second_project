@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import javax.annotation.PostConstruct;
@@ -24,11 +26,13 @@ public class MicroserviceMyusersApplication {
 	@Autowired
 	UtilisateurDao utilisateurDao;
 
+	PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
 	@PostConstruct
 	private void postConstruct(){
 		Utilisateur utilisateur = new Utilisateur();
 		utilisateur.setPseudo("martin");
-		utilisateur.setMotDePasse("martin");
+		utilisateur.setMotDePasse(passwordEncoder.encode("martin"));
 		utilisateur.setRoleEnums(Collections.singletonList(RoleEnum.USER));
 		utilisateur.setEmail("martin@gmail.com");
 		utilisateurDao.save(utilisateur);
