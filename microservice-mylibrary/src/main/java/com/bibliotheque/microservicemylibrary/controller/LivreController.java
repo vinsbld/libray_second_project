@@ -3,6 +3,7 @@ package com.bibliotheque.microservicemylibrary.controller;
 import com.bibliotheque.microservicemylibrary.configurations.ApplicationPropertiesConfiguration;
 import com.bibliotheque.microservicemylibrary.dao.LivreDao;
 import com.bibliotheque.microservicemylibrary.exeptions.LivresNotFoundExeption;
+import com.bibliotheque.microservicemylibrary.model.Copie;
 import com.bibliotheque.microservicemylibrary.model.Livre;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

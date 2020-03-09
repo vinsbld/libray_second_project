@@ -1,5 +1,6 @@
 package com.bibliotheque.microservicemyclient.controller;
 
+import com.bibliotheque.microservicemyclient.bean.CopieBean;
 import com.bibliotheque.microservicemyclient.bean.LivreBean;
 import com.bibliotheque.microservicemyclient.bean.UtilisateurBean;
 import com.bibliotheque.microservicemyclient.proxies.MicroserviceMyLibraryProxy;
@@ -11,6 +12,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
@@ -44,10 +46,21 @@ public class ClientController {
 
     @GetMapping("/livres")
     public String afficherUneListeDeLivres(Model model){
+
        List<LivreBean> livreBeanList = microserviceMyLibraryProxy.ListeDeLivres();
        model.addAttribute("livreBeanList", livreBeanList);
        logger.info("Liste de livre demandée");
+
        return "Livres";
+    }
+
+    @GetMapping("/livre/{id}")
+    public String afficherUnLivre(Model model, @PathVariable("id") Long id){
+        LivreBean livreBean = microserviceMyLibraryProxy.afficherUnLivre(id);
+        model.addAttribute("livre", livreBean);
+        List<CopieBean> copieBeanList = microserviceMyLibraryProxy.afficherLesCopiesLivre(livreBean.getId());
+        model.addAttribute("copie", copieBeanList);
+        return "Livre";
     }
 
 

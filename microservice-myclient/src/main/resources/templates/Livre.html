@@ -32,7 +32,7 @@
 
 
 <!--==========================
-    Livres section
+    Livre section
   ============================-->
 
 <body>
@@ -41,23 +41,33 @@
     <section th:id="page">
         <div class="page-container">
 
-            <h1>Liste des livres</h1>
+            <h1>Details du livre</h1>
 
             <div class="cstyle">
                 <table class="table listTableDeco">
-                    <thead>
-                        <tr>
-                            <th>Titre : </th>
-                            <th>Nom de l'Auteur</th>
-                            <th>Prénom de l'Auteur</th>
-                        </tr>
-                    </thead>
                     <tbody>
-                    <tr th:each="mlivre:${livreBeanList}">
-                        <td><a th:href="@{/livre/{id}(id=${mlivre.id})}" th:text="${mlivre.titre}"></a></td>
-                        <td th:text="${mlivre.nomAuteur}"></td>
-                        <td th:text="${mlivre.prenomAuteur}"></td>
+                        <tr>
+                            <td>Titre : </td>
+                            <td th:text="${livre.titre}"></td>
+                        </tr>
+                        <tr>
+                            <td>Nom de l'auteur : </td>
+                            <td th:text="${livre.nomAuteur}"></td>
+                        </tr>
+                        <tr>
+                            <td>Prénom de l'auteur : </td>
+                            <td th:text="${livre.prenomAuteur}"></td>
+                        </tr>
+                        <tr>
+                            <td>Date d'édition : </td>
+                            <td th:text="${livre.dateEdition}"></td>
+                        </tr>
+                        <tr th:each="vcopie:${copie}">
+                            <td>Nombres d'exemplaires disponibles : </td>
+                            <td th:text="${vcopie.getNbCopies()}"></td>
+                        </tr>
                     </tr>
+
                     </tbody>
                 </table>
             </div>
