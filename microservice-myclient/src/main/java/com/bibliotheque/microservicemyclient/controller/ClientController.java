@@ -4,6 +4,8 @@ import com.bibliotheque.microservicemyclient.bean.LivreBean;
 import com.bibliotheque.microservicemyclient.bean.UtilisateurBean;
 import com.bibliotheque.microservicemyclient.proxies.MicroserviceMyLibraryProxy;
 import com.bibliotheque.microservicemyclient.proxies.MicroserviceMyUsersProxy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -15,6 +17,8 @@ import java.util.List;
 @Controller
 public class ClientController {
 
+    Logger logger = LoggerFactory.getLogger(this.getClass());
+
     @Autowired
     MicroserviceMyUsersProxy microserviceMyUsersProxy;
 
@@ -24,6 +28,8 @@ public class ClientController {
     @GetMapping("/acceuil")
     public String acceuil(Model model){
 
+        logger.info("Page d'acceuil demandée");
+
         return "acceuil";
 
     }
@@ -32,6 +38,7 @@ public class ClientController {
     public String afficherUnProfilUtilisateur(Model model){
         UtilisateurBean utilisateurBean = (UtilisateurBean) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         model.addAttribute("utilisateur", utilisateurBean);
+        logger.info("L'utilisateur "+utilisateurBean+" id : "+utilisateurBean.getId()+ " consulte sa page profil");
         return "Profil";
     }
 
@@ -39,6 +46,7 @@ public class ClientController {
     public String afficherUneListeDeLivres(Model model){
        List<LivreBean> livreBeanList = microserviceMyLibraryProxy.ListeDeLivres();
        model.addAttribute("livreBeanList", livreBeanList);
+       logger.info("Liste de livre demandée");
        return "Livres";
     }
 
