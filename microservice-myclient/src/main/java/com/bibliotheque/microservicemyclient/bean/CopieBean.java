@@ -1,33 +1,32 @@
 package com.bibliotheque.microservicemyclient.bean;
 
-public class CopieBean {
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.io.Serializable;
+import java.util.List;
+
+@NoArgsConstructor
+@Getter
+@Setter
+public @Data
+class CopieBean implements Serializable {
 
     private Long id;
 
     private Integer nbCopies;
 
-    public CopieBean() {
-    }
+    private LivreBean livreBean;
 
-    public CopieBean(Long id, Integer nbCopies) {
+    private List<ReservationBean>reservationBeans;
+
+    public CopieBean(Long id, Integer nbCopies, LivreBean livreBean, List<ReservationBean> reservationBeans) {
         this.id = id;
         this.nbCopies = nbCopies;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Integer getNbCopies() {
-        return nbCopies;
-    }
-
-    public void setNbCopies(Integer nbCopies) {
-        this.nbCopies = nbCopies;
+        this.livreBean = livreBean;
+        this.reservationBeans = reservationBeans;
     }
 
     @Override
@@ -35,6 +34,8 @@ public class CopieBean {
         return "CopieBean{" +
                 "id=" + id +
                 ", nbCopies=" + nbCopies +
+                ", livreBean=" + livreBean +
+                ", reservationBeans=" + reservationBeans +
                 '}';
     }
 }

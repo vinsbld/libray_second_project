@@ -16,6 +16,8 @@ public class UtilisateurBean implements UserDetails {
 
     private String email;
 
+
+
     public UtilisateurBean() {
     }
 

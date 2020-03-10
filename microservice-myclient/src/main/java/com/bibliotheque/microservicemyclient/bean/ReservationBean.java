@@ -1,8 +1,15 @@
 package com.bibliotheque.microservicemyclient.bean;
 
+import lombok.*;
+
+import java.io.Serializable;
 import java.util.Date;
 
-public class ReservationBean {
+@NoArgsConstructor
+@Getter
+@Setter
+public @Data
+class ReservationBean implements Serializable {
 
     private Long id;
 
@@ -14,55 +21,15 @@ public class ReservationBean {
 
     private boolean prolongerPret;
 
-    public ReservationBean() {
-    }
+    private CopieBean copieBean;
 
-    public ReservationBean(Long id, Long idUtilisateur, Date dateDeDebutPret, Date dateDeFinDuPret, boolean prolongerPret) {
+    public ReservationBean(Long id, Long idUtilisateur, Date dateDeDebutPret, Date dateDeFinDuPret, boolean prolongerPret, CopieBean copieBean) {
         this.id = id;
         this.idUtilisateur = idUtilisateur;
         this.dateDeDebutPret = dateDeDebutPret;
         this.dateDeFinDuPret = dateDeFinDuPret;
         this.prolongerPret = prolongerPret;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getIdUtilisateur() {
-        return idUtilisateur;
-    }
-
-    public void setIdUtilisateur(Long idUtilisateur) {
-        this.idUtilisateur = idUtilisateur;
-    }
-
-    public Date getDateDeDebutPret() {
-        return dateDeDebutPret;
-    }
-
-    public void setDateDeDebutPret(Date dateDeDebutPret) {
-        this.dateDeDebutPret = dateDeDebutPret;
-    }
-
-    public Date getDateDeFinDuPret() {
-        return dateDeFinDuPret;
-    }
-
-    public void setDateDeFinDuPret(Date dateDeFinDuPret) {
-        this.dateDeFinDuPret = dateDeFinDuPret;
-    }
-
-    public boolean isProlongerPret() {
-        return prolongerPret;
-    }
-
-    public void setProlongerPret(boolean prolongerPret) {
-        this.prolongerPret = prolongerPret;
+        this.copieBean = copieBean;
     }
 
     @Override
@@ -73,6 +40,7 @@ public class ReservationBean {
                 ", dateDeDebutPret=" + dateDeDebutPret +
                 ", dateDeFinDuPret=" + dateDeFinDuPret +
                 ", prolongerPret=" + prolongerPret +
+                ", copieBean=" + copieBean +
                 '}';
     }
 }

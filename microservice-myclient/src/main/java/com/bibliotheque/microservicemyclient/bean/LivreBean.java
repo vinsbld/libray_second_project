@@ -1,6 +1,7 @@
 package com.bibliotheque.microservicemyclient.bean;
 
 import java.util.Date;
+import java.util.List;
 
 public class LivreBean {
 
@@ -14,15 +15,18 @@ public class LivreBean {
 
     private Date dateEdition;
 
+    private List<CopieBean> copieBeans;
+
     public LivreBean() {
     }
 
-    public LivreBean(Long id, String titre, String nomAuteur, String prenomAuteur, Date dateEdition) {
+    public LivreBean(Long id, String titre, String nomAuteur, String prenomAuteur, Date dateEdition, List<CopieBean> copieBeans) {
         this.id = id;
         this.titre = titre;
         this.nomAuteur = nomAuteur;
         this.prenomAuteur = prenomAuteur;
         this.dateEdition = dateEdition;
+        this.copieBeans = copieBeans;
     }
 
     public Long getId() {
@@ -65,6 +69,14 @@ public class LivreBean {
         this.dateEdition = dateEdition;
     }
 
+    public List<CopieBean> getCopieBeans() {
+        return copieBeans;
+    }
+
+    public void setCopieBeans(List<CopieBean> copieBeans) {
+        this.copieBeans = copieBeans;
+    }
+
     @Override
     public String toString() {
         return "LivreBean{" +
@@ -73,6 +85,7 @@ public class LivreBean {
                 ", nomAuteur='" + nomAuteur + '\'' +
                 ", prenomAuteur='" + prenomAuteur + '\'' +
                 ", dateEdition=" + dateEdition +
+                ", copieBeans=" + copieBeans +
                 '}';
     }
 }

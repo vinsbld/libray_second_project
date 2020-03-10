@@ -51,7 +51,7 @@ public class MicroserviceMylibraryApplication {
 
 			Reservation reservation = new Reservation();
 			reservation.setCopie(copie);
-			reservation.setIdUtilisateur((long) 1);
+			reservation.setIdUtilisateur(1L);
 			reservation.setDateDeDebutPret(new Date());
 			reservation.setDateDeFinDuPret(reservationService.add4Weeks(reservation.getDateDeDebutPret()));
 			reservation.setProlongerPret(false);

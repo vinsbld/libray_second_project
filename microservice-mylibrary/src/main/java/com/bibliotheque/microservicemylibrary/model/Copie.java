@@ -2,74 +2,33 @@ package com.bibliotheque.microservicemylibrary.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.*;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import java.util.Collection;
+import java.io.Serializable;
+import java.util.List;
 
 @Entity
-public class Copie {
+@NoArgsConstructor
+@RequiredArgsConstructor
+public @Data
+class Copie implements Serializable {
 
     @Id
     @GeneratedValue
     private Long id;
 
-    @NotNull
+    @NonNull
     private Integer nbCopies;
 
-
-    @JsonBackReference
+    @NonNull
+    @JsonManagedReference
     @ManyToOne
-    @JoinColumn
     private Livre livre;
 
-    @JsonManagedReference
+    @NonNull
+    @JsonBackReference
     @OneToMany(mappedBy = "copie", fetch = FetchType.EAGER)
-    private Collection<Reservation>reservations;
+    private List<Reservation> reservations;
 
-    public Copie() {
-    }
-
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Livre getLivre() {
-        return livre;
-    }
-
-    public void setLivre(Livre livre) {
-        this.livre = livre;
-    }
-
-    public Collection<Reservation> getReservations() {
-        return reservations;
-    }
-
-    public void setReservations(Collection<Reservation> reservations) {
-        this.reservations = reservations;
-    }
-
-    public Integer getNbCopies() {
-        return nbCopies;
-    }
-
-    public void setNbCopies(Integer nbCopies) {
-        this.nbCopies = nbCopies;
-    }
-
-    @Override
-    public String toString() {
-        return "Copie{" +
-                "id=" + id +
-                ", nbCopies=" + nbCopies +
-                ", livre=" + livre +
-                ", reservations=" + reservations +
-                '}';
-    }
 }

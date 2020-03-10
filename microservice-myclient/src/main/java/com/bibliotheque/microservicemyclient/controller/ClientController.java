@@ -2,6 +2,7 @@ package com.bibliotheque.microservicemyclient.controller;
 
 import com.bibliotheque.microservicemyclient.bean.CopieBean;
 import com.bibliotheque.microservicemyclient.bean.LivreBean;
+import com.bibliotheque.microservicemyclient.bean.ReservationBean;
 import com.bibliotheque.microservicemyclient.bean.UtilisateurBean;
 import com.bibliotheque.microservicemyclient.proxies.MicroserviceMyLibraryProxy;
 import com.bibliotheque.microservicemyclient.proxies.MicroserviceMyUsersProxy;
@@ -38,9 +39,15 @@ public class ClientController {
 
     @GetMapping("/profil")
     public String afficherUnProfilUtilisateur(Model model){
+
         UtilisateurBean utilisateurBean = (UtilisateurBean) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         model.addAttribute("utilisateur", utilisateurBean);
+
+        List<ReservationBean>reservationBeans = microserviceMyLibraryProxy.afficherLaListeDesReservationsParUtilisateur(utilisateurBean.getId());
+        model.addAttribute("listReservations", reservationBeans);
+
         logger.info("L'utilisateur "+utilisateurBean+" id : "+utilisateurBean.getId()+ " consulte sa page profil");
+
         return "Profil";
     }
 
@@ -49,6 +56,7 @@ public class ClientController {
 
        List<LivreBean> livreBeanList = microserviceMyLibraryProxy.ListeDeLivres();
        model.addAttribute("livreBeanList", livreBeanList);
+
        logger.info("Liste de livre demandée");
 
        return "Livres";

@@ -55,6 +55,15 @@
                     </tr>
                 </table>
             </div>
+            <h1>Mes Réservations en cours</h1>
+            <div class="cstyle">
+                <table class="table listTableDeco">
+                    <tr th:each="mlistReservations:${listReservations}">
+                       <td th:text="${mlistReservations.copieBean.nbCopies}"></td>
+                    </tr>
+                </table>
+            </div>
+
         </div>
     </section>
 </main>

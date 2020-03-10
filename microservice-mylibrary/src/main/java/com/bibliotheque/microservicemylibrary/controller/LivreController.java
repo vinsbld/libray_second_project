@@ -3,7 +3,6 @@ package com.bibliotheque.microservicemylibrary.controller;
 import com.bibliotheque.microservicemylibrary.configurations.ApplicationPropertiesConfiguration;
 import com.bibliotheque.microservicemylibrary.dao.LivreDao;
 import com.bibliotheque.microservicemylibrary.exeptions.LivresNotFoundExeption;
-import com.bibliotheque.microservicemylibrary.model.Copie;
 import com.bibliotheque.microservicemylibrary.model.Livre;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +29,6 @@ public class LivreController {
     public List<Livre> ListeDeLivres(){
         List<Livre>livres = livreDao.findAll();
         if (livres.isEmpty()) throw new LivresNotFoundExeption("Il n'y a pas de livres");
-        //List<Livre> listeLimitee = livres.subList(0, appProperties.getLimiteDeLivres());
         logger.info("Récupération de la liste des produits");
         return livres;
     }
@@ -41,5 +39,6 @@ public class LivreController {
         logger.info("Le détail d'un livre est demandé");
         return livre;
     }
+
 
 }
