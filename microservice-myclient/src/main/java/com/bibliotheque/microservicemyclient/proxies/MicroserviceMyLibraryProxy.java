@@ -23,10 +23,10 @@ public interface MicroserviceMyLibraryProxy {
     LivreBean afficherUnLivre(@PathVariable("id") Long id);
 
     @GetMapping(value = "/copies/{id}")
-    List<CopieBean> afficherLesCopiesLivre(@PathVariable Long id);
+    List<CopieBean> afficherLesCopiesDunLivre(@PathVariable("id")Long id);
 
-    @GetMapping("/listeCopies")
-    List<CopieBean> afficherUneListeDeCopie();
+    @GetMapping(value = "/copie/{id}")
+    CopieBean afficherUneCopie(@PathVariable("id")Long id);
 
     @GetMapping(value = "/listeDesReservations/{id}")
     List<ReservationBean> afficherLaListeDesReservationsParUtilisateur(@PathVariable("id")Long id);

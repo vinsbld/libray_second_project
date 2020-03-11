@@ -62,9 +62,9 @@
                             <td>Date d'édition : </td>
                             <td th:text="${livre.dateEdition}"></td>
                         </tr>
-                        <tr th:each="vcopie:${copie}">
-                            <td>Nombres d'exemplaires disponibles : </td>
-                            <td th:text="${vcopie.getNbCopies()}"></td>
+                        <tr th:each="mlivre:${copieList}">
+                            <td>Nombre de copies : </td>
+                            <td th:text="${mlivre.nbCopies}"></td>
                         </tr>
                     </tr>
 

@@ -1,5 +1,6 @@
 package com.bibliotheque.microservicemyclient.bean;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,6 +19,7 @@ class CopieBean implements Serializable {
 
     private Integer nbCopies;
 
+    @JsonProperty("livre")
     private LivreBean livreBean;
 
     private List<ReservationBean>reservationBeans;

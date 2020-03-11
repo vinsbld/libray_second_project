@@ -64,10 +64,15 @@ public class ClientController {
 
     @GetMapping("/livre/{id}")
     public String afficherUnLivre(Model model, @PathVariable("id") Long id){
+
         LivreBean livreBean = microserviceMyLibraryProxy.afficherUnLivre(id);
         model.addAttribute("livre", livreBean);
-        List<CopieBean> copieBeanList = microserviceMyLibraryProxy.afficherLesCopiesLivre(livreBean.getId());
-        model.addAttribute("copie", copieBeanList);
+
+        List<CopieBean>copieBeanList = microserviceMyLibraryProxy.afficherLesCopiesDunLivre(livreBean.getId());
+        model.addAttribute("copieList", copieBeanList);
+
+        logger.info("Le livre "+livreBean.getTitre()+" est en consultation");
+
         return "Livre";
     }
 

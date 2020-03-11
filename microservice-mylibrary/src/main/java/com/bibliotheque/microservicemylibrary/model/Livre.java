@@ -24,6 +24,7 @@ class Livre implements Serializable {
     private String nomAuteur;
     @NonNull
     private String prenomAuteur;
+    @NonNull
     private Date dateEdition;
 
     @NonNull

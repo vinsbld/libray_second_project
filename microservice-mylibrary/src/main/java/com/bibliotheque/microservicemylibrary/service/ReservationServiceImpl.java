@@ -12,7 +12,7 @@ public class ReservationServiceImpl implements ReservationService {
     public Date add4Weeks(Date date) {
         GregorianCalendar gregorianCalendar = new GregorianCalendar();
         gregorianCalendar.setGregorianChange(date);
-        gregorianCalendar.add(GregorianCalendar.MONTH, 1 );
+        gregorianCalendar.add(GregorianCalendar.WEEK_OF_MONTH, 4);
         return gregorianCalendar.getTime();
     }
 }

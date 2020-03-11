@@ -1,5 +1,6 @@
 package com.bibliotheque.microservicemyclient.bean;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import java.io.Serializable;
@@ -21,6 +22,7 @@ class ReservationBean implements Serializable {
 
     private boolean prolongerPret;
 
+    @JsonProperty("copie")
     private CopieBean copieBean;
 
     public ReservationBean(Long id, Long idUtilisateur, Date dateDeDebutPret, Date dateDeFinDuPret, boolean prolongerPret, CopieBean copieBean) {
