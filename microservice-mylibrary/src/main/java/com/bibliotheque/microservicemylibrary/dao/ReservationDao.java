@@ -6,9 +6,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+
 @Repository
 public interface ReservationDao extends JpaRepository<Reservation, Long> {
 
-    List<Reservation> findAllByIdUtilisateur(Long id);
 
+    List<Reservation> findAllByIdUtilisateur(Long id);
 }

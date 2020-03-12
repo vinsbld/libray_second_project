@@ -2,6 +2,7 @@ package com.bibliotheque.microservicemylibrary.controller;
 
 import com.bibliotheque.microservicemylibrary.dao.CopieDao;
 import com.bibliotheque.microservicemylibrary.model.Copie;
+import com.bibliotheque.microservicemylibrary.service.CopieService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,17 +20,17 @@ public class CopieController {
     Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    private CopieDao copieDao;
+    private CopieService copieService;
 
     @RequestMapping(value = "/copies/{id}")
     public List<Copie> afficherLesCopiesDunLivre(@PathVariable("id")Long id){
-        List<Copie>copieList = copieDao.findAllByLivreId(id);
+        List<Copie>copieList = copieService.findAllByLivreId(id);
         return copieList;
     }
 
     @RequestMapping(value = "/copie/{id}")
     public Optional<Copie> afficherUneCopie(@PathVariable("id")Long id){
-        Optional<Copie> copie = copieDao.findById(id);
+        Optional<Copie> copie = copieService.findById(id);
         return copie;
     }
 
