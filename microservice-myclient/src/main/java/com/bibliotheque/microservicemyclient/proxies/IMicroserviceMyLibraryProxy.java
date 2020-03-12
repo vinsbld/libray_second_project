@@ -14,7 +14,7 @@ import java.util.List;
 
 @FeignClient(name ="microservice-mylibrary")
 @RibbonClient(name ="microservice-mylibrary")
-public interface MicroserviceMyLibraryProxy {
+public interface IMicroserviceMyLibraryProxy {
 
     @GetMapping(value = "/livres")
     List<LivreBean> ListeDeLivres();

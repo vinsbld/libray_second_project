@@ -1,6 +1,6 @@
-package com.bibliotheque.microservicemylibrary.service;
+package com.bibliotheque.microservicemylibrary.service.reservation;
 
-import com.bibliotheque.microservicemylibrary.dao.ReservationDao;
+import com.bibliotheque.microservicemylibrary.dao.IReservationDao;
 import com.bibliotheque.microservicemylibrary.model.Reservation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,10 +10,10 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 @Service
-public class ReservationServiceImpl implements ReservationService {
+public class IReservationServiceImpl implements IReservationService {
 
     @Autowired
-    private ReservationDao reservationDao;
+    private IReservationDao IReservationDao;
 
     @Override
     public Date add4Weeks(Date date) {
@@ -25,6 +25,6 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public List<Reservation> findAllByIdUtilisateur(Long id) {
-        return reservationDao.findAllByIdUtilisateur(id);
+        return IReservationDao.findAllByIdUtilisateur(id);
     }
 }

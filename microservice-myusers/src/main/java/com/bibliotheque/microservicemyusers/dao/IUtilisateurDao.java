@@ -9,7 +9,7 @@ import java.util.Optional;
 
 
 @Repository
-public interface UtilisateurDao extends JpaRepository<Utilisateur, Long> {
+public interface IUtilisateurDao extends JpaRepository<Utilisateur, Long> {
 
     //trouver un utilisateur par son pseudo
     Utilisateur findByPseudo(String pseudo);

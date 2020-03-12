@@ -1,7 +1,7 @@
 package com.bibliotheque.microservicemyclient.security;
 
 import com.bibliotheque.microservicemyclient.bean.UtilisateurBean;
-import com.bibliotheque.microservicemyclient.proxies.MicroserviceMyUsersProxy;
+import com.bibliotheque.microservicemyclient.service.myUsers.IMicroserviceMyUsersProxyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -12,11 +12,11 @@ import org.springframework.stereotype.Service;
 public class UtilisateurSecurityService implements UserDetailsService {
 
 @Autowired
-MicroserviceMyUsersProxy microserviceMyUsersProxy;
+private IMicroserviceMyUsersProxyService iMicroserviceMyUsersProxyService;
 
     @Override
     public UserDetails loadUserByUsername(String pseudo) throws UsernameNotFoundException {
-        UtilisateurBean utilisateur = microserviceMyUsersProxy.connexionUtilisateur(pseudo.toLowerCase());
+        UtilisateurBean utilisateur = iMicroserviceMyUsersProxyService.connexionUtilisateur(pseudo.toLowerCase());
         if (utilisateur==null){
             throw new UsernameNotFoundException("l'utilisateur "+pseudo+" n'existe pas");
         }else {

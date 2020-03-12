@@ -1,6 +1,6 @@
 package com.bibliotheque.microservicemyusers;
 
-import com.bibliotheque.microservicemyusers.dao.UtilisateurDao;
+import com.bibliotheque.microservicemyusers.dao.IUtilisateurDao;
 import com.bibliotheque.microservicemyusers.model.RoleEnum;
 import com.bibliotheque.microservicemyusers.model.Utilisateur;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ public class MicroserviceMyusersApplication {
 	}
 
 	@Autowired
-	UtilisateurDao utilisateurDao;
+	IUtilisateurDao IUtilisateurDao;
 
 	PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -35,7 +35,7 @@ public class MicroserviceMyusersApplication {
 		utilisateur.setMotDePasse(passwordEncoder.encode("martin"));
 		utilisateur.setRoleEnums(Collections.singletonList(RoleEnum.USER));
 		utilisateur.setEmail("martin@gmail.com");
-		utilisateurDao.save(utilisateur);
+		IUtilisateurDao.save(utilisateur);
 
 	}
 

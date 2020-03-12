@@ -1,13 +1,13 @@
 package com.bibliotheque.microservicemylibrary.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @NoArgsConstructor
@@ -25,11 +25,26 @@ class Livre implements Serializable {
     @NonNull
     private String prenomAuteur;
     @NonNull
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
     private Date dateEdition;
+    @NonNull
+    private String editeur;
 
     @NonNull
     @JsonBackReference
     @OneToMany(mappedBy = "livre", fetch = FetchType.EAGER)
-    private List<Copie> copies;
+    private Set<Copie> copies;
 
+    @Override
+    public String toString() {
+        return "Livre{" +
+                "id=" + id +
+                ", titre='" + titre + '\'' +
+                ", nomAuteur='" + nomAuteur + '\'' +
+                ", prenomAuteur='" + prenomAuteur + '\'' +
+                ", dateEdition=" + dateEdition +
+                ", editeur='" + editeur + '\'' +
+                ", copies=" + copies +
+                '}';
+    }
 }

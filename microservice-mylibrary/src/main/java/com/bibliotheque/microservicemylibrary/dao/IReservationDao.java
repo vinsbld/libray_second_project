@@ -8,7 +8,7 @@ import java.util.List;
 
 
 @Repository
-public interface ReservationDao extends JpaRepository<Reservation, Long> {
+public interface IReservationDao extends JpaRepository<Reservation, Long> {
 
 
     List<Reservation> findAllByIdUtilisateur(Long id);

@@ -1,11 +1,11 @@
-package com.bibliotheque.microservicemylibrary.service;
+package com.bibliotheque.microservicemylibrary.service.livre;
 
 import com.bibliotheque.microservicemylibrary.model.Livre;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface LivreService {
+public interface ILivreService {
 
     List<Livre> findAll();
 

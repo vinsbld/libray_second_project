@@ -4,8 +4,8 @@ import com.bibliotheque.microservicemyclient.bean.CopieBean;
 import com.bibliotheque.microservicemyclient.bean.LivreBean;
 import com.bibliotheque.microservicemyclient.bean.ReservationBean;
 import com.bibliotheque.microservicemyclient.bean.UtilisateurBean;
-import com.bibliotheque.microservicemyclient.proxies.MicroserviceMyLibraryProxy;
-import com.bibliotheque.microservicemyclient.proxies.MicroserviceMyUsersProxy;
+import com.bibliotheque.microservicemyclient.service.myLibrary.IMicroserviceMyLibraryProxyService;
+import com.bibliotheque.microservicemyclient.service.myUsers.IMicroserviceMyUsersProxyService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +23,10 @@ public class ClientController {
     Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    MicroserviceMyUsersProxy microserviceMyUsersProxy;
+    IMicroserviceMyUsersProxyService iMicroserviceMyUsersProxyService;
 
     @Autowired
-    MicroserviceMyLibraryProxy microserviceMyLibraryProxy;
+    IMicroserviceMyLibraryProxyService iMicroserviceMyLibraryProxyService;
 
     @GetMapping("/acceuil")
     public String acceuil(Model model){
@@ -43,7 +43,7 @@ public class ClientController {
         UtilisateurBean utilisateurBean = (UtilisateurBean) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         model.addAttribute("utilisateur", utilisateurBean);
 
-        List<ReservationBean>reservationBeans = microserviceMyLibraryProxy.afficherLaListeDesReservationsParUtilisateur(utilisateurBean.getId());
+        List<ReservationBean>reservationBeans = iMicroserviceMyLibraryProxyService.afficherLaListeDesReservationsParUtilisateur(utilisateurBean.getId());
         model.addAttribute("listReservations", reservationBeans);
 
         logger.info("L'utilisateur "+utilisateurBean+" id : "+utilisateurBean.getId()+ " consulte sa page profil");
@@ -54,7 +54,7 @@ public class ClientController {
     @GetMapping("/livres")
     public String afficherUneListeDeLivres(Model model){
 
-       List<LivreBean> livreBeanList = microserviceMyLibraryProxy.ListeDeLivres();
+       List<LivreBean> livreBeanList = iMicroserviceMyLibraryProxyService.ListeDeLivres();
        model.addAttribute("livreBeanList", livreBeanList);
 
        logger.info("Liste de livre demandée");
@@ -65,10 +65,10 @@ public class ClientController {
     @GetMapping("/livre/{id}")
     public String afficherUnLivre(Model model, @PathVariable("id") Long id){
 
-        LivreBean livreBean = microserviceMyLibraryProxy.afficherUnLivre(id);
+        LivreBean livreBean = iMicroserviceMyLibraryProxyService.afficherUnLivre(id);
         model.addAttribute("livre", livreBean);
 
-        List<CopieBean>copieBeanList = microserviceMyLibraryProxy.afficherLesCopiesDunLivre(livreBean.getId());
+        List<CopieBean>copieBeanList = iMicroserviceMyLibraryProxyService.afficherLesCopiesDunLivre(livreBean.getId());
         model.addAttribute("copieList", copieBeanList);
 
         logger.info("Le livre "+livreBean.getTitre()+" est en consultation");

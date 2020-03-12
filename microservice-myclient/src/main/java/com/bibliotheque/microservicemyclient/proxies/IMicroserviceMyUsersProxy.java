@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 @FeignClient(name = "microservice-myusers")
 @RibbonClient(name = "microservice-myusers")
-public interface MicroserviceMyUsersProxy {
+public interface IMicroserviceMyUsersProxy {
 
     @GetMapping("/{pseudo}/connexion")
     UtilisateurBean connexionUtilisateur(@PathVariable String pseudo);

@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface LivreDao extends JpaRepository<Livre, Long> {
+public interface ILivreDao extends JpaRepository<Livre, Long> {
 
     //recupere la liste de tous les livres
     List<Livre>findAll();

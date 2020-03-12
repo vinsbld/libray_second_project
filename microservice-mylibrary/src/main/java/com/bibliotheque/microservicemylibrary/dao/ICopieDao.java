@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @Repository
 public interface
-CopieDao extends JpaRepository<Copie, Long> {
+ICopieDao extends JpaRepository<Copie, Long> {
 
     //Récupere la liste des copies d'un livre par son id
     List<Copie> findAllByLivreId(Long id);
