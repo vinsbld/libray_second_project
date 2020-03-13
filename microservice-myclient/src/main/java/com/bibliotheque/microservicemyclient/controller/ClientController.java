@@ -41,10 +41,10 @@ public class ClientController {
     public String afficherUnProfilUtilisateur(Model model){
 
         UtilisateurBean utilisateurBean = (UtilisateurBean) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        model.addAttribute("utilisateur", utilisateurBean);
+        model.addAttribute("utilisateurBean", utilisateurBean);
 
         List<ReservationBean>reservationBeans = iMicroserviceMyLibraryProxyService.afficherLaListeDesReservationsParUtilisateur(utilisateurBean.getId());
-        model.addAttribute("listReservations", reservationBeans);
+        model.addAttribute("reservationBeans", reservationBeans);
 
         logger.info("L'utilisateur "+utilisateurBean+" id : "+utilisateurBean.getId()+ " consulte sa page profil");
 
@@ -66,10 +66,10 @@ public class ClientController {
     public String afficherUnLivre(Model model, @PathVariable("id") Long id){
 
         LivreBean livreBean = iMicroserviceMyLibraryProxyService.afficherUnLivre(id);
-        model.addAttribute("livre", livreBean);
+        model.addAttribute("livreBean", livreBean);
 
-        List<CopieBean>copieBeanList = iMicroserviceMyLibraryProxyService.afficherLesCopiesDunLivre(livreBean.getId());
-        model.addAttribute("copieList", copieBeanList);
+        List<CopieBean> copieBeansDisponibles = iMicroserviceMyLibraryProxyService.afficherLesCopiesDunLivre(livreBean.getId());
+        model.addAttribute("copieBeansDisponibles", copieBeansDisponibles);
 
         logger.info("Le livre "+livreBean.getTitre()+" est en consultation");
 

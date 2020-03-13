@@ -57,10 +57,8 @@
                         <td><a th:href="@{/livre/{id}(id=${mlivre.id})}" th:text="${mlivre.titre}"></a></td>
                         <td th:text="${mlivre.nomAuteur}"></td>
                         <td th:text="${mlivre.prenomAuteur}"></td>
+                        <td th:text="${}"></td>
                     </tr>
-                    <!-- <tr th:each="mcopie:${listeCopie}">
-                        <td th:text="${livreBeanList.get(mcopie.getNbCopies())}"></td>
-                    </tr> -->
                     </tbody>
                 </table>
             </div>

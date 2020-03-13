@@ -13,7 +13,7 @@ import java.util.List;
 public class IReservationServiceImpl implements IReservationService {
 
     @Autowired
-    private IReservationDao IReservationDao;
+    private IReservationDao iReservationDao;
 
     @Override
     public Date add4Weeks(Date date) {
@@ -25,6 +25,13 @@ public class IReservationServiceImpl implements IReservationService {
 
     @Override
     public List<Reservation> findAllByIdUtilisateur(Long id) {
-        return IReservationDao.findAllByIdUtilisateur(id);
+
+        return iReservationDao.findAllByIdUtilisateur(id);
+    }
+
+    @Override
+    public Reservation save(Reservation reservation){
+        return iReservationDao.save(reservation);
     }
 }
+

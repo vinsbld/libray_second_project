@@ -23,22 +23,21 @@ public class LivreController {
     ApplicationPropertiesConfiguration appProperties;
 
     @Autowired
-    private ILivreService ILivreService;
+    private ILivreService iLivreService;
 
     @RequestMapping(value = "/livres")
     public List<Livre> ListeDeLivres(){
-        List<Livre>livres = ILivreService.findAll();
+        List<Livre> livres = iLivreService.findAll();
         if (livres.isEmpty()) throw new LivresNotFoundExeption("Il n'y a pas de livres");
         logger.info("Récupération de la liste des produits");
         return livres;
     }
 
     @RequestMapping(value = "/livre/{id}")
-    public Optional<Livre> afficherUnLivre(@PathVariable Long id) {
-        Optional<Livre> livre = ILivreService.findById(id);
+    public Optional<Livre> afficherUnLivre(@PathVariable("id") Long id) {
+        Optional<Livre> livre = iLivreService.findById(id);
         logger.info("Le détail d'un livre est demandé");
         return livre;
     }
-
 
 }

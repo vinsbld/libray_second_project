@@ -18,11 +18,11 @@ public class ReservationController {
     Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    private IReservationService IReservationService;
+    private IReservationService iReservationService;
 
     @RequestMapping(value = "/listeDesReservations/{id}", method = RequestMethod.GET)
     public List<Reservation> afficherLaListeDesReservationsParUtilisateur(@PathVariable("id") Long id){
-        List<Reservation> reservations = IReservationService.findAllByIdUtilisateur(id);
+        List<Reservation> reservations = iReservationService.findAllByIdUtilisateur(id);
         return reservations;
     }
 

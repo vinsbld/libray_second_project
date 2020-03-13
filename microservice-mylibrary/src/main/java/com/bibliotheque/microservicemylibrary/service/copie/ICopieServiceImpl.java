@@ -12,15 +12,25 @@ import java.util.Optional;
 public class ICopieServiceImpl implements ICopieService {
 
     @Autowired
-    ICopieDao ICopieDao;
+    ICopieDao iCopieDao;
 
     @Override
     public List<Copie> findAllByLivreId(Long id){
-        return ICopieDao.findAllByLivreId(id);
+        return iCopieDao.findAllByLivreId(id);
     }
 
     @Override
     public Optional<Copie> findById(Long id){
-        return ICopieDao.findById(id);
+        return iCopieDao.findById(id);
+    }
+
+    @Override
+    public Copie save(Copie copie){
+        return iCopieDao.save(copie);
+    }
+
+    @Override
+    public List<Copie> getCopieLivresDisponibles(Long idLivre){
+        return iCopieDao.getCopieLivresDisponibles(idLivre);
     }
 }

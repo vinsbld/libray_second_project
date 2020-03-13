@@ -1,24 +1,28 @@
 package com.bibliotheque.microservicemyusers.model;
 
+import lombok.Data;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 
 @Entity
-public class Utilisateur {
+@RequiredArgsConstructor
+public @Data
+class Utilisateur implements Serializable {
 
     @Id
     @GeneratedValue
     private Long id;
-    @NotNull
+    @NonNull
     private String pseudo;
-    @NotNull
+    @NonNull
     private String motDePasse;
-    @NotNull
+    @NonNull
     @Email
     private String email;
 
@@ -31,66 +35,13 @@ public class Utilisateur {
         this.roleEnums = Collections.singletonList(RoleEnum.USER);
     }
 
-
-    public Utilisateur(@NotNull String pseudo, @NotNull String motDePasse, List<RoleEnum> roleEnums, String email) {
-        this.pseudo = pseudo;
-        setMotDePasse(motDePasse);
-        this.roleEnums = roleEnums;
-        this.email = email;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getPseudo() {
-        return pseudo;
-    }
-
-    public void setPseudo(String pseudo) {
-        this.pseudo = pseudo;
-    }
-
-    public String getMotDePasse() {
-        return motDePasse;
-    }
-
-    public void setMotDePasse(String motDePasse) {
-        this.motDePasse = motDePasse;
-    }
-
-    public List<RoleEnum> getRoleEnums() {
-        return roleEnums;
-    }
-
-    public void setRoleEnums(List<RoleEnum> roleEnums) {
-        this.roleEnums = roleEnums;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void grantAuthority(RoleEnum authority) {
-        if ( roleEnums == null ) roleEnums = new ArrayList<>();
-        roleEnums.add(authority);
-    }
-
-
     @Override
     public String toString() {
         return "Utilisateur{" +
                 "id=" + id +
                 ", pseudo='" + pseudo + '\'' +
                 ", motDePasse='" + motDePasse + '\'' +
+                ", email='" + email + '\'' +
                 ", roleEnums=" + roleEnums +
                 '}';
     }

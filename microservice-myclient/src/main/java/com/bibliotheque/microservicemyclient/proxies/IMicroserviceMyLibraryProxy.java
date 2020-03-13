@@ -31,4 +31,7 @@ public interface IMicroserviceMyLibraryProxy {
     @GetMapping(value = "/listeDesReservations/{id}")
     List<ReservationBean> afficherLaListeDesReservationsParUtilisateur(@PathVariable("id")Long id);
 
+    @GetMapping(value = "/copies/dispos/{id}")
+    List<CopieBean> afficherLesCopiesDisponibles(@PathVariable("id") Long id);
+
 }

@@ -10,6 +10,11 @@ import java.util.List;
 @Repository
 public interface IReservationDao extends JpaRepository<Reservation, Long> {
 
-
+    //trouver une reservation par utilisateur
     List<Reservation> findAllByIdUtilisateur(Long id);
+
+    //sauvegarder une reservation
+    Reservation save(Reservation reservation);
+
+
 }

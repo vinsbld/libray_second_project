@@ -6,6 +6,7 @@ import com.bibliotheque.microservicemyclient.bean.ReservationBean;
 import com.bibliotheque.microservicemyclient.proxies.IMicroserviceMyLibraryProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
@@ -14,31 +15,36 @@ import java.util.List;
 public class IMicroserviceMyLibraryProxyServiceImpl implements IMicroserviceMyLibraryProxyService {
 
     @Autowired
-    IMicroserviceMyLibraryProxy IMicroserviceMyLibraryProxy;
+    IMicroserviceMyLibraryProxy iMicroserviceMyLibraryProxy;
 
     @Override
     public List<LivreBean> ListeDeLivres(){
-        return IMicroserviceMyLibraryProxy.ListeDeLivres();
+        return iMicroserviceMyLibraryProxy.ListeDeLivres();
     }
 
     @Override
-    public LivreBean afficherUnLivre(@PathVariable("id") Long id){
-        return IMicroserviceMyLibraryProxy.afficherUnLivre(id);
+    public LivreBean afficherUnLivre(Long id){
+        return iMicroserviceMyLibraryProxy.afficherUnLivre(id);
     }
 
     @Override
-    public List<CopieBean> afficherLesCopiesDunLivre(@PathVariable("id")Long id){
-        return IMicroserviceMyLibraryProxy.afficherLesCopiesDunLivre(id);
+    public List<CopieBean> afficherLesCopiesDunLivre(Long id){
+        return iMicroserviceMyLibraryProxy.afficherLesCopiesDunLivre(id);
     }
 
     @Override
-    public CopieBean afficherUneCopie(@PathVariable("id")Long id){
-        return IMicroserviceMyLibraryProxy.afficherUneCopie(id);
+    public CopieBean afficherUneCopie(Long id){
+        return iMicroserviceMyLibraryProxy.afficherUneCopie(id);
     }
 
     @Override
-    public List<ReservationBean> afficherLaListeDesReservationsParUtilisateur(@PathVariable("id")Long id){
-        return IMicroserviceMyLibraryProxy.afficherLaListeDesReservationsParUtilisateur(id);
+    public List<ReservationBean> afficherLaListeDesReservationsParUtilisateur(Long id){
+        return iMicroserviceMyLibraryProxy.afficherLaListeDesReservationsParUtilisateur(id);
+    }
+
+    @Override
+    public List<CopieBean> afficherLesCopiesDisponibles(Long id){
+        return iMicroserviceMyLibraryProxy.afficherLesCopiesDisponibles(id);
     }
 
 }

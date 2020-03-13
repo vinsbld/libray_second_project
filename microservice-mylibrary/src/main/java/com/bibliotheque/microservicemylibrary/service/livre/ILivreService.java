@@ -7,7 +7,9 @@ import java.util.Optional;
 
 public interface ILivreService {
 
-    List<Livre> findAll();
+    List<Livre>findAll();
 
     Optional<Livre> findById(Long id);
+
+    Livre save(Livre livre);
 }

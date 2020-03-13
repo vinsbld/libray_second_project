@@ -19,15 +19,18 @@ class CopieBean implements Serializable {
 
     private Integer isbn;
 
+    private boolean disponible;
+
     @JsonProperty("livre")
     private LivreBean livreBean;
 
     @JsonProperty("reservation")
     private Set<ReservationBean> reservationBeans;
 
-    public CopieBean(Long id, Integer isbn, LivreBean livreBean, Set<ReservationBean> reservationBeans) {
+    public CopieBean(Long id, Integer isbn, boolean disponible, LivreBean livreBean, Set<ReservationBean> reservationBeans) {
         this.id = id;
         this.isbn = isbn;
+        this.disponible = disponible;
         this.livreBean = livreBean;
         this.reservationBeans = reservationBeans;
     }
@@ -37,6 +40,7 @@ class CopieBean implements Serializable {
         return "CopieBean{" +
                 "id=" + id +
                 ", isbn=" + isbn +
+                ", disponible=" + disponible +
                 ", livreBean=" + livreBean +
                 ", reservationBeans=" + reservationBeans +
                 '}';

@@ -11,15 +11,15 @@ import java.util.Optional;
 public class IUtilisateurServiceImpl implements IUtilisateurService {
 
     @Autowired
-    private IUtilisateurDao IUtilisateurDao;
+    private IUtilisateurDao iUtilisateurDao;
 
     @Override
     public Utilisateur findByPseudo(String pseudo){
-        return IUtilisateurDao.findByPseudo(pseudo);
+        return iUtilisateurDao.findByPseudo(pseudo);
     }
 
     @Override
     public Optional<Utilisateur> findById(Long id){
-        return IUtilisateurDao.findById(id);
+        return iUtilisateurDao.findById(id);
     }
 }

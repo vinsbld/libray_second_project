@@ -48,26 +48,24 @@
                     <tbody>
                         <tr>
                             <td>Titre : </td>
-                            <td th:text="${livre.titre}"></td>
+                            <td th:text="${livreBean.titre}"></td>
                         </tr>
                         <tr>
                             <td>Nom de l'auteur : </td>
-                            <td th:text="${livre.nomAuteur}"></td>
+                            <td th:text="${livreBean.nomAuteur}"></td>
                         </tr>
                         <tr>
                             <td>Prénom de l'auteur : </td>
-                            <td th:text="${livre.prenomAuteur}"></td>
+                            <td th:text="${livreBean.prenomAuteur}"></td>
                         </tr>
                         <tr>
                             <td>Date d'édition : </td>
-                            <td th:text="${livre.dateEdition}"></td>
+                            <td th:text="${livreBean.dateEdition}"></td>
                         </tr>
-                        <tr th:each="mlivre:${copieList}">
-                            <td>Nombre de copies : </td>
-                            <td th:text="${mlivre.nbCopies}"></td>
-                        </tr>
-                    </tr>
+                        <tr>
+                            <td>Nombres d'exemplaires disponibles : </td>
 
+                        </tr>
                     </tbody>
                 </table>
             </div>

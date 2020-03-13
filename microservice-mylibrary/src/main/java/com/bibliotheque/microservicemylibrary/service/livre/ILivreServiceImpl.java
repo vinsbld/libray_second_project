@@ -12,15 +12,21 @@ import java.util.Optional;
 public class ILivreServiceImpl implements ILivreService {
 
     @Autowired
-    ILivreDao ILivreDao;
+    ILivreDao mLivreDao;
 
     @Override
-    public List<Livre> findAll(){
-        return ILivreDao.findAll();
+    public List<Livre> findAll(){return  mLivreDao.findAll();
     }
 
     @Override
     public Optional<Livre> findById(Long id){
-        return ILivreDao.findById(id);
+        return mLivreDao.findById(id);
     }
+
+    @Override
+    public Livre save(Livre livre){
+        return mLivreDao.save(livre);
+    }
+
+
 }

@@ -6,7 +6,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -22,6 +22,9 @@ class Copie implements Serializable {
     private Integer isbn;
 
     @NonNull
+    private boolean disponible;
+
+    @NonNull
     @JsonManagedReference
     @ManyToOne
     private Livre livre;
@@ -29,13 +32,14 @@ class Copie implements Serializable {
     @NonNull
     @JsonBackReference
     @OneToMany(mappedBy = "copie", fetch = FetchType.EAGER)
-    private Set<Reservation> reservations;
+    private List<Reservation> reservations;
 
     @Override
     public String toString() {
         return "Copie{" +
                 "id=" + id +
                 ", isbn=" + isbn +
+                ", disponible=" + disponible +
                 ", livre=" + livre +
                 ", reservations=" + reservations +
                 '}';

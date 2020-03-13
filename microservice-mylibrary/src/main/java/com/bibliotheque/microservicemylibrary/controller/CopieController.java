@@ -19,18 +19,24 @@ public class CopieController {
     Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    private ICopieService ICopieService;
+    private ICopieService iCopieService;
 
     @RequestMapping(value = "/copies/{id}")
     public List<Copie> afficherLesCopiesDunLivre(@PathVariable("id")Long id){
-        List<Copie>copieList = ICopieService.findAllByLivreId(id);
+        List<Copie>copieList = iCopieService.findAllByLivreId(id);
         return copieList;
     }
 
     @RequestMapping(value = "/copie/{id}")
     public Optional<Copie> afficherUneCopie(@PathVariable("id")Long id){
-        Optional<Copie> copie = ICopieService.findById(id);
+        Optional<Copie> copie = iCopieService.findById(id);
         return copie;
+    }
+
+    @RequestMapping(value = "/copies/dispos/{id}")
+    public List<Copie> afficherLesCopiesDisponibles(@PathVariable("id") Long id){
+        List<Copie> copiesDisponibles = iCopieService.getCopieLivresDisponibles(id);
+        return copiesDisponibles;
     }
 
 

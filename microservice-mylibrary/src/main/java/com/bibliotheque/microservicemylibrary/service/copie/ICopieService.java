@@ -10,4 +10,8 @@ public interface ICopieService {
     List<Copie> findAllByLivreId(Long id);
 
     Optional<Copie> findById(Long id);
+
+    Copie save(Copie copie);
+
+    List<Copie> getCopieLivresDisponibles(Long idLivre);
 }
