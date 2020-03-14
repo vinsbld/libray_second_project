@@ -63,9 +63,25 @@
                             <td th:text="${livreBean.dateEdition}"></td>
                         </tr>
                         <tr>
-                            <td>Nombres d'exemplaires disponibles : </td>
-
+                            <td>éditeur : </td>
+                            <td th:text="${livreBean.editeur}"></td>
                         </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="cstyle">
+                <table class="table listTableDeco">
+                    <thead>
+                    <tr>
+                        <th>Exemplaires disponibles : <span th:text="${nbCopiesDisponibles}" style="color:#00FF00;"></span> / <span th:text="${nbTTCopies}"></span></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+
+                    <tr th:each="dispo:${copieBeansDisponibles}">
+                        <td>isbn : <span th:text="${dispo.isbn}"></span></td>
+                    </tr>
                     </tbody>
                 </table>
             </div>

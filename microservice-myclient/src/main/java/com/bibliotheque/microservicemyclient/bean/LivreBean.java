@@ -8,38 +8,44 @@ import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.Set;
+import java.util.List;
 
 @NoArgsConstructor
 @Getter
 @Setter
 public @Data
-class LivreBean implements Serializable {
+        class LivreBean implements Serializable {
 
-    private Long id;
+            private Long id;
 
-    private String titre;
+            private String titre;
 
-    private String nomAuteur;
+            private String nomAuteur;
 
-    private String prenomAuteur;
+            private String prenomAuteur;
 
-    private Date dateEdition;
+            private Date dateEdition;
 
-    private String editeur;
+            private String editeur;
 
-    @JsonProperty("copie")
-    private Set<CopieBean> copieBeans;
+            public Integer nbCopies;
 
-    public LivreBean(Long id, String titre, String nomAuteur, String prenomAuteur, Date dateEdition, String editeur, Set<CopieBean> copieBeans) {
-        this.id = id;
-        this.titre = titre;
-        this.nomAuteur = nomAuteur;
-        this.prenomAuteur = prenomAuteur;
-        this.dateEdition = dateEdition;
-        this.editeur = editeur;
-        this.copieBeans = copieBeans;
-    }
+            public Integer nbrCopiesDisponibles;
+
+            @JsonProperty("copie")
+            private List<CopieBean> copieBeans;
+
+            public LivreBean(Long id, String titre, String nomAuteur, String prenomAuteur, Date dateEdition, String editeur, Integer nbCopies, Integer nbrCopiesDisponibles, List<CopieBean> copieBeans) {
+                this.id = id;
+                this.titre = titre;
+                this.nomAuteur = nomAuteur;
+                this.prenomAuteur = prenomAuteur;
+                this.dateEdition = dateEdition;
+                this.editeur = editeur;
+                this.nbCopies = nbCopies;
+                this.nbrCopiesDisponibles = nbrCopiesDisponibles;
+                this.copieBeans = copieBeans;
+            }
 
     @Override
     public String toString() {
@@ -50,6 +56,8 @@ class LivreBean implements Serializable {
                 ", prenomAuteur='" + prenomAuteur + '\'' +
                 ", dateEdition=" + dateEdition +
                 ", editeur='" + editeur + '\'' +
+                ", nbCopies=" + nbCopies +
+                ", nbrCopiesDisponibles=" + nbrCopiesDisponibles +
                 ", copieBeans=" + copieBeans +
                 '}';
     }

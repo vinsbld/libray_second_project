@@ -31,6 +31,7 @@ public class ICopieServiceImpl implements ICopieService {
 
     @Override
     public List<Copie> getCopieLivresDisponibles(Long idLivre){
+
         return iCopieDao.getCopieLivresDisponibles(idLivre);
     }
 }

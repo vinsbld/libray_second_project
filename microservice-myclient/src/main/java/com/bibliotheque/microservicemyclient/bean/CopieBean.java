@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Set;
 
 @NoArgsConstructor
@@ -25,9 +26,9 @@ class CopieBean implements Serializable {
     private LivreBean livreBean;
 
     @JsonProperty("reservation")
-    private Set<ReservationBean> reservationBeans;
+    private List<ReservationBean> reservationBeans;
 
-    public CopieBean(Long id, Integer isbn, boolean disponible, LivreBean livreBean, Set<ReservationBean> reservationBeans) {
+    public CopieBean(Long id, Integer isbn, boolean disponible, LivreBean livreBean, List<ReservationBean> reservationBeans) {
         this.id = id;
         this.isbn = isbn;
         this.disponible = disponible;

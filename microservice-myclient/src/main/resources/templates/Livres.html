@@ -50,6 +50,7 @@
                             <th>Titre : </th>
                             <th>Nom de l'Auteur</th>
                             <th>Prénom de l'Auteur</th>
+                            <th>Nombre d'exemplaires disponibles : </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -57,7 +58,7 @@
                         <td><a th:href="@{/livre/{id}(id=${mlivre.id})}" th:text="${mlivre.titre}"></a></td>
                         <td th:text="${mlivre.nomAuteur}"></td>
                         <td th:text="${mlivre.prenomAuteur}"></td>
-                        <td th:text="${}"></td>
+                        <td><span th:text="${mlivre.nbrCopiesDisponibles}" style="color:#00FF00;"></span> / <span th:text="${mlivre.nbCopies}"></span></td>
                     </tr>
                     </tbody>
                 </table>

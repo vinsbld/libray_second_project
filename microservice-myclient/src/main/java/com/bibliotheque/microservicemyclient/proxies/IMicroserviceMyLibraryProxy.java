@@ -28,10 +28,10 @@ public interface IMicroserviceMyLibraryProxy {
     @GetMapping(value = "/copie/{id}")
     CopieBean afficherUneCopie(@PathVariable("id")Long id);
 
-    @GetMapping(value = "/listeDesReservations/{id}")
-    List<ReservationBean> afficherLaListeDesReservationsParUtilisateur(@PathVariable("id")Long id);
-
     @GetMapping(value = "/copies/dispos/{id}")
     List<CopieBean> afficherLesCopiesDisponibles(@PathVariable("id") Long id);
+
+    @GetMapping(value = "/listeDesReservations/{id}")
+    List<ReservationBean> afficherLaListeDesReservationsParUtilisateur(@PathVariable("id")Long id);
 
 }

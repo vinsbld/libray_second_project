@@ -61,6 +61,12 @@ public class MicroserviceMylibraryApplication {
 			copieLivre.setDisponible(false);
 			iCopieService.save(copieLivre);
 
+			Copie copieLivreLivre = new Copie();
+			copieLivreLivre.setLivre(livre);
+			copieLivreLivre.setIsbn(5422);
+			copieLivreLivre.setDisponible(true);
+			iCopieService.save(copieLivreLivre);
+
 			Copie copie1 = new Copie();
 			copie1.setLivre(livre1);
 			copie1.setIsbn(5528);

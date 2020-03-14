@@ -40,6 +40,23 @@ class Livre implements Serializable {
     @OneToMany(mappedBy = "livre", fetch = FetchType.EAGER)
     private List<Copie> copies;
 
+    @Transient
+    public Integer getNbrCopiesDisponibles(){
+       Integer nbDispo = 0;
+        for (Copie c : copies) {
+            if (c.isDisponible()){
+                nbDispo++;
+            }
+        }
+        return nbDispo;
+    }
+
+    @Transient
+    public Integer getNbCopies(){
+        return copies.size();
+    }
+
+
     @Override
     public String toString() {
         return "Livre{" +

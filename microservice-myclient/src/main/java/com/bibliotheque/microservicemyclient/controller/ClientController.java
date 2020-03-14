@@ -68,8 +68,16 @@ public class ClientController {
         LivreBean livreBean = iMicroserviceMyLibraryProxyService.afficherUnLivre(id);
         model.addAttribute("livreBean", livreBean);
 
-        List<CopieBean> copieBeansDisponibles = iMicroserviceMyLibraryProxyService.afficherLesCopiesDunLivre(livreBean.getId());
+        List<CopieBean> copieBeansDisponibles = iMicroserviceMyLibraryProxyService.afficherLesCopiesDisponibles(livreBean.getId());
         model.addAttribute("copieBeansDisponibles", copieBeansDisponibles);
+        model.addAttribute("nbCopiesDisponibles", copieBeansDisponibles.size());
+
+        List<CopieBean> nbTTCopies= iMicroserviceMyLibraryProxyService.afficherLesCopiesDunLivre(id);
+        model.addAttribute("nbTTCopies", nbTTCopies.size());
+
+       /** Integer tab[] = new Integer[copieBeansDisponibles.size()];
+        tab = copieBeansDisponibles.toArray(tab);
+        model.addAttribute("nber", tab.length);**/
 
         logger.info("Le livre "+livreBean.getTitre()+" est en consultation");
 
