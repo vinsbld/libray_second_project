@@ -85,7 +85,7 @@ public class MicroserviceMylibraryApplication {
 			reservation.setDateDeDebutPret(new Date());
 			reservation.setDateDeFinDuPret(iReservationService.add4Weeks(reservation.getDateDeDebutPret()));
 			reservation.setProlongerPret(false);
-			iReservationService.save(reservation);
+			iReservationService.addReservation(reservation);
 
 			Reservation reservation1 = new Reservation();
 			reservation1.setCopie(copie1);
@@ -93,7 +93,7 @@ public class MicroserviceMylibraryApplication {
 			reservation1.setDateDeDebutPret(new Date());
 			reservation1.setDateDeFinDuPret(iReservationService.add4Weeks(reservation.getDateDeDebutPret()));
 			reservation1.setProlongerPret(false);
-			iReservationService.save(reservation1);
+			iReservationService.addReservation(reservation1);
 
 		}
 

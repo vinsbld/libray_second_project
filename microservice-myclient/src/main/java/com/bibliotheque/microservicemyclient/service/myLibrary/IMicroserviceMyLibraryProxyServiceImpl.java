@@ -6,9 +6,8 @@ import com.bibliotheque.microservicemyclient.bean.ReservationBean;
 import com.bibliotheque.microservicemyclient.proxies.IMicroserviceMyLibraryProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -45,6 +44,16 @@ public class IMicroserviceMyLibraryProxyServiceImpl implements IMicroserviceMyLi
     @Override
     public List<CopieBean> afficherLesCopiesDisponibles(Long id){
         return iMicroserviceMyLibraryProxy.afficherLesCopiesDisponibles(id);
+    }
+
+    @Override
+    public Date add4Weeks(Date date){
+        return iMicroserviceMyLibraryProxy.add4Weeks(date);
+    }
+
+    @Override
+    public void demandeDeReservation(Long id, ReservationBean reservationBean){
+        iMicroserviceMyLibraryProxy.demandeDeReservation(id, reservationBean);
     }
 
 }

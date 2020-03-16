@@ -14,7 +14,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -37,6 +41,7 @@ public class ClientController {
 
     }
 
+    /*============== #Profil ======================*/
     @GetMapping("/profil")
     public String afficherUnProfilUtilisateur(Model model){
 
@@ -51,6 +56,7 @@ public class ClientController {
         return "Profil";
     }
 
+    /*============== #Livres ======================*/
     @GetMapping("/livres")
     public String afficherUneListeDeLivres(Model model){
 
@@ -75,14 +81,34 @@ public class ClientController {
         List<CopieBean> nbTTCopies= iMicroserviceMyLibraryProxyService.afficherLesCopiesDunLivre(id);
         model.addAttribute("nbTTCopies", nbTTCopies.size());
 
-       /** Integer tab[] = new Integer[copieBeansDisponibles.size()];
-        tab = copieBeansDisponibles.toArray(tab);
-        model.addAttribute("nber", tab.length);**/
-
         logger.info("Le livre "+livreBean.getTitre()+" est en consultation");
 
         return "Livre";
     }
 
+    /*============== #Reservation ======================*/
+    @PostMapping("/reservation/{id}")
+    public String demandeDeReservation(Model model, @PathVariable("id")Long id, final RedirectAttributes redirectAttributes){
+
+        UtilisateurBean utilisateurBean = (UtilisateurBean) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        utilisateurBean = iMicroserviceMyUsersProxyService.findById(utilisateurBean.getId()).get();
+        model.addAttribute("utilisateurBean", utilisateurBean);
+
+        CopieBean copieBean = iMicroserviceMyLibraryProxyService.afficherUneCopie(id);
+        model.addAttribute("copie", copieBean);
+
+        Date date = new Date(Calendar.getInstance().getTime().getTime());
+        ReservationBean reservationBean = new ReservationBean();
+        reservationBean.setCopieBean(copieBean);
+        reservationBean.setDateDeDebutPret(date);
+        reservationBean.setIdUtilisateur(utilisateurBean.getId());
+        reservationBean.setDateDeDebutPret(date);
+        reservationBean.setDateDeFinDuPret(iMicroserviceMyLibraryProxyService.add4Weeks(date));
+        reservationBean.setProlongerPret(false);
+        copieBean.setDisponible(false);
+        iMicroserviceMyLibraryProxyService.demandeDeReservation(copieBean.getId(), reservationBean);
+
+        return "redirect:/Livre"+id;
+    }
 
 }

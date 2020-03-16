@@ -17,4 +17,5 @@ public interface IReservationDao extends JpaRepository<Reservation, Long> {
     Reservation save(Reservation reservation);
 
 
+    void save(Long id, Reservation reservation);
 }

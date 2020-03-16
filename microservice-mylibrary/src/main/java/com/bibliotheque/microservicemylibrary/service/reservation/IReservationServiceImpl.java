@@ -30,8 +30,8 @@ public class IReservationServiceImpl implements IReservationService {
     }
 
     @Override
-    public Reservation save(Reservation reservation){
-        return iReservationDao.save(reservation);
+    public void addReservation(Long id, Reservation reservation){
+        iReservationDao.save(id, reservation);
     }
 }
 

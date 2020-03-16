@@ -5,10 +5,10 @@ import com.bibliotheque.microservicemyclient.bean.LivreBean;
 import com.bibliotheque.microservicemyclient.bean.ReservationBean;
 import org.springframework.cloud.netflix.ribbon.RibbonClient;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.*;
 
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -33,5 +33,11 @@ public interface IMicroserviceMyLibraryProxy {
 
     @GetMapping(value = "/listeDesReservations/{id}")
     List<ReservationBean> afficherLaListeDesReservationsParUtilisateur(@PathVariable("id")Long id);
+
+    @GetMapping(value = "/prolonger/{id}")
+    Date add4Weeks(Date date);
+
+    @PostMapping(value = "/reserver/{id}")
+    void demandeDeReservation(@PathVariable("id")Long id, @RequestBody ReservationBean reservationBean);
 
 }

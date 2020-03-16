@@ -12,5 +12,5 @@ public interface IReservationService {
     List<Reservation> findAllByIdUtilisateur(Long id);
 
 
-    Reservation save(Reservation reservation);
+    void addReservation(Long id, Reservation reservation);
 }
