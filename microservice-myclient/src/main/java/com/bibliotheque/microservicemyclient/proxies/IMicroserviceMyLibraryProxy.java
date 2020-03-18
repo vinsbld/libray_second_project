@@ -8,7 +8,6 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
 
-import java.util.Date;
 import java.util.List;
 
 
@@ -34,10 +33,10 @@ public interface IMicroserviceMyLibraryProxy {
     @GetMapping(value = "/listeDesReservations/{id}")
     List<ReservationBean> afficherLaListeDesReservationsParUtilisateur(@PathVariable("id")Long id);
 
-    @GetMapping(value = "/prolonger/{id}")
-    Date add4Weeks(Date date);
+    @PostMapping(value = "/reserver")
+    void demandeDeReservation(@RequestParam Long id, @RequestParam Long idUtilisateur);
 
-    @PostMapping(value = "/reserver/{id}")
-    void demandeDeReservation(@PathVariable("id")Long id, @RequestBody ReservationBean reservationBean);
+    @PostMapping(value = "/prolonger/{id}")
+    void prolongerPret(@PathVariable("id") Long id, ReservationBean reservationBean);
 
 }

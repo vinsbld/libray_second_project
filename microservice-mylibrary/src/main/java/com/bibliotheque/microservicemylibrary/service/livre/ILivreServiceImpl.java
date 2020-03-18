@@ -5,6 +5,7 @@ import com.bibliotheque.microservicemylibrary.model.Livre;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,6 +14,7 @@ public class ILivreServiceImpl implements ILivreService {
 
     @Autowired
     ILivreDao mLivreDao;
+
 
     @Override
     public List<Livre> findAll(){return  mLivreDao.findAll();
@@ -27,6 +29,7 @@ public class ILivreServiceImpl implements ILivreService {
     public Livre save(Livre livre){
         return mLivreDao.save(livre);
     }
+
 
 
 }

@@ -4,7 +4,6 @@ import com.bibliotheque.microservicemyclient.bean.CopieBean;
 import com.bibliotheque.microservicemyclient.bean.LivreBean;
 import com.bibliotheque.microservicemyclient.bean.ReservationBean;
 
-import java.util.Date;
 import java.util.List;
 
 public interface IMicroserviceMyLibraryProxyService {
@@ -21,7 +20,8 @@ public interface IMicroserviceMyLibraryProxyService {
 
     List<CopieBean> afficherLesCopiesDisponibles(Long id);
 
-    Date add4Weeks(Date date);
 
-    void demandeDeReservation(Long id, ReservationBean reservationBean);
+    void demandeDeReservation(Long id, Long idUtilisateur);
+
+    void prolongerPret(Long id, ReservationBean reservationBean);
 }

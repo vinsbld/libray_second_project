@@ -6,8 +6,11 @@ import com.bibliotheque.microservicemyclient.bean.ReservationBean;
 import com.bibliotheque.microservicemyclient.proxies.IMicroserviceMyLibraryProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -47,13 +50,12 @@ public class IMicroserviceMyLibraryProxyServiceImpl implements IMicroserviceMyLi
     }
 
     @Override
-    public Date add4Weeks(Date date){
-        return iMicroserviceMyLibraryProxy.add4Weeks(date);
+    public void demandeDeReservation(Long id, Long idUtilisateur){
+        iMicroserviceMyLibraryProxy.demandeDeReservation(id, idUtilisateur);
     }
 
     @Override
-    public void demandeDeReservation(Long id, ReservationBean reservationBean){
-        iMicroserviceMyLibraryProxy.demandeDeReservation(id, reservationBean);
+    public void prolongerPret(Long id, ReservationBean reservationBean){
+        iMicroserviceMyLibraryProxy.prolongerPret(id, reservationBean);
     }
-
 }

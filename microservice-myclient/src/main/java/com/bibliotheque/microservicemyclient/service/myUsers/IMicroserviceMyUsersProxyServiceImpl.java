@@ -19,7 +19,7 @@ public class IMicroserviceMyUsersProxyServiceImpl implements IMicroserviceMyUser
     }
 
     @Override
-    public Optional<UtilisateurBean> findById(Long id){
+    public UtilisateurBean findById(Long id){
         return iMicroserviceMyUsersProxy.findById(id);
     }
 }

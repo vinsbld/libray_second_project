@@ -33,6 +33,7 @@ public class MicroserviceMylibraryApplication {
 		@PostConstruct
 		private void postConstruct(){
 
+
 			Livre livre = new Livre();
 			livre.setTitre("1984");
 			livre.setNomAuteur("Orwel");
@@ -52,13 +53,13 @@ public class MicroserviceMylibraryApplication {
 			Copie copie = new Copie();
 			copie.setLivre(livre);
 			copie.setIsbn(3458);
-			copie.setDisponible(true);
+			copie.setDisponible(false);
 			iCopieService.save(copie);
 
 			Copie copieLivre = new Copie();
 			copieLivre.setLivre(livre);
 			copieLivre.setIsbn(5422);
-			copieLivre.setDisponible(false);
+			copieLivre.setDisponible(true);
 			iCopieService.save(copieLivre);
 
 			Copie copieLivreLivre = new Copie();
@@ -70,13 +71,13 @@ public class MicroserviceMylibraryApplication {
 			Copie copie1 = new Copie();
 			copie1.setLivre(livre1);
 			copie1.setIsbn(5528);
-			copie1.setDisponible(true);
+			copie1.setDisponible(false);
 			iCopieService.save(copie1);
 
 			Copie copieLivre1 = new Copie();
 			copieLivre1.setLivre(livre1);
 			copieLivre1.setIsbn(1958);
-			copieLivre1.setDisponible(false);
+			copieLivre1.setDisponible(true);
 			iCopieService.save(copieLivre1);
 
 			Reservation reservation = new Reservation();

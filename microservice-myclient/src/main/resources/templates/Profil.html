@@ -59,21 +59,20 @@
                 <table class="table listTableDeco">
                     <thead>
                     <tr>
-                        <th></th>
+                        <th>Date du prêt</th>
+                        <th>Ouvrage emprunté</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr th:each="mlistReservations:${reservationBeans}">
-                        <td th:text="${mlistReservations.id}"></td>
                         <td th:text="${mlistReservations.dateDeDebutPret}"></td>
-                        <td th:text="${mlistReservations.dateDeFinDuPret}"></td>
+
                         <td th:text="${mlistReservations.copieBean.livreBean.titre}"></td>
                         <td><button type="submit" class="btn-get-create btn-xs ">Prolonger</button></td>
                     </tr>
                     </tbody>
                 </table>
             </div>
-            <h1>Mes Réservations terminées</h1>
         </div>
     </section>
 </main>

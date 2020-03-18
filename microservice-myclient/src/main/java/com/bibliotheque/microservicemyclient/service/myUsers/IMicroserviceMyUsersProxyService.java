@@ -8,5 +8,5 @@ public interface IMicroserviceMyUsersProxyService {
 
     UtilisateurBean connexionUtilisateur(String pseudo);
 
-    Optional<UtilisateurBean> findById(Long id);
+    UtilisateurBean findById(Long id);
 }

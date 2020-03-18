@@ -1,11 +1,11 @@
 package com.bibliotheque.microservicemylibrary.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -13,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @RequiredArgsConstructor
 public @Data
-class Livre implements Serializable {
+class Livre {
 
     @Id
     @GeneratedValue
@@ -56,17 +56,4 @@ class Livre implements Serializable {
         return copies.size();
     }
 
-
-    @Override
-    public String toString() {
-        return "Livre{" +
-                "id=" + id +
-                ", titre='" + titre + '\'' +
-                ", nomAuteur='" + nomAuteur + '\'' +
-                ", prenomAuteur='" + prenomAuteur + '\'' +
-                ", dateEdition=" + dateEdition +
-                ", editeur='" + editeur + '\'' +
-                ", copies=" + copies +
-                '}';
-    }
 }

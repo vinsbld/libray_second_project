@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
 
 
 @RestController
@@ -23,5 +24,10 @@ public class UtilisateurController {
         logger.info("Une demande de connexion à été faite");
         return utilisateur;}
 
+    @RequestMapping(value = "/connexion/{id}", method = RequestMethod.GET)
+    Optional<Utilisateur> findById(@PathVariable("id") Long id){
+        Optional<Utilisateur> utilisateur = IUtilisateurService.findById(id);
+        return utilisateur;
+    }
 
 }

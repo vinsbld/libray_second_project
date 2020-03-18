@@ -88,27 +88,19 @@ public class ClientController {
 
     /*============== #Reservation ======================*/
     @PostMapping("/reservation/{id}")
-    public String demandeDeReservation(Model model, @PathVariable("id")Long id, final RedirectAttributes redirectAttributes){
+    public String demandeDeReservation(Model model, @PathVariable("id")Long id){
 
         UtilisateurBean utilisateurBean = (UtilisateurBean) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        utilisateurBean = iMicroserviceMyUsersProxyService.findById(utilisateurBean.getId()).get();
+        utilisateurBean = iMicroserviceMyUsersProxyService.findById(utilisateurBean.getId());
         model.addAttribute("utilisateurBean", utilisateurBean);
 
         CopieBean copieBean = iMicroserviceMyLibraryProxyService.afficherUneCopie(id);
         model.addAttribute("copie", copieBean);
 
-        Date date = new Date(Calendar.getInstance().getTime().getTime());
-        ReservationBean reservationBean = new ReservationBean();
-        reservationBean.setCopieBean(copieBean);
-        reservationBean.setDateDeDebutPret(date);
-        reservationBean.setIdUtilisateur(utilisateurBean.getId());
-        reservationBean.setDateDeDebutPret(date);
-        reservationBean.setDateDeFinDuPret(iMicroserviceMyLibraryProxyService.add4Weeks(date));
-        reservationBean.setProlongerPret(false);
-        copieBean.setDisponible(false);
-        iMicroserviceMyLibraryProxyService.demandeDeReservation(copieBean.getId(), reservationBean);
-
-        return "redirect:/Livre"+id;
+        return "redirect:/livres";
     }
+
+    //prolonger un pret
+
 
 }
