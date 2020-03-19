@@ -33,10 +33,13 @@ public interface IMicroserviceMyLibraryProxy {
     @GetMapping(value = "/listeDesReservations/{id}")
     List<ReservationBean> afficherLaListeDesReservationsParUtilisateur(@PathVariable("id")Long id);
 
-    @PostMapping(value = "/reserver")
-    void demandeDeReservation(@RequestParam Long id, @RequestParam Long idUtilisateur);
+    @PostMapping(value = "/reserver/{id}")
+    void demandeDeReservation(@PathVariable Long id, @RequestParam Long idUtilisateur);
 
     @PostMapping(value = "/prolonger/{id}")
-    void prolongerPret(@PathVariable("id") Long id, ReservationBean reservationBean);
+    ReservationBean prolongerPret(@PathVariable Long id, @RequestParam Long idUtilisateur);
+
+    @RequestMapping(value = "/reservation/{id}")
+    ReservationBean affivherUneReservation(@PathVariable("id")Long id);
 
 }

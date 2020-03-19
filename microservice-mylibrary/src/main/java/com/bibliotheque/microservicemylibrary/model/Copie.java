@@ -10,26 +10,21 @@ import java.util.List;
 
 @Entity
 @NoArgsConstructor
-@RequiredArgsConstructor
 public @Data
-class Copie implements Serializable {
+class Copie {
 
     @Id
     @GeneratedValue
     private Long id;
 
-    @NonNull
     private Integer isbn;
 
-    @NonNull
     private boolean disponible;
 
-    @NonNull
     @JsonManagedReference
     @ManyToOne
     private Livre livre;
 
-    @NonNull
     @JsonBackReference
     @OneToMany(mappedBy = "copie", fetch = FetchType.EAGER)
     private List<Reservation> reservations;

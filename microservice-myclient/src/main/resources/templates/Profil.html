@@ -60,15 +60,16 @@
                     <thead>
                     <tr>
                         <th>Date du prêt</th>
+                        <th>Date de fin du prêt</th>
                         <th>Ouvrage emprunté</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr th:each="mlistReservations:${reservationBeans}">
                         <td th:text="${mlistReservations.dateDeDebutPret}"></td>
-
+                        <td th:text="${mlistReservations.dateDeFinDuPret}"></td>
                         <td th:text="${mlistReservations.copieBean.livreBean.titre}"></td>
-                        <td><button type="submit" class="btn-get-create btn-xs ">Prolonger</button></td>
+                        <td><form th:action="@{/prolonger/{id}(id=${mlistReservations.id})}" method="post"><button type="submit" class="btn-get-create btn-xs ">Prolonger</button></form></td>
                     </tr>
                     </tbody>
                 </table>

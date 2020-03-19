@@ -3,6 +3,7 @@ package com.bibliotheque.microservicemyclient.service.myLibrary;
 import com.bibliotheque.microservicemyclient.bean.CopieBean;
 import com.bibliotheque.microservicemyclient.bean.LivreBean;
 import com.bibliotheque.microservicemyclient.bean.ReservationBean;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
@@ -20,8 +21,9 @@ public interface IMicroserviceMyLibraryProxyService {
 
     List<CopieBean> afficherLesCopiesDisponibles(Long id);
 
-
     void demandeDeReservation(Long id, Long idUtilisateur);
 
-    void prolongerPret(Long id, ReservationBean reservationBean);
+    ReservationBean prolongerPret(Long id, Long idUtilisateur);
+
+    ReservationBean affivherUneReservation(@PathVariable("id") Long id);
 }

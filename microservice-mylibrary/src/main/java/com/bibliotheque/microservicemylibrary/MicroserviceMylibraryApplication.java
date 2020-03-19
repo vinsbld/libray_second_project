@@ -14,6 +14,7 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import javax.annotation.PostConstruct;
 import java.util.Date;
 
+
 @SpringBootApplication
 @EnableDiscoveryClient
 public class MicroserviceMylibraryApplication {
@@ -21,82 +22,81 @@ public class MicroserviceMylibraryApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(MicroserviceMylibraryApplication.class, args);}
 
-		@Autowired
-		ILivreService iLivreService;
+	@Autowired
+	ILivreService iLivreService;
 
-		@Autowired
-		ICopieService iCopieService;
+	@Autowired
+	ICopieService iCopieService;
 
-		@Autowired
-		IReservationService iReservationService;
+	@Autowired
+	IReservationService iReservationService;
 
-		@PostConstruct
-		private void postConstruct(){
+	@PostConstruct
+	private void postConstruct(){
 
 
-			Livre livre = new Livre();
-			livre.setTitre("1984");
-			livre.setNomAuteur("Orwel");
-			livre.setPrenomAuteur("George");
-			livre.setDateEdition(new Date(2020,04,02));
-			livre.setEditeur("FOLIO");
-			iLivreService.save(livre);
+		Livre livre = new Livre();
+		livre.setTitre("1984");
+		livre.setNomAuteur("Orwel");
+		livre.setPrenomAuteur("George");
+		livre.setDateEdition(new Date(2020,04,02));
+		livre.setEditeur("FOLIO");
+		iLivreService.save(livre);
 
-			Livre livre1 = new Livre();
-			livre1.setTitre("Le meilleur des mondes");
-			livre1.setPrenomAuteur("Aldous");
-			livre1.setNomAuteur("Huxley");
-			livre1.setDateEdition(new Date(2017,10,04));
-			livre1.setEditeur("POCHE");
-			iLivreService.save(livre1);
+		Livre livre1 = new Livre();
+		livre1.setTitre("Le meilleur des mondes");
+		livre1.setPrenomAuteur("Aldous");
+		livre1.setNomAuteur("Huxley");
+		livre1.setDateEdition(new Date(2017,10,04));
+		livre1.setEditeur("POCHE");
+		iLivreService.save(livre1);
 
-			Copie copie = new Copie();
-			copie.setLivre(livre);
-			copie.setIsbn(3458);
-			copie.setDisponible(false);
-			iCopieService.save(copie);
+		Copie copie = new Copie();
+		copie.setLivre(livre);
+		copie.setIsbn(3458);
+		copie.setDisponible(false);
+		iCopieService.save(copie);
 
-			Copie copieLivre = new Copie();
-			copieLivre.setLivre(livre);
-			copieLivre.setIsbn(5422);
-			copieLivre.setDisponible(true);
-			iCopieService.save(copieLivre);
+		Copie copieLivre = new Copie();
+		copieLivre.setLivre(livre);
+		copieLivre.setIsbn(5422);
+		copieLivre.setDisponible(true);
+		iCopieService.save(copieLivre);
 
-			Copie copieLivreLivre = new Copie();
-			copieLivreLivre.setLivre(livre);
-			copieLivreLivre.setIsbn(5422);
-			copieLivreLivre.setDisponible(true);
-			iCopieService.save(copieLivreLivre);
+		Copie copieLivreLivre = new Copie();
+		copieLivreLivre.setLivre(livre);
+		copieLivreLivre.setIsbn(5424);
+		copieLivreLivre.setDisponible(true);
+		iCopieService.save(copieLivreLivre);
 
-			Copie copie1 = new Copie();
-			copie1.setLivre(livre1);
-			copie1.setIsbn(5528);
-			copie1.setDisponible(false);
-			iCopieService.save(copie1);
+		Copie copie1 = new Copie();
+		copie1.setLivre(livre1);
+		copie1.setIsbn(5528);
+		copie1.setDisponible(false);
+		iCopieService.save(copie1);
 
-			Copie copieLivre1 = new Copie();
-			copieLivre1.setLivre(livre1);
-			copieLivre1.setIsbn(1958);
-			copieLivre1.setDisponible(true);
-			iCopieService.save(copieLivre1);
+		Copie copieLivre1 = new Copie();
+		copieLivre1.setLivre(livre1);
+		copieLivre1.setIsbn(1958);
+		copieLivre1.setDisponible(true);
+		iCopieService.save(copieLivre1);
 
-			Reservation reservation = new Reservation();
-			reservation.setCopie(copie);
-			reservation.setIdUtilisateur(1L);
-			reservation.setDateDeDebutPret(new Date());
-			reservation.setDateDeFinDuPret(iReservationService.add4Weeks(reservation.getDateDeDebutPret()));
-			reservation.setProlongerPret(false);
-			iReservationService.addReservation(reservation);
+		Reservation reservation = new Reservation();
+		reservation.setCopie(copie);
+		reservation.setIdUtilisateur(1L);
+		reservation.setDateDeDebutPret(new Date());
+		reservation.setDateDeFinDuPret(iReservationService.add4Weeks(reservation.getDateDeDebutPret()));
+		reservation.setProlongerPret(false);
+		iReservationService.save(reservation);
 
-			Reservation reservation1 = new Reservation();
-			reservation1.setCopie(copie1);
-			reservation1.setIdUtilisateur(1L);
-			reservation1.setDateDeDebutPret(new Date());
-			reservation1.setDateDeFinDuPret(iReservationService.add4Weeks(reservation.getDateDeDebutPret()));
-			reservation1.setProlongerPret(false);
-			iReservationService.addReservation(reservation1);
+		Reservation reservation1 = new Reservation();
+		reservation1.setCopie(copie1);
+		reservation1.setIdUtilisateur(1L);
+		reservation1.setDateDeDebutPret(new Date());
+		reservation1.setDateDeFinDuPret(iReservationService.add4Weeks(reservation.getDateDeDebutPret()));
+		reservation1.setProlongerPret(false);
+		iReservationService.save(reservation1);
 
-		}
-
+	}
 
 }

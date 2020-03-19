@@ -4,6 +4,7 @@ import com.bibliotheque.microservicemylibrary.model.Reservation;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 public interface IReservationService {
 
@@ -11,7 +12,7 @@ public interface IReservationService {
 
     List<Reservation> findAllByIdUtilisateur(Long id);
 
-    void addReservation(Reservation reservation);
+    Optional<Reservation> findById(Long id);
 
-    void prolongerPret(Long id, Reservation reservation);
+    void save(Reservation reservation);
 }

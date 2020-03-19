@@ -2,10 +2,8 @@ package com.bibliotheque.microservicemylibrary.service.reservation;
 
 import com.bibliotheque.microservicemylibrary.dao.IReservationDao;
 import com.bibliotheque.microservicemylibrary.model.Reservation;
-import com.bibliotheque.microservicemylibrary.service.copie.ICopieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.*;
 
@@ -29,15 +27,12 @@ public class IReservationServiceImpl implements IReservationService {
     }
 
     @Override
-    public void addReservation(Reservation reservation){
-        iReservationDao.save(reservation);
+    public Optional<Reservation> findById(Long id){
+        return iReservationDao.findById(id);
     }
 
     @Override
-    public void prolongerPret(Long id, Reservation reservation){
-        Date date = new Date();
-        reservation.setDateDeDebutPret(date);
-        reservation.setDateDeFinDuPret(add4Weeks(date));
+    public void save(Reservation reservation){
         iReservationDao.save(reservation);
     }
 }

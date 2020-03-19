@@ -11,24 +11,24 @@ import java.util.Date;
 
 @Entity
 @NoArgsConstructor
-@RequiredArgsConstructor
 public @Data
-class Reservation implements Serializable {
+class Reservation{
 
     @Id
     @GeneratedValue
     private Long id;
 
-    @NonNull
+
     private Long idUtilisateur;
-    @NonNull
+
+    @DateTimeFormat(pattern="dd/MM/yyyy")
     private Date dateDeDebutPret;
 
+    @DateTimeFormat(pattern="yyyy-MM-dd")
     private Date dateDeFinDuPret;
-    @NonNull
+
     private boolean prolongerPret;
 
-    @NonNull
     @JsonManagedReference
     @ManyToOne
     private Copie copie;

@@ -15,8 +15,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -97,10 +97,24 @@ public class ClientController {
         CopieBean copieBean = iMicroserviceMyLibraryProxyService.afficherUneCopie(id);
         model.addAttribute("copie", copieBean);
 
+        iMicroserviceMyLibraryProxyService.demandeDeReservation(copieBean.getId(), utilisateurBean.getId());
+
         return "redirect:/livres";
     }
 
     //prolonger un pret
+    @PostMapping("/prolonger/{id}")
+    public String prolongerLePret(Model model, @PathVariable("id")Long id){
+
+        UtilisateurBean utilisateurBean = (UtilisateurBean) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        model.addAttribute("utilisateurBean", utilisateurBean);
+
+        ReservationBean reservationBean = iMicroserviceMyLibraryProxyService.affivherUneReservation(id);
+        iMicroserviceMyLibraryProxyService.prolongerPret(reservationBean.getId(), utilisateurBean.getId());
+
+        return "redirect:/profil";
+
+    }
 
 
 }

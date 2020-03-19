@@ -7,9 +7,6 @@ import com.bibliotheque.microservicemyclient.proxies.IMicroserviceMyLibraryProxy
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -55,7 +52,12 @@ public class IMicroserviceMyLibraryProxyServiceImpl implements IMicroserviceMyLi
     }
 
     @Override
-    public void prolongerPret(Long id, ReservationBean reservationBean){
-        iMicroserviceMyLibraryProxy.prolongerPret(id, reservationBean);
+    public ReservationBean prolongerPret(Long id, Long idUtilisateur){
+        return iMicroserviceMyLibraryProxy.prolongerPret(id, idUtilisateur);
+    }
+
+    @Override
+    public ReservationBean affivherUneReservation(@PathVariable("id")Long id){
+       return iMicroserviceMyLibraryProxy.affivherUneReservation(id);
     }
 }

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 
 @RestController
@@ -32,24 +33,39 @@ public class ReservationController {
         return reservations;
     }
 
-    @RequestMapping(value = "/reserver", method = RequestMethod.POST)
-    public void demandeDeReservation(@RequestParam Long id, @RequestParam Long idUtilisateur){
+    @RequestMapping(value = "/reservation/{id}")
+    public Optional<Reservation> affivherUneReservation(@PathVariable("id")Long id){
+        Optional<Reservation>reservation = iReservationService.findById(id);
+        return reservation;
+
+    }
+
+    @RequestMapping(value = "/reserver/{id}", method = RequestMethod.POST)
+    public void demandeDeReservation(@PathVariable Long id, @RequestParam Long idUtilisateur){
         Date date = new Date(Calendar.getInstance().getTime().getTime());
         Copie copie = copieService.findById(id).get();
         copie.setDisponible(false);
+        copieService.save(copie);
         Reservation reservation = new Reservation();
         reservation.setCopie(copie);
         reservation.setDateDeDebutPret(date);
         reservation.setDateDeFinDuPret(iReservationService.add4Weeks(date));
         reservation.setProlongerPret(false);
         reservation.setIdUtilisateur(idUtilisateur);
-        iReservationService.addReservation(reservation);
+        iReservationService.save(reservation);
     }
 
 
     @RequestMapping(value = "/prolonger/{id}", method = RequestMethod.POST)
-    public void prolongerPret(Long id, Reservation reservation){
-        iReservationService.prolongerPret(id, reservation);
+    public void prolongerPret(@PathVariable Long id,@RequestParam Long idUtilisateur){
+
+        Date date = new Date(Calendar.getInstance().getTime().getTime());
+        Reservation reservation = iReservationService.findById(id).get();
+        reservation.setIdUtilisateur(idUtilisateur);
+        reservation.setProlongerPret(true);
+        reservation.setDateDeFinDuPret(iReservationService.add4Weeks(reservation.getDateDeFinDuPret()));
+
+        iReservationService.save(reservation);
     }
 
 }

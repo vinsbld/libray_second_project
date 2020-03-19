@@ -11,7 +11,6 @@ import java.util.List;
 
 @Entity
 @NoArgsConstructor
-@RequiredArgsConstructor
 public @Data
 class Livre {
 
@@ -19,23 +18,21 @@ class Livre {
     @GeneratedValue
     private Long id;
 
-    @NonNull
+
     private String titre;
 
-    @NonNull
+
     private String nomAuteur;
 
-    @NonNull
+
     private String prenomAuteur;
 
-    @NonNull
-    @DateTimeFormat(pattern="yyyy-MM-dd")
+
     private Date dateEdition;
 
-    @NonNull
+    @DateTimeFormat(pattern="yyyy-MM-dd")
     private String editeur;
 
-    @NonNull
     @JsonBackReference
     @OneToMany(mappedBy = "livre", fetch = FetchType.EAGER)
     private List<Copie> copies;
