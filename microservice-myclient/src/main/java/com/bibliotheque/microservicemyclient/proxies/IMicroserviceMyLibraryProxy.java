@@ -3,6 +3,7 @@ package com.bibliotheque.microservicemyclient.proxies;
 import com.bibliotheque.microservicemyclient.bean.CopieBean;
 import com.bibliotheque.microservicemyclient.bean.LivreBean;
 import com.bibliotheque.microservicemyclient.bean.ReservationBean;
+import com.bibliotheque.microservicemyclient.configurations.FeignConfig;
 import org.springframework.cloud.netflix.ribbon.RibbonClient;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
@@ -10,8 +11,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
-@FeignClient(name ="microservice-mylibrary")
+@RequestMapping(value = "/microservice-mylibrary")
+@FeignClient(name ="zuul-server", contextId = "IMicroserviceMyLibraryProxy", configuration = FeignConfig.class, url = "http://localhost:9006")
 @RibbonClient(name ="microservice-mylibrary")
 public interface IMicroserviceMyLibraryProxy {
 
@@ -39,7 +40,10 @@ public interface IMicroserviceMyLibraryProxy {
     @PostMapping(value = "/prolonger/{id}")
     ReservationBean prolongerPret(@PathVariable Long id, @RequestParam Long idUtilisateur);
 
-    @RequestMapping(value = "/reservation/{id}")
-    ReservationBean affivherUneReservation(@PathVariable("id")Long id);
+    @GetMapping(value = "/reservation/{id}")
+    ReservationBean afficherUneReservation(@PathVariable("id")Long id);
+
+    @GetMapping(value = "/recherche")
+    List<LivreBean> faireUneRechercheParTitre(@RequestParam(name = "mc", defaultValue = "")String mc);
 
 }

@@ -4,6 +4,7 @@ import com.bibliotheque.microservicemyclient.bean.CopieBean;
 import com.bibliotheque.microservicemyclient.bean.LivreBean;
 import com.bibliotheque.microservicemyclient.bean.ReservationBean;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -25,5 +26,7 @@ public interface IMicroserviceMyLibraryProxyService {
 
     ReservationBean prolongerPret(Long id, Long idUtilisateur);
 
-    ReservationBean affivherUneReservation(@PathVariable("id") Long id);
+    ReservationBean afficherUneReservation(@PathVariable("id") Long id);
+
+    List<LivreBean> faireUneRechercheParTitre(@RequestParam(name = "mc", defaultValue = "") String mc);
 }

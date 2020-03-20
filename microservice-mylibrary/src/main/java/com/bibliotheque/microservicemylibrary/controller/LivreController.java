@@ -46,4 +46,9 @@ public class LivreController {
        return "ok";
     }
 
+    @RequestMapping(value = "/recherche", method = RequestMethod.GET)
+    public List<Livre> faireUneRechercheParTitre(@RequestParam(name = "mc", defaultValue = "")String mc){
+       return iLivreService.chercherParTitre("%"+mc+"%");
+    }
+
 }

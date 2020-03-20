@@ -7,6 +7,7 @@ import com.bibliotheque.microservicemyclient.proxies.IMicroserviceMyLibraryProxy
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -57,7 +58,12 @@ public class IMicroserviceMyLibraryProxyServiceImpl implements IMicroserviceMyLi
     }
 
     @Override
-    public ReservationBean affivherUneReservation(@PathVariable("id")Long id){
-       return iMicroserviceMyLibraryProxy.affivherUneReservation(id);
+    public ReservationBean afficherUneReservation(@PathVariable("id")Long id){
+       return iMicroserviceMyLibraryProxy.afficherUneReservation(id);
+    }
+
+    @Override
+    public List<LivreBean> faireUneRechercheParTitre(@RequestParam(name = "mc", defaultValue = "") String mc){
+        return iMicroserviceMyLibraryProxy.faireUneRechercheParTitre(mc);
     }
 }

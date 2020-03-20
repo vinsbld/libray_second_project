@@ -43,6 +43,13 @@
 
             <h1>Liste des livres</h1>
 
+            <form th:action="@{/recherche}" methode="get">
+                <label>Mot clé :</label>
+                <input type="text" name="mc" th:value="${mc}"/>
+                <button class="btn btn-primary">Chercher</button>
+            </form>
+
+
             <div class="cstyle">
                 <table class="table listTableDeco">
                     <thead>
@@ -62,6 +69,9 @@
                     </tr>
                     </tbody>
                 </table>
+            </div>
+            <div th:if="${livreBeanList.isEmpty()}">
+                <p>Aucun livres ne correspond à vos critères</p>
             </div>
         </div>
     </section>

@@ -1,12 +1,13 @@
 package com.bibliotheque.microservicemyclient.proxies;
 
 import com.bibliotheque.microservicemyclient.bean.UtilisateurBean;
+import com.bibliotheque.microservicemyclient.configurations.FeignConfig;
 import org.springframework.cloud.netflix.ribbon.RibbonClient;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
-
-@FeignClient(name = "microservice-myusers")
+@RequestMapping(value = "microservice-myusers")
+@FeignClient(name = "zuul-server", contextId = "IMicroserviceMyUsersProxy", configuration = FeignConfig.class, url = "http://localhost:9006")
 @RibbonClient(name = "microservice-myusers")
 public interface IMicroserviceMyUsersProxy {
 

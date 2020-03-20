@@ -57,7 +57,13 @@
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-security</artifactId>
 		</dependency>
-	</dependencies>
+        <dependency>
+            <groupId>io.zipkin.brave</groupId>
+            <artifactId>brave</artifactId>
+            <version>5.9.5</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
 
 
 	<dependencyManagement>

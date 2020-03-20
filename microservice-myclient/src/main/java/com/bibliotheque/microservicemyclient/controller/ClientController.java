@@ -15,10 +15,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -57,6 +55,7 @@ public class ClientController {
     }
 
     /*============== #Livres ======================*/
+    //afficher une liste de tous les livres
     @GetMapping("/livres")
     public String afficherUneListeDeLivres(Model model){
 
@@ -68,6 +67,7 @@ public class ClientController {
        return "Livres";
     }
 
+    //afficher un livre
     @GetMapping("/livre/{id}")
     public String afficherUnLivre(Model model, @PathVariable("id") Long id){
 
@@ -86,7 +86,28 @@ public class ClientController {
         return "Livre";
     }
 
+    //faire une recherche de livre
+    @GetMapping("/recherche")
+    public String rechercherUnLivre(Model model, @RequestParam(name = "mc", defaultValue = "") String mc){
+
+        if (mc.isEmpty()){
+            List<LivreBean> livreBeanList = iMicroserviceMyLibraryProxyService.ListeDeLivres();
+            model.addAttribute("livreBeanList", livreBeanList);
+        }
+        try {
+
+            List<LivreBean> livreBeanList = iMicroserviceMyLibraryProxyService.faireUneRechercheParTitre("%" + mc + "%");
+            model.addAttribute("livreBeanList", livreBeanList);
+            model.addAttribute("mc", mc);
+        }catch (Exception e){
+            model.addAttribute("exception",e);
+            throw new RuntimeException("Livre Introuvable");
+        }
+        return "/Livres";
+    }
+
     /*============== #Reservation ======================*/
+    //faire une reservation
     @PostMapping("/reservation/{id}")
     public String demandeDeReservation(Model model, @PathVariable("id")Long id){
 
@@ -109,7 +130,7 @@ public class ClientController {
         UtilisateurBean utilisateurBean = (UtilisateurBean) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         model.addAttribute("utilisateurBean", utilisateurBean);
 
-        ReservationBean reservationBean = iMicroserviceMyLibraryProxyService.affivherUneReservation(id);
+        ReservationBean reservationBean = iMicroserviceMyLibraryProxyService.afficherUneReservation(id);
         iMicroserviceMyLibraryProxyService.prolongerPret(reservationBean.getId(), utilisateurBean.getId());
 
         return "redirect:/profil";
