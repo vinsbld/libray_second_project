@@ -15,4 +15,6 @@ public interface IReservationService {
     Optional<Reservation> findById(Long id);
 
     void save(Reservation reservation);
+
+    List<Reservation> relance(Date dateNow);
 }

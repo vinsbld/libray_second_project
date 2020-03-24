@@ -27,6 +27,8 @@ class Reservation{
     @DateTimeFormat(pattern="yyyy-MM-dd")
     private Date dateDeFinDuPret;
 
+    private Date dateRetour;
+
     private boolean prolongerPret;
 
     @JsonManagedReference

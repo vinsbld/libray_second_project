@@ -36,5 +36,9 @@ public class IReservationServiceImpl implements IReservationService {
         iReservationDao.save(reservation);
     }
 
+    @Override
+    public List<Reservation> relance(Date dateNow){
+       return iReservationDao.findAllByDateRetourIsNullAndDateDeFinDuPretBefore(dateNow);
+    }
 }
 

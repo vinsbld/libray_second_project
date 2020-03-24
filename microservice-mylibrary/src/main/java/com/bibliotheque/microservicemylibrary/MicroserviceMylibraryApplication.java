@@ -1,6 +1,7 @@
 package com.bibliotheque.microservicemylibrary;
 
 import com.bibliotheque.microservicemylibrary.model.Copie;
+import com.bibliotheque.microservicemylibrary.model.Email;
 import com.bibliotheque.microservicemylibrary.model.Livre;
 import com.bibliotheque.microservicemylibrary.model.Reservation;
 import com.bibliotheque.microservicemylibrary.service.copie.ICopieService;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 import javax.annotation.PostConstruct;
 import java.util.Date;
@@ -17,6 +19,7 @@ import java.util.Date;
 
 @SpringBootApplication
 @EnableDiscoveryClient
+@EnableScheduling
 public class MicroserviceMylibraryApplication {
 
 	public static void main(String[] args) {
@@ -96,6 +99,11 @@ public class MicroserviceMylibraryApplication {
 		reservation1.setDateDeFinDuPret(iReservationService.add4Weeks(reservation.getDateDeDebutPret()));
 		reservation1.setProlongerPret(false);
 		iReservationService.save(reservation1);
+
+		Email email = new Email();
+		email.setName("relance");
+		email.setObjet("relance pour rendu");
+		email.setContenu("ez rendre le livre [LIVRE_TITRE] à ");
 
 	}
 

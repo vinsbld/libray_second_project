@@ -4,6 +4,7 @@ import com.bibliotheque.microservicemylibrary.model.Reservation;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,4 +23,7 @@ public interface IReservationDao extends JpaRepository<Reservation, Long> {
 
     //sauvegarder une reservation
     Reservation save(Optional<Reservation> reservation);
+
+    //trouve les reservations non retournées
+    List<Reservation> findAllByDateRetourIsNullAndDateDeFinDuPretBefore(Date dateNow);
 }
