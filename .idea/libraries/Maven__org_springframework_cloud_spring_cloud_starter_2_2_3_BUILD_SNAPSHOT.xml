@@ -1,13 +1,13 @@
 <component name="libraryTable">
   <library name="Maven: org.springframework.cloud:spring-cloud-starter:2.2.3.BUILD-SNAPSHOT">
     <CLASSES>
-      <root url="jar://$MAVEN_REPOSITORY$/org/springframework/cloud/spring-cloud-starter/2.2.3.BUILD-SNAPSHOT/spring-cloud-starter-2.2.3.BUILD-20200323.094141-15.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/springframework/cloud/spring-cloud-starter/2.2.3.BUILD-SNAPSHOT/spring-cloud-starter-2.2.3.BUILD-20200325.094143-16.jar!/" />
     </CLASSES>
     <JAVADOC>
-      <root url="jar://$MAVEN_REPOSITORY$/org/springframework/cloud/spring-cloud-starter/2.2.3.BUILD-SNAPSHOT/spring-cloud-starter-2.2.3.BUILD-20200323.094141-15-javadoc.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/springframework/cloud/spring-cloud-starter/2.2.3.BUILD-SNAPSHOT/spring-cloud-starter-2.2.3.BUILD-20200325.094143-16-javadoc.jar!/" />
     </JAVADOC>
     <SOURCES>
-      <root url="jar://$MAVEN_REPOSITORY$/org/springframework/cloud/spring-cloud-starter/2.2.3.BUILD-SNAPSHOT/spring-cloud-starter-2.2.3.BUILD-20200323.094141-15-sources.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/springframework/cloud/spring-cloud-starter/2.2.3.BUILD-SNAPSHOT/spring-cloud-starter-2.2.3.BUILD-20200325.094143-16-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

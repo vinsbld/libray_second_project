@@ -62,6 +62,7 @@
                         <th>Date du prêt</th>
                         <th>Date de fin du prêt</th>
                         <th>Ouvrage emprunté</th>
+                        <th></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -69,8 +70,9 @@
                         <td th:text="${mlistReservations.dateDeDebutPret}"></td>
                         <td th:text="${mlistReservations.dateDeFinDuPret}"></td>
                         <td th:text="${mlistReservations.copieBean.livreBean.titre}"></td>
-                        <td th:if="${mlistReservations.isProlongerPret()==false}"><form th:action="@{/prolonger/{id}(id=${mlistReservations.id})}" method="post"><button type="submit" class="btn-get-create btn-xs ">Prolonger</button></form></td>
+                        <td th:if="${(mlistReservations.isProlongerPret()==false) and (mlistReservations.dateDeFinDuPret>mlistReservations.getDateDuJour())}"><form th:action="@{/prolonger/{id}(id=${mlistReservations.id})}" method="post"><button type="submit" class="btn-get-create btn-xs ">Prolonger</button></form></td>
                         <td th:if="${mlistReservations.isProlongerPret()==true}"><span style="color:gray">Prolongation en cours</span></td>
+                        <td th:if="${mlistReservations.dateDeFinDuPret<mlistReservations.getDateDuJour()}"><span style="color:red">Délais dépassé !</span></td>
                     </tr>
                     </tbody>
                 </table>

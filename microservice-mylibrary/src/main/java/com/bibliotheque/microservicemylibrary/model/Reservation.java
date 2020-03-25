@@ -29,6 +29,8 @@ class Reservation{
 
     private Date dateRetour;
 
+    private Date dateDuJour = new Date();
+
     private boolean prolongerPret;
 
     @JsonManagedReference

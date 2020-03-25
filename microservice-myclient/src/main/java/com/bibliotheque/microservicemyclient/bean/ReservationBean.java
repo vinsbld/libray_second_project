@@ -20,6 +20,10 @@ class ReservationBean implements Serializable {
 
     private Date dateDeFinDuPret;
 
+    private Date dateRetour;
+
+    private Date dateDuJour = new Date();
+
     private boolean prolongerPret;
 
     @JsonProperty("copie")

@@ -12,13 +12,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 import javax.annotation.PostConstruct;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 
 @SpringBootApplication
+@EnableFeignClients("com.bibliotheque.microservicemylibrary")
 @EnableDiscoveryClient
 @EnableScheduling
 public class MicroserviceMylibraryApplication {
@@ -100,7 +105,7 @@ public class MicroserviceMylibraryApplication {
 		reservation1.setCopie(copie1);
 		reservation1.setIdUtilisateur(1L);
 		reservation1.setDateDeDebutPret(new Date());
-		reservation1.setDateDeFinDuPret(iReservationService.add4Weeks(reservation.getDateDeDebutPret()));
+		reservation1.setDateDeFinDuPret(new GregorianCalendar(2020, Calendar.FEBRUARY, 24).getTime());
 		reservation1.setProlongerPret(false);
 		iReservationService.save(reservation1);
 

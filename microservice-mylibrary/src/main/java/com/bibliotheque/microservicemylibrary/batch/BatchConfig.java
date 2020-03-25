@@ -2,7 +2,6 @@ package com.bibliotheque.microservicemylibrary.batch;
 
 import com.bibliotheque.microservicemylibrary.dao.IEmailDao;
 import com.bibliotheque.microservicemylibrary.dao.IReservationDao;
-import com.bibliotheque.microservicemylibrary.outils.EmailType;
 import com.bibliotheque.microservicemylibrary.proxies.IMicroserviceMyUsersProxy;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -32,19 +31,15 @@ public class BatchConfig {
     private IEmailDao iEmailDao;
 
     @Autowired
-    private IMicroserviceMyUsersProxy iMicroserviceMyUsersProxy;
-
-    @Autowired
-    private EmailType emailType;
-
-
-    @Autowired
     private JavaMailSenderImpl sender;
+
+    @Autowired
+    private IMicroserviceMyUsersProxy iMicroserviceMyUsersProxy;
 
     @Bean
     public Step stepOne() {
         return steps.get("stepOne")
-                .tasklet(new MyTaskOne(iReservationDao, iEmailDao, iMicroserviceMyUsersProxy, emailType, sender) )
+                .tasklet(new MyTaskOne(iReservationDao, iEmailDao, iMicroserviceMyUsersProxy, sender))
                 .build();
     }
 

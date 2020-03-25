@@ -32,7 +32,7 @@ public class MicroserviceMyusersApplication {
 		utilisateur.setPseudo("martin");
 		utilisateur.setMotDePasse(passwordEncoder.encode("martin"));
 		utilisateur.setRoleEnums(Collections.singletonList(RoleEnum.USER));
-		utilisateur.setEmail("martin@gmail.com");
+		utilisateur.setEmail("moc.projet07@gmail.com");
 		iUtilisateurDao.save(utilisateur);
 
 	}

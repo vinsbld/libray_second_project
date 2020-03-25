@@ -25,15 +25,13 @@ public class MyTaskOne implements Tasklet {
     private final IEmailDao iEmailDao;
     private final IMicroserviceMyUsersProxy iMicroserviceMyUsersProxy;
     private final JavaMailSenderImpl sender;
-    private final EmailType emailType;
 
 
-    public MyTaskOne(IReservationDao iReservationDao, IEmailDao iEmailDao, IMicroserviceMyUsersProxy iMicroserviceMyUsersProxy, EmailType emailType, JavaMailSenderImpl sender) {
+    public MyTaskOne(IReservationDao iReservationDao, IEmailDao iEmailDao, IMicroserviceMyUsersProxy iMicroserviceMyUsersProxy, JavaMailSenderImpl sender) {
         this.iReservationDao = iReservationDao;
         this.iEmailDao = iEmailDao;
         this.iMicroserviceMyUsersProxy = iMicroserviceMyUsersProxy;
         this.sender = sender;
-        this.emailType = emailType;
     }
 
 
@@ -49,8 +47,8 @@ public class MyTaskOne implements Tasklet {
 
         if (reservationList.size() > 0)
             for (Reservation res : reservationList) {
-                UtilisateurBean utilisateurBean = iMicroserviceMyUsersProxy.findById(res.getId());
-                emailType.add(new EmailType(utilisateurBean.getEmail(), res.getCopie().getLivre().getTitre(), res.getDateDeFinDuPret()));
+                UtilisateurBean utilisateurBean = iMicroserviceMyUsersProxy.findById(res.getIdUtilisateur());
+                emailType.add(new EmailType(utilisateurBean.getEmail(), res.getCopie().getLivre().getTitre(), res.getDateDeFinDuPret().toString()));
 
             }
 
