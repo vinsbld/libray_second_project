@@ -1,5 +1,6 @@
 package com.bibliotheque.microservicemylibrary;
 
+import com.bibliotheque.microservicemylibrary.dao.IEmailDao;
 import com.bibliotheque.microservicemylibrary.model.Copie;
 import com.bibliotheque.microservicemylibrary.model.Email;
 import com.bibliotheque.microservicemylibrary.model.Livre;
@@ -33,6 +34,9 @@ public class MicroserviceMylibraryApplication {
 
 	@Autowired
 	IReservationService iReservationService;
+
+	@Autowired
+	IEmailDao iEmailDao;
 
 	@PostConstruct
 	private void postConstruct(){
@@ -103,7 +107,12 @@ public class MicroserviceMylibraryApplication {
 		Email email = new Email();
 		email.setName("relance");
 		email.setObjet("relance pour rendu");
-		email.setContenu("ez rendre le livre [LIVRE_TITRE] à ");
+		email.setContenu("\n" +
+				"\tVous devriez rendre le livre [LIVRE_TITRE] à la blibliothèque au plus tard à la date : [DATE_FIN].\n" +
+				"à ce jour nous n'avons toujours pas enregistré ce retour.\n" +
+				"Nous vous demandons de régulariser la situation dès à présent.\n" +
+				"Cordialement.'),");
+		iEmailDao.save(email);
 
 	}
 
