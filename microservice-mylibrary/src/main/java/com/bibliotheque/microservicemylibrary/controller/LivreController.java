@@ -1,6 +1,5 @@
 package com.bibliotheque.microservicemylibrary.controller;
 
-import com.bibliotheque.microservicemylibrary.configurations.ApplicationPropertiesConfiguration;
 import com.bibliotheque.microservicemylibrary.exeptions.LivresNotFoundExeption;
 import com.bibliotheque.microservicemylibrary.model.Livre;
 import com.bibliotheque.microservicemylibrary.service.livre.ILivreService;
@@ -18,9 +17,6 @@ import java.util.Optional;
 public class LivreController {
 
     Logger logger = LoggerFactory.getLogger(this.getClass());
-
-    @Autowired
-    ApplicationPropertiesConfiguration appProperties;
 
     @Autowired
     private ILivreService iLivreService;
@@ -43,11 +39,13 @@ public class LivreController {
     @RequestMapping(value = "/addLivre", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public String ajouterUnLivre(@RequestBody Livre livre){
        iLivreService.save(livre);
+       logger.info("ajout d'une demande de reservation pour un livre");
        return "ok";
     }
 
     @RequestMapping(value = "/recherche", method = RequestMethod.GET)
     public List<Livre> faireUneRechercheParTitre(@RequestParam(name = "mc", defaultValue = "")String mc){
+        logger.info("recherche pour un livre");
        return iLivreService.chercherParTitre("%"+mc+"%");
     }
 

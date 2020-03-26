@@ -30,12 +30,14 @@ public class ReservationController {
     @RequestMapping(value = "/listeDesReservations/{id}", method = RequestMethod.GET)
     public List<Reservation> afficherLaListeDesReservationsParUtilisateur(@PathVariable("id") Long id){
         List<Reservation> reservations = iReservationService.findAllByIdUtilisateur(id);
+        logger.info("demande la liste des reservation pour un utilisateur");
         return reservations;
     }
 
     @RequestMapping(value = "/reservation/{id}")
     public Optional<Reservation> affivherUneReservation(@PathVariable("id")Long id){
         Optional<Reservation>reservation = iReservationService.findById(id);
+        logger.info("detail d'une reservation demandée");
         return reservation;
 
     }
@@ -53,6 +55,7 @@ public class ReservationController {
         reservation.setProlongerPret(false);
         reservation.setIdUtilisateur(idUtilisateur);
         iReservationService.save(reservation);
+        logger.info("demande de reservation pour une copie d'un livre");
     }
 
 
@@ -64,7 +67,7 @@ public class ReservationController {
         reservation.setIdUtilisateur(idUtilisateur);
         reservation.setProlongerPret(true);
         reservation.setDateDeFinDuPret(iReservationService.add4Weeks(reservation.getDateDeFinDuPret()));
-
+        logger.info("demande de prolongation d'un prêt");
         iReservationService.save(reservation);
     }
 
