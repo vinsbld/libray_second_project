@@ -9,8 +9,8 @@ import java.util.List;
 
 public interface EmailService {
 
-    Email findByName(String name);
 
+    Email findByName(String name);
 
     void sendSimpleMessage(String email, String objet, String contenu) throws MessagingException;
 

@@ -23,6 +23,7 @@ ICopieDao extends JpaRepository<Copie, Long> {
     //sauvegarder une copie
     Copie save(Copie copie);
 
+    //trouve les copies d'un livre qui sont disponibles
     @Query("SELECT c FROM Copie c WHERE  c.disponible = true and c.livre.id = :id ")
     List<Copie> getCopieLivresDisponibles(Long id);
 
