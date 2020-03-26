@@ -26,11 +26,23 @@ public class IEmailServiceImpl implements EmailService{
     JavaMailSenderImpl sender;
 
 
+    /**
+     * Permet de rechercher un thème Email par son nom
+     * @param name nom de l'attribut
+     * @return le thème Email
+     */
     @Override
     public Email findByName(String name){
         return iEmailDao.findByName( name );
     }
 
+    /**
+     * Permet l'envoi d'un mail
+     * @param email adresse mail du destinataire
+     * @param objet objet du mail
+     * @param contenu message du mail
+     * @throws MessagingException
+     */
     @Override
     public void sendSimpleMessage(String email, String objet, String contenu) throws MessagingException {
 
@@ -48,6 +60,11 @@ public class IEmailServiceImpl implements EmailService{
         logger.info("{} email notification has been send to {}", email);
     }
 
+    /**
+     * Permet d'envoyer le mail de relance des livres non rendu
+     * @param emailTypeList liste des utilisateurs qui n'ont pas rendu leur livres
+     * @throws MessagingException
+     */
     @Override
     public void sendRevival(List<EmailType> emailTypeList) throws MessagingException {
 
