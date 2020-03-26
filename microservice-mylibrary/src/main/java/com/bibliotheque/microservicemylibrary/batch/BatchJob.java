@@ -17,6 +17,10 @@ public class BatchJob {
     @Autowired
     Job job;
 
+    /**
+     * Programmation de la relance par mail tous les jours, heure réglable dans le bootstap.properties du microservice
+     * @throws Exception
+     */
     @Scheduled(cron = "${microservice.config.cron.job}")
     public void lendingRevival() throws Exception
     {
