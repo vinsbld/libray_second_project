@@ -40,7 +40,7 @@ public class MyTaskOne implements Tasklet {
     @Override
     public RepeatStatus execute(StepContribution stepContribution, ChunkContext chunkContext) throws Exception {
 
-        System.out.println("debut du batch");
+        System.out.println("debut du batch de relance");
 
         Date date = new Date();
        List<Reservation>reservationList = iReservationDao.findAllByDateRetourIsNullAndDateDeFinDuPretBefore(date);
@@ -57,7 +57,7 @@ public class MyTaskOne implements Tasklet {
         List<EmailType> emailList = new ArrayList<>(emailType);
         this.sendRevival(emailList);
 
-        System.out.println("fin du batch");
+        System.out.println("fin du batch de relance");
 
         return RepeatStatus.FINISHED;
     }
@@ -68,8 +68,8 @@ public class MyTaskOne implements Tasklet {
 
         for (EmailType e: emailList) {
             String text = email.getContenu()
-                    .replace("[LIVRE_TITRE]", e.getTitre()
-                            .replace("[DATE_FIN]", e.getDateDeFinDuPret()));
+                    .replace("[LIVRE_TITRE]", e.getTitre())
+                            .replace("[DATE_FIN]", e.getDateDeFinDuPret());
             this.sendSimpleMessage(e.getEmail(),email.getObjet(),text);
         }
     }
