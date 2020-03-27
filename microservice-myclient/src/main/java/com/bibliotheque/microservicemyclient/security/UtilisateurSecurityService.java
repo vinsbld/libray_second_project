@@ -14,6 +14,12 @@ public class UtilisateurSecurityService implements UserDetailsService {
 @Autowired
 private IMicroserviceMyUsersProxyService iMicroserviceMyUsersProxyService;
 
+    /**
+     * Permet la connexion d'un utilisateur
+     * @param pseudo pseudo de l'utilisateur
+     * @return l'utilisateur
+     * @throws UsernameNotFoundException
+     */
     @Override
     public UserDetails loadUserByUsername(String pseudo) throws UsernameNotFoundException {
         UtilisateurBean utilisateur = iMicroserviceMyUsersProxyService.connexionUtilisateur(pseudo.toLowerCase());

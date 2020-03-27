@@ -16,11 +16,17 @@ import java.util.List;
 @RibbonClient(name ="microservice-mylibrary")
 public interface IMicroserviceMyLibraryProxy {
 
+    /*===========================** Livres **===========================*/
     @GetMapping(value = "/livres")
     List<LivreBean> ListeDeLivres();
 
     @GetMapping(value = "/livre/{id}")
     LivreBean afficherUnLivre(@PathVariable("id") Long id);
+
+    @GetMapping(value = "/recherche")
+    List<LivreBean> faireUneRechercheParTitre(@RequestParam(name = "mc", defaultValue = "")String mc);
+
+    /*===========================** Copies **===========================*/
 
     @GetMapping(value = "/copies/{id}")
     List<CopieBean> afficherLesCopiesDunLivre(@PathVariable("id")Long id);
@@ -30,6 +36,8 @@ public interface IMicroserviceMyLibraryProxy {
 
     @GetMapping(value = "/copies/dispos/{id}")
     List<CopieBean> afficherLesCopiesDisponibles(@PathVariable("id") Long id);
+
+    /*===========================** Reservations **===========================*/
 
     @GetMapping(value = "/listeDesReservations/{id}")
     List<ReservationBean> afficherLaListeDesReservationsParUtilisateur(@PathVariable("id")Long id);
@@ -42,8 +50,5 @@ public interface IMicroserviceMyLibraryProxy {
 
     @GetMapping(value = "/reservation/{id}")
     ReservationBean afficherUneReservation(@PathVariable("id")Long id);
-
-    @GetMapping(value = "/recherche")
-    List<LivreBean> faireUneRechercheParTitre(@RequestParam(name = "mc", defaultValue = "")String mc);
 
 }
