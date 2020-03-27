@@ -13,11 +13,21 @@ public class IMicroserviceMyUsersProxyServiceImpl implements IMicroserviceMyUser
     @Autowired
     private IMicroserviceMyUsersProxy iMicroserviceMyUsersProxy;
 
+    /**
+     * Permet de rechercher un utilisateur
+     * @param pseudo Pseudo de l'utilisateur
+     * @return l'utilisateur
+     */
     @Override
     public UtilisateurBean connexionUtilisateur(String pseudo){
         return iMicroserviceMyUsersProxy.connexionUtilisateur(pseudo);
     }
 
+    /**
+     * Permet de rechecher un utilisateur
+     * @param id identifiant de l'utilisateur
+     * @return l'utilisateur
+     */
     @Override
     public UtilisateurBean findById(Long id){
         return iMicroserviceMyUsersProxy.findById(id);
