@@ -90,6 +90,8 @@ public class ClientController {
     @GetMapping("/recherche")
     public String rechercherUnLivre(Model model, @RequestParam(name = "mc", defaultValue = "") String mc){
 
+        logger.info("un utilisateur effectue une recherche de livre avec le mot clé : "+ mc );
+
         if (mc.isEmpty()){
             List<LivreBean> livreBeanList = iMicroserviceMyLibraryProxyService.ListeDeLivres();
             model.addAttribute("livreBeanList", livreBeanList);
@@ -103,6 +105,7 @@ public class ClientController {
             model.addAttribute("exception",e);
             throw new RuntimeException("Livre Introuvable");
         }
+
         return "/Livres";
     }
 
@@ -120,6 +123,8 @@ public class ClientController {
 
         iMicroserviceMyLibraryProxyService.demandeDeReservation(copieBean.getId(), utilisateurBean.getId());
 
+        logger.info("l'utilisateur : "+utilisateurBean.getPseudo()+ " id : " +utilisateurBean.getId()+" fait une demande de réservtion pour la copie isbn : "+copieBean.getIsbn());
+
         return "redirect:/livres";
     }
 
@@ -132,6 +137,8 @@ public class ClientController {
 
         ReservationBean reservationBean = iMicroserviceMyLibraryProxyService.afficherUneReservation(id);
         iMicroserviceMyLibraryProxyService.prolongerPret(reservationBean.getId(), utilisateurBean.getId());
+
+        logger.info("l'utilisateur : "+utilisateurBean.getPseudo()+" a prolonger la réservation dont l' id est : "+reservationBean.getId());
 
         return "redirect:/profil";
 
