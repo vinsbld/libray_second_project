@@ -72,7 +72,7 @@ public class ReservationController {
     }
 
     @RequestMapping(value = "/retour/{id}", method = RequestMethod.POST)
-    public void retournerCopie(@PathVariable Long id,@RequestParam Long idUtilisateur){
+    public void retournerUnPret(@PathVariable Long id,@RequestParam Long idUtilisateur){
 
         Date date = new Date(Calendar.getInstance().getTime().getTime());
         Reservation reservation = iReservationService.findById(id).get();
