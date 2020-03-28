@@ -21,6 +21,10 @@ Description :
                     Zipkin
                     Spring-admin/Acuator
 
+Lancer l'application : 
+                    
+                    mvn spring-boot:run
+
 Etapes : 
 
       Ordre de déploiement
