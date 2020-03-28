@@ -71,4 +71,16 @@ public class ReservationController {
         iReservationService.save(reservation);
     }
 
+    @RequestMapping(value = "/retour/{id}", method = RequestMethod.POST)
+    public void retournerCopie(@PathVariable Long id,@RequestParam Long idUtilisateur){
+
+        Date date = new Date(Calendar.getInstance().getTime().getTime());
+        Reservation reservation = iReservationService.findById(id).get();
+        reservation.setIdUtilisateur(idUtilisateur);
+        reservation.setDateRetour(date);
+        reservation.setRendu(true);
+        iReservationService.save(reservation);
+
+    }
+
 }

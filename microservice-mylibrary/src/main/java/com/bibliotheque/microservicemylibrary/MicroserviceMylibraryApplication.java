@@ -99,6 +99,7 @@ public class MicroserviceMylibraryApplication {
 		reservation.setDateDeDebutPret(new Date());
 		reservation.setDateDeFinDuPret(iReservationService.add4Weeks(reservation.getDateDeDebutPret()));
 		reservation.setProlongerPret(false);
+		reservation.setRendu(false);
 		iReservationService.save(reservation);
 
 		Reservation reservation1 = new Reservation();
@@ -107,6 +108,7 @@ public class MicroserviceMylibraryApplication {
 		reservation1.setDateDeDebutPret(new Date());
 		reservation1.setDateDeFinDuPret(new GregorianCalendar(2020, Calendar.FEBRUARY, 24).getTime());
 		reservation1.setProlongerPret(false);
+		reservation.setRendu(false);
 		iReservationService.save(reservation1);
 
 		Email email = new Email();

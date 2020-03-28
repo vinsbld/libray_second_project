@@ -22,6 +22,8 @@ class ReservationBean implements Serializable {
 
     private Date dateRetour;
 
+    private boolean rendu;
+
     private Date dateDuJour = new Date();
 
     private boolean prolongerPret;

@@ -1,12 +1,10 @@
 package com.bibliotheque.microservicemylibrary.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.Date;
 
 @Entity
@@ -21,7 +19,7 @@ class Reservation{
 
     private Long idUtilisateur;
 
-    @DateTimeFormat(pattern="dd/MM/yyyy")
+    @DateTimeFormat(pattern="dd-MM-yyyy")
     private Date dateDeDebutPret;
 
     @DateTimeFormat(pattern="yyyy-MM-dd")
@@ -29,6 +27,9 @@ class Reservation{
 
     private Date dateRetour;
 
+    private boolean rendu;
+
+    @Transient
     private Date dateDuJour = new Date();
 
     private boolean prolongerPret;
