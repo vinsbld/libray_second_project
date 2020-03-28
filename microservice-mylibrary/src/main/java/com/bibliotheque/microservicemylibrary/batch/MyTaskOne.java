@@ -14,6 +14,7 @@ import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -42,6 +43,7 @@ public class MyTaskOne implements Tasklet {
 
         System.out.println("debut du batch de relance");
 
+        SimpleDateFormat oldFormat = new SimpleDateFormat("dd/MM/yyyy");
         Date date = new Date();
        List<Reservation>reservationList = iReservationDao.findAllByDateRetourIsNullAndDateDeFinDuPretBefore(date);
 
@@ -50,7 +52,7 @@ public class MyTaskOne implements Tasklet {
         if (reservationList.size() > 0)
             for (Reservation res : reservationList) {
                 UtilisateurBean utilisateurBean = iMicroserviceMyUsersProxy.findById(res.getIdUtilisateur());
-                emailType.add(new EmailType(utilisateurBean.getEmail(), res.getCopie().getLivre().getTitre(), res.getDateDeFinDuPret().toString()));
+                emailType.add(new EmailType(utilisateurBean.getEmail(), res.getCopie().getLivre().getTitre(), oldFormat.format(res.getDateDeFinDuPret())));
 
             }
 
@@ -65,6 +67,7 @@ public class MyTaskOne implements Tasklet {
     public void sendRevival(List<EmailType> emailList){
 
         Email email = iEmailDao.findByName("relance");
+
 
         for (EmailType e: emailList) {
             String text = email.getContenu()

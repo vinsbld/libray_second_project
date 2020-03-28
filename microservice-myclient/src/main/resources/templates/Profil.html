@@ -65,9 +65,10 @@
                         <th></th>
                     </tr>
                     </thead>
+
                     <tbody>
                     <tr th:each="mlistReservations:${reservationBeans}">
-                        <td th:text="${mlistReservations.dateDeDebutPret}"></td>
+                        <td th:text="${#dates.format(mlistReservations.dateDeDebutPret, 'dd/MM/yyyy')}"></td>
                         <td th:text="${mlistReservations.dateDeFinDuPret}"></td>
                         <td th:text="${mlistReservations.copieBean.livreBean.titre}"></td>
                         <td th:if="${(mlistReservations.isProlongerPret()==false) and (mlistReservations.dateDeFinDuPret>mlistReservations.getDateDuJour())}"><form th:action="@{/prolonger/{id}(id=${mlistReservations.id})}" method="post"><button type="submit" class="btn-get-create btn-xs ">Prolonger</button></form></td>
