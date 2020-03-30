@@ -27,10 +27,9 @@ class Livre {
 
     private String prenomAuteur;
 
-
+    @DateTimeFormat(pattern="yyyy-MM-dd")
     private Date dateEdition;
 
-    @DateTimeFormat(pattern="yyyy-MM-dd")
     private String editeur;
 
     @JsonBackReference

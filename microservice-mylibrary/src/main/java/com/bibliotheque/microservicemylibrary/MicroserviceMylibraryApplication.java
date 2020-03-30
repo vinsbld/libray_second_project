@@ -46,12 +46,11 @@ public class MicroserviceMylibraryApplication {
 	@PostConstruct
 	private void postConstruct(){
 
-
 		Livre livre = new Livre();
 		livre.setTitre("1984");
 		livre.setNomAuteur("Orwel");
 		livre.setPrenomAuteur("George");
-		livre.setDateEdition(new Date(2020,04,02));
+		livre.setDateEdition(new GregorianCalendar(2020,04,02).getTime());
 		livre.setEditeur("FOLIO");
 		iLivreService.save(livre);
 
@@ -59,7 +58,7 @@ public class MicroserviceMylibraryApplication {
 		livre1.setTitre("Le meilleur des mondes");
 		livre1.setPrenomAuteur("Aldous");
 		livre1.setNomAuteur("Huxley");
-		livre1.setDateEdition(new Date(2017,10,04));
+		livre1.setDateEdition(new GregorianCalendar(2017,10,04).getTime());
 		livre1.setEditeur("POCHE");
 		iLivreService.save(livre1);
 

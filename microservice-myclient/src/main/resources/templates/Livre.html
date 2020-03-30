@@ -60,7 +60,7 @@
                         </tr>
                         <tr>
                             <td>Date d'édition : </td>
-                            <td th:text="${livreBean.dateEdition}"></td>
+                            <td th:text="${#dates.format(livreBean.dateEdition, 'dd/MM/yyyy')}"></td>
                         </tr>
                         <tr>
                             <td>éditeur : </td>
@@ -74,6 +74,7 @@
                     <thead>
                     <tr>
                         <th>Exemplaires disponibles : <span th:text="${nbCopiesDisponibles}" style="color:#00FF00;"></span> / <span th:text="${nbTTCopies}"></span></th>
+                        <th sec:authorize="isAuthenticated()"></th>
                     </tr>
                     </thead>
                     <tbody>
