@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @RequestMapping(value = "microservice-myusers")
 @FeignClient(name = "zuul-server", contextId = "IMicroserviceMyUsersProxy", configuration = FeignConfig.class, url = "http://localhost:9006")
-@RibbonClient(name = "microservice-myusers")
 public interface IMicroserviceMyUsersProxy {
 
     @GetMapping("/{pseudo}/connexion")
