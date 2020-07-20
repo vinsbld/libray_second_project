@@ -1,13 +1,13 @@
 <component name="libraryTable">
   <library name="Maven: org.springframework.boot:spring-boot:2.2.6.BUILD-SNAPSHOT">
     <CLASSES>
-      <root url="jar://$MAVEN_REPOSITORY$/org/springframework/boot/spring-boot/2.2.6.BUILD-SNAPSHOT/spring-boot-2.2.6.BUILD-20200325.094435-34.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/springframework/boot/spring-boot/2.2.6.BUILD-SNAPSHOT/spring-boot-2.2.6.BUILD-20200326.110814-39.jar!/" />
     </CLASSES>
     <JAVADOC>
-      <root url="jar://$MAVEN_REPOSITORY$/org/springframework/boot/spring-boot/2.2.6.BUILD-SNAPSHOT/spring-boot-2.2.6.BUILD-20200325.094435-34-javadoc.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/springframework/boot/spring-boot/2.2.6.BUILD-SNAPSHOT/spring-boot-2.2.6.BUILD-20200326.110814-39-javadoc.jar!/" />
     </JAVADOC>
     <SOURCES>
-      <root url="jar://$MAVEN_REPOSITORY$/org/springframework/boot/spring-boot/2.2.6.BUILD-SNAPSHOT/spring-boot-2.2.6.BUILD-20200325.094435-34-sources.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/springframework/boot/spring-boot/2.2.6.BUILD-SNAPSHOT/spring-boot-2.2.6.BUILD-20200326.110814-39-sources.jar!/" />
     </SOURCES>
   </library>
 </component>
