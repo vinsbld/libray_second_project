@@ -81,6 +81,13 @@ public class ClientController {
         List<CopieBean> nbTTCopies= iMicroserviceMyLibraryProxyService.afficherLesCopiesDunLivre(id);
         model.addAttribute("nbTTCopies", nbTTCopies.size());
 
+        List<CopieBean> listIsbnDesLivres = iMicroserviceMyLibraryProxyService.afficherLesCopiesDunLivre(id);
+        model.addAttribute("listIsbn", listIsbnDesLivres);
+
+        ReservationBean reservationBean = iMicroserviceMyLibraryProxyService.afficherUneReservation(id);
+        model.addAttribute("dateDeRetour", reservationBean);
+
+
         logger.info("Le livre "+livreBean.getTitre()+" est en consultation");
 
         return "Livre";

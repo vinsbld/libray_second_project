@@ -78,11 +78,14 @@
                     </tr>
                     </thead>
                     <tbody>
-
-
                     <tr th:each="dispo:${copieBeansDisponibles}">
                         <td>isbn : <span th:text="${dispo.isbn}"></span></td>
                         <td sec:authorize="isAuthenticated()"><form th:action="@{/reservation/{id}(id=${dispo.id})}" method="post"><button type="submit" onclick="return confirm('Confirmation de réservation')" class="btn-get-create">Réserver</button></form></td>
+                    </tr>
+                    <tr th:each="nondispo:${listIsbn}">
+                        <td>isbn : <span th:text="${nondispo.isbn}"></span></td>
+                        <td>date de retour prévue : <span></span></td>
+                        <td sec:authorize="isAuthenticated()"><button type="submit" onclick="return confirm('confirmez la réservation en liste attente')" class="btn-get-create">réservation en liste d'attente</button></td>
                     </tr>
                     </tbody>
                 </table>
