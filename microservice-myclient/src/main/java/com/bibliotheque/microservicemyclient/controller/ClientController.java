@@ -43,8 +43,8 @@ public class ClientController {
         UtilisateurBean utilisateurBean = (UtilisateurBean) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         model.addAttribute("utilisateurBean", utilisateurBean);
 
-        List<EmpruntBean> empruntBeans = iMicroserviceMyLibraryProxyService.afficherLaListeDesReservationsParUtilisateur(utilisateurBean.getId());
-        model.addAttribute("reservationBeans", empruntBeans);
+        List<EmpruntBean> empruntBeans = iMicroserviceMyLibraryProxyService.afficherLaListeDesEmpruntsParUtilisateur(utilisateurBean.getId());
+        model.addAttribute("empruntBeans", empruntBeans);
 
         logger.info("L'utilisateur "+utilisateurBean+" id : "+utilisateurBean.getId()+ " consulte sa page profil");
 
@@ -119,7 +119,7 @@ public class ClientController {
         CopieBean copieBean = iMicroserviceMyLibraryProxyService.afficherUneCopie(id);
         model.addAttribute("copie", copieBean);
 
-        iMicroserviceMyLibraryProxyService.demandeDeReservation(copieBean.getId(), utilisateurBean.getId());
+        iMicroserviceMyLibraryProxyService.demandeEmprunt(copieBean.getId(), utilisateurBean.getId());
 
         logger.info("l'utilisateur : "+utilisateurBean.getPseudo()+ " id : " +utilisateurBean.getId()+" fait une demande de réservtion pour la copie isbn : "+copieBean.getIsbn());
 
@@ -133,7 +133,7 @@ public class ClientController {
         UtilisateurBean utilisateurBean = (UtilisateurBean) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         model.addAttribute("utilisateurBean", utilisateurBean);
 
-        EmpruntBean empruntBean = iMicroserviceMyLibraryProxyService.afficherUneReservation(id);
+        EmpruntBean empruntBean = iMicroserviceMyLibraryProxyService.afficherUnEmprunt(id);
         iMicroserviceMyLibraryProxyService.prolongerPret(empruntBean.getId(), utilisateurBean.getId());
 
         logger.info("l'utilisateur : "+utilisateurBean.getPseudo()+" a prolonger la réservation dont l' id est : "+ empruntBean.getId());

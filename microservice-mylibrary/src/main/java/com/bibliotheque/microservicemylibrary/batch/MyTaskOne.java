@@ -30,8 +30,8 @@ public class MyTaskOne implements Tasklet {
     /**
      * Tache par batch permettant de relancer les utilisateurs qui n'ont pas rendu leurs livres
      */
-    public MyTaskOne(IEmpruntDao iReservationDao, IEmailDao iEmailDao, IMicroserviceMyUsersProxy iMicroserviceMyUsersProxy, JavaMailSenderImpl sender) {
-        this.iEmpruntDao = iReservationDao;
+    public MyTaskOne(IEmpruntDao iEmpruntDao, IEmailDao iEmailDao, IMicroserviceMyUsersProxy iMicroserviceMyUsersProxy, JavaMailSenderImpl sender) {
+        this.iEmpruntDao = iEmpruntDao;
         this.iEmailDao = iEmailDao;
         this.iMicroserviceMyUsersProxy = iMicroserviceMyUsersProxy;
         this.sender = sender;

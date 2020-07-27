@@ -18,17 +18,15 @@ public interface IMicroserviceMyLibraryProxyService {
 
     CopieBean afficherUneCopie(Long id);
 
-    List<EmpruntBean> afficherLaListeDesReservationsParUtilisateur(Long id);
+    List<EmpruntBean> afficherLaListeDesEmpruntsParUtilisateur(Long id);
 
     List<CopieBean> afficherLesCopiesDisponibles(Long id);
 
-    List<CopieBean> afficherLesCopiesNonDisponibles(Long id);
-
-    void demandeDeReservation(Long id, Long idUtilisateur);
+    void demandeEmprunt(Long id, Long idUtilisateur);
 
     EmpruntBean prolongerPret(Long id, Long idUtilisateur);
 
-    EmpruntBean afficherUneReservation(Long id);
+    EmpruntBean afficherUnEmprunt(Long id);
 
     List<LivreBean> faireUneRechercheParTitre(@RequestParam(name = "mc", defaultValue = "") String mc);
 

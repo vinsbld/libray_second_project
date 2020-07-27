@@ -80,7 +80,7 @@
                     <tbody>
                         <tr th:each="n:${mCopies}">
                             <td>isbn : <span th:text="${n.copie.isbn}"></span></td>
-                            <td><span th:if="${n.copie.isDisponible() == false}">date de retour : </span><span th:text="${#dates.format(n?.emprunt?.dateDeFinDuPret, 'dd/MM/yyyy')}"></span></td>
+                            <td><span th:if="${n.copie.isDisponible() == false}">date de retour : </span><span th:text="${#dates.format(n?.emprunt?.dateDeFinEmprunt, 'dd/MM/yyyy')}"></span></td>
                             <td sec:authorize="isAuthenticated()"><span th:if="${n.copie.isDisponible() == true}"><span>  </span><form th:action="@{/emprunt/{id}(id=${n.copie.id})}" method="post"><button type="submit" onclick="return confirm('Confirmation de réservation')" class="btn-get-create">Réserver</button></form></span></td>
                             <td sec:authorize="isAuthenticated()"><span th:if="${n.copie.isDisponible() == false}"><button type="submit" onclick="return confirm('confirmez la réservation en liste attente')" class="btn-get-create">réservation en liste d'attente</button></span></td>
                         </tr>

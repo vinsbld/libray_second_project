@@ -16,9 +16,9 @@ class EmpruntBean implements Serializable {
 
     private Long idUtilisateur;
 
-    private Date dateDeDebutPret;
+    private Date dateDeDebutEmprunt;
 
-    private Date dateDeFinDuPret;
+    private Date dateDeFinEmprunt;
 
     private Date dateRetour;
 
@@ -31,11 +31,11 @@ class EmpruntBean implements Serializable {
     @JsonProperty("copie")
     private CopieBean copieBean;
 
-    public EmpruntBean(Long id, Long idUtilisateur, Date dateDeDebutPret, Date dateDeFinDuPret, boolean prolongerEmprunt, CopieBean copieBean) {
+    public EmpruntBean(Long id, Long idUtilisateur, Date dateDeDebutEmprunt, Date dateDeFinEmprunt, boolean prolongerEmprunt, CopieBean copieBean) {
         this.id = id;
         this.idUtilisateur = idUtilisateur;
-        this.dateDeDebutPret = dateDeDebutPret;
-        this.dateDeFinDuPret = dateDeFinDuPret;
+        this.dateDeDebutEmprunt = dateDeDebutEmprunt;
+        this.dateDeFinEmprunt = dateDeFinEmprunt;
         this.prolongerEmprunt = prolongerEmprunt;
         this.copieBean = copieBean;
     }
@@ -45,8 +45,8 @@ class EmpruntBean implements Serializable {
         return "EmpruntBean{" +
                 "id=" + id +
                 ", idUtilisateur=" + idUtilisateur +
-                ", dateDeDebutPret=" + dateDeDebutPret +
-                ", dateDeFinDuPret=" + dateDeFinDuPret +
+                ", dateDeDebutPret=" + dateDeDebutEmprunt +
+                ", dateDeFinDuPret=" + dateDeFinEmprunt +
                 ", prolongerPret=" + prolongerEmprunt +
                 ", copieBean=" + copieBean +
                 '}';

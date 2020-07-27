@@ -64,7 +64,7 @@ public class IMicroserviceMyLibraryProxyServiceImpl implements IMicroserviceMyLi
      * @return la liste des emprunts d'un utilisateur
      */
     @Override
-    public List<EmpruntBean> afficherLaListeDesReservationsParUtilisateur(Long id){
+    public List<EmpruntBean> afficherLaListeDesEmpruntsParUtilisateur(Long id){
         return iMicroserviceMyLibraryProxy.afficherLaListeDesReservationsParUtilisateur(id);
     }
 
@@ -78,10 +78,6 @@ public class IMicroserviceMyLibraryProxyServiceImpl implements IMicroserviceMyLi
         return iMicroserviceMyLibraryProxy.afficherLesCopiesDisponibles(id);
     }
 
-    @Override
-    public List<CopieBean> afficherLesCopiesNonDisponibles(Long id) {
-        return iMicroserviceMyLibraryProxy.afficherLesCopiesNonDisponibles(id);
-    }
 
     /**
      * Permet de faire une demande de reservation d'une copie d'un livre
@@ -89,7 +85,7 @@ public class IMicroserviceMyLibraryProxyServiceImpl implements IMicroserviceMyLi
      * @param idUtilisateur identifiant de l'utilisateur
      */
     @Override
-    public void demandeDeReservation(Long id, Long idUtilisateur){
+    public void demandeEmprunt(Long id, Long idUtilisateur){
         iMicroserviceMyLibraryProxy.demandeDeReservation(id, idUtilisateur);
     }
 
@@ -110,7 +106,7 @@ public class IMicroserviceMyLibraryProxyServiceImpl implements IMicroserviceMyLi
      * @return la reservation recherchée
      */
     @Override
-    public EmpruntBean afficherUneReservation(Long id){
+    public EmpruntBean afficherUnEmprunt(Long id){
        return iMicroserviceMyLibraryProxy.afficherUneReservation(id);
     }
 

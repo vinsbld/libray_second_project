@@ -71,6 +71,7 @@ public class IEmailServiceImpl implements EmailService{
         Email email = findByName("relance");
 
         for (EmailType e: emailTypeList) {
+
             String text = email.getContenu()
                     .replace("[LIVRE_TITRE]", e.getTitre())
                     .replace("[DATE_FIN]", e.getDateDeFinEmprunt());
