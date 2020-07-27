@@ -94,18 +94,18 @@ public class MicroserviceMylibraryApplication {
 		Emprunt emprunt = new Emprunt();
 		emprunt.setCopie(copie);
 		emprunt.setIdUtilisateur(1L);
-		emprunt.setDateDeDebutPret(new Date());
-		emprunt.setDateDeFinDuPret(iEmpruntService.add4Weeks(emprunt.getDateDeDebutPret()));
-		emprunt.setProlongerPret(false);
+		emprunt.setDateDeDebutEmprunt(new Date());
+		emprunt.setDateDeFinEmprunt(iEmpruntService.add4Weeks(emprunt.getDateDeDebutEmprunt()));
+		emprunt.setProlongerEmprunt(false);
 		emprunt.setRendu(false);
 		iEmpruntService.save(emprunt);
 
 		Emprunt emprunt1 = new Emprunt();
 		emprunt1.setCopie(copie1);
 		emprunt1.setIdUtilisateur(1L);
-		emprunt1.setDateDeDebutPret(new Date());
-		emprunt1.setDateDeFinDuPret(new GregorianCalendar(2020, Calendar.FEBRUARY, 24).getTime());
-		emprunt1.setProlongerPret(false);
+		emprunt1.setDateDeDebutEmprunt(new Date());
+		emprunt1.setDateDeFinEmprunt(new GregorianCalendar(2020, Calendar.FEBRUARY, 24).getTime());
+		emprunt1.setProlongerEmprunt(false);
 		emprunt.setRendu(false);
 		iEmpruntService.save(emprunt1);
 

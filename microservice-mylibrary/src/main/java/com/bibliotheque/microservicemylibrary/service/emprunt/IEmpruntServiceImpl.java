@@ -11,7 +11,7 @@ import java.util.*;
 public class IEmpruntServiceImpl implements IEmpruntService {
 
     @Autowired
-    private IEmpruntDao iReservationDao;
+    private IEmpruntDao iEmpruntDao;
 
     /**
      * Permet d'ajouter 4 semaines à une date
@@ -32,7 +32,7 @@ public class IEmpruntServiceImpl implements IEmpruntService {
      */
     @Override
     public List<Emprunt> findAllByIdUtilisateur(Long id) {
-        return iReservationDao.findAllByIdUtilisateur(id);
+        return iEmpruntDao.findAllByIdUtilisateur(id);
     }
 
     /**
@@ -42,7 +42,7 @@ public class IEmpruntServiceImpl implements IEmpruntService {
      */
     @Override
     public Optional<Emprunt> findById(Long id){
-        return iReservationDao.findById(id);
+        return iEmpruntDao.findById(id);
     }
 
     /**
@@ -51,7 +51,7 @@ public class IEmpruntServiceImpl implements IEmpruntService {
      */
     @Override
     public void save(Emprunt emprunt){
-        iReservationDao.save(emprunt);
+        iEmpruntDao.save(emprunt);
     }
 
     /**
@@ -62,12 +62,12 @@ public class IEmpruntServiceImpl implements IEmpruntService {
      */
     @Override
     public List<Emprunt> relance(Date dateNow){
-       return iReservationDao.findAllByDateRetourIsNullAndDateDeFinDuPretBefore(dateNow);
+       return iEmpruntDao.findAllByDateRetourIsNullAndAndDateDeFinEmpruntBefore(dateNow);
     }
 
     @Override
     public Emprunt findByCopie_Id(Long id) {
-        return iReservationDao.findByCopie_Id(id);
+        return iEmpruntDao.findByCopie_Id(id);
     }
 
 }

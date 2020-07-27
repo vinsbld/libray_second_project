@@ -67,7 +67,7 @@
                     </thead>
 
                     <tbody>
-                    <tr th:each="mlistReservations:${reservationBeans}">
+                    <tr th:each="mlistReservations:${empruntBeans}">
                         <td th:text="${#dates.format(mlistReservations.dateDeDebutPret, 'dd/MM/yyyy')}"></td>
                         <td th:text="${#dates.format(mlistReservations.dateDeFinDuPret, 'dd/MM/yyyy')}"></td>
                         <td th:text="${mlistReservations.copieBean.livreBean.titre}"></td>

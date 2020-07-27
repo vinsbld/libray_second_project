@@ -2,15 +2,15 @@ package com.bibliotheque.microservicemyclient.bean;
 
 public class CopieBeanDTO {
 
-    private ReservationBean reservation;
+    private EmpruntBean emprunt;
     private CopieBean copie;
 
-    public ReservationBean getReservation() {
-        return reservation;
+    public EmpruntBean getEmprunt() {
+        return emprunt;
     }
 
-    public void setReservation(ReservationBean reservation) {
-        this.reservation = reservation;
+    public void setEmprunt(EmpruntBean empruntBean) {
+        this.emprunt = empruntBean;
     }
 
     public CopieBean getCopie() {

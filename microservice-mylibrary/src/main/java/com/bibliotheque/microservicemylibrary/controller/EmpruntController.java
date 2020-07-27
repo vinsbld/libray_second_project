@@ -50,9 +50,9 @@ public class EmpruntController {
         copieService.save(copie);
         Emprunt emprunt = new Emprunt();
         emprunt.setCopie(copie);
-        emprunt.setDateDeDebutPret(date);
-        emprunt.setDateDeFinDuPret(iEmpruntService.add4Weeks(date));
-        emprunt.setProlongerPret(false);
+        emprunt.setDateDeDebutEmprunt(date);
+        emprunt.setDateDeFinEmprunt(iEmpruntService.add4Weeks(date));
+        emprunt.setProlongerEmprunt(false);
         emprunt.setIdUtilisateur(idUtilisateur);
         iEmpruntService.save(emprunt);
         logger.info("demande de emprunt pour une copie d'un livre");
@@ -65,8 +65,8 @@ public class EmpruntController {
         Date date = new Date(Calendar.getInstance().getTime().getTime());
         Emprunt emprunt = iEmpruntService.findById(id).get();
         emprunt.setIdUtilisateur(idUtilisateur);
-        emprunt.setProlongerPret(true);
-        emprunt.setDateDeFinDuPret(iEmpruntService.add4Weeks(emprunt.getDateDeFinDuPret()));
+        emprunt.setProlongerEmprunt(true);
+        emprunt.setDateDeFinEmprunt(iEmpruntService.add4Weeks(emprunt.getDateDeFinEmprunt()));
         logger.info("demande de prolongation d'un prêt");
         iEmpruntService.save(emprunt);
     }

@@ -25,7 +25,7 @@ public interface IEmpruntDao extends JpaRepository<Emprunt, Long> {
     Emprunt save(Optional<Emprunt> reservation);
 
     //trouve les emprunts non retournées
-    List<Emprunt> findAllByDateRetourIsNullAndDateDeFinDuPretBefore(Date dateNow);
+    List<Emprunt> findAllByDateRetourIsNullAndAndDateDeFinEmpruntBefore(Date dateNow);
 
     //trouver une reservation par copies de livre
     Emprunt findByCopie_Id(Long id);

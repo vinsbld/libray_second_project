@@ -45,14 +45,14 @@ public class MyTaskOne implements Tasklet {
 
         SimpleDateFormat oldFormat = new SimpleDateFormat("dd/MM/yyyy");
         Date date = new Date();
-       List<Emprunt> empruntList = iEmpruntDao.findAllByDateRetourIsNullAndDateDeFinDuPretBefore(date);
+       List<Emprunt> empruntList = iEmpruntDao.findAllByDateRetourIsNullAndAndDateDeFinEmpruntBefore(date);
 
         ArrayList<EmailType> emailType = new ArrayList<>();
 
         if (empruntList.size() > 0)
             for (Emprunt res : empruntList) {
                 UtilisateurBean utilisateurBean = iMicroserviceMyUsersProxy.findById(res.getIdUtilisateur());
-                emailType.add(new EmailType(utilisateurBean.getEmail(), res.getCopie().getLivre().getTitre(), oldFormat.format(res.getDateDeFinDuPret())));
+                emailType.add(new EmailType(utilisateurBean.getEmail(), res.getCopie().getLivre().getTitre(), oldFormat.format(res.getDateDeFinEmprunt())));
 
             }
 
@@ -72,7 +72,7 @@ public class MyTaskOne implements Tasklet {
         for (EmailType e: emailList) {
             String text = email.getContenu()
                     .replace("[LIVRE_TITRE]", e.getTitre())
-                            .replace("[DATE_FIN]", e.getDateDeFinDuPret());
+                            .replace("[DATE_FIN]", e.getDateDeFinEmprunt());
             this.sendSimpleMessage(e.getEmail(),email.getObjet(),text);
         }
     }

@@ -1,8 +1,6 @@
 package com.bibliotheque.microservicemylibrary.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -22,10 +20,10 @@ class Emprunt {
     private Long idUtilisateur;
 
     @DateTimeFormat(pattern="dd-MM-yyyy")
-    private Date dateDeDebutPret;
+    private Date dateDeDebutEmprunt;
 
     @DateTimeFormat(pattern="yyyy-MM-dd")
-    private Date dateDeFinDuPret;
+    private Date dateDeFinEmprunt;
 
     private Date dateRetour;
 
@@ -34,7 +32,7 @@ class Emprunt {
     @Transient
     private Date dateDuJour = new Date();
 
-    private boolean prolongerPret;
+    private boolean prolongerEmprunt;
 
     @JsonBackReference
     @ManyToOne

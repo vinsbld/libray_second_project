@@ -2,8 +2,8 @@ package com.bibliotheque.microservicemyclient.proxies;
 
 import com.bibliotheque.microservicemyclient.bean.CopieBean;
 import com.bibliotheque.microservicemyclient.bean.CopieBeanDTO;
+import com.bibliotheque.microservicemyclient.bean.EmpruntBean;
 import com.bibliotheque.microservicemyclient.bean.LivreBean;
-import com.bibliotheque.microservicemyclient.bean.ReservationBean;
 import com.bibliotheque.microservicemyclient.configurations.FeignConfig;
 import org.springframework.cloud.netflix.ribbon.RibbonClient;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -44,16 +44,16 @@ public interface IMicroserviceMyLibraryProxy {
     /*===========================** Reservations **===========================*/
 
     @GetMapping(value = "/listeDesReservations/{id}")
-    List<ReservationBean> afficherLaListeDesReservationsParUtilisateur(@PathVariable("id")Long id);
+    List<EmpruntBean> afficherLaListeDesReservationsParUtilisateur(@PathVariable("id")Long id);
 
     @PostMapping(value = "/reserver/{id}")
     void demandeDeReservation(@PathVariable Long id, @RequestParam Long idUtilisateur);
 
     @PostMapping(value = "/prolonger/{id}")
-    ReservationBean prolongerPret(@PathVariable Long id, @RequestParam Long idUtilisateur);
+    EmpruntBean prolongerPret(@PathVariable Long id, @RequestParam Long idUtilisateur);
 
     @GetMapping(value = "/reservation/{id}")
-    ReservationBean afficherUneReservation(@PathVariable("id")Long id);
+    EmpruntBean afficherUneReservation(@PathVariable("id")Long id);
 
 
 }

@@ -43,8 +43,8 @@ public class ClientController {
         UtilisateurBean utilisateurBean = (UtilisateurBean) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         model.addAttribute("utilisateurBean", utilisateurBean);
 
-        List<ReservationBean>reservationBeans = iMicroserviceMyLibraryProxyService.afficherLaListeDesReservationsParUtilisateur(utilisateurBean.getId());
-        model.addAttribute("reservationBeans", reservationBeans);
+        List<EmpruntBean> empruntBeans = iMicroserviceMyLibraryProxyService.afficherLaListeDesReservationsParUtilisateur(utilisateurBean.getId());
+        model.addAttribute("reservationBeans", empruntBeans);
 
         logger.info("L'utilisateur "+utilisateurBean+" id : "+utilisateurBean.getId()+ " consulte sa page profil");
 
@@ -133,10 +133,10 @@ public class ClientController {
         UtilisateurBean utilisateurBean = (UtilisateurBean) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         model.addAttribute("utilisateurBean", utilisateurBean);
 
-        ReservationBean reservationBean = iMicroserviceMyLibraryProxyService.afficherUneReservation(id);
-        iMicroserviceMyLibraryProxyService.prolongerPret(reservationBean.getId(), utilisateurBean.getId());
+        EmpruntBean empruntBean = iMicroserviceMyLibraryProxyService.afficherUneReservation(id);
+        iMicroserviceMyLibraryProxyService.prolongerPret(empruntBean.getId(), utilisateurBean.getId());
 
-        logger.info("l'utilisateur : "+utilisateurBean.getPseudo()+" a prolonger la réservation dont l' id est : "+reservationBean.getId());
+        logger.info("l'utilisateur : "+utilisateurBean.getPseudo()+" a prolonger la réservation dont l' id est : "+ empruntBean.getId());
 
         return "redirect:/profil";
 

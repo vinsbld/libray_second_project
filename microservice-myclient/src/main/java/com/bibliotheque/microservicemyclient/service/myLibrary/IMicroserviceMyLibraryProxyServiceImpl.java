@@ -2,8 +2,8 @@ package com.bibliotheque.microservicemyclient.service.myLibrary;
 
 import com.bibliotheque.microservicemyclient.bean.CopieBean;
 import com.bibliotheque.microservicemyclient.bean.CopieBeanDTO;
+import com.bibliotheque.microservicemyclient.bean.EmpruntBean;
 import com.bibliotheque.microservicemyclient.bean.LivreBean;
-import com.bibliotheque.microservicemyclient.bean.ReservationBean;
 import com.bibliotheque.microservicemyclient.proxies.IMicroserviceMyLibraryProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -64,7 +64,7 @@ public class IMicroserviceMyLibraryProxyServiceImpl implements IMicroserviceMyLi
      * @return la liste des emprunts d'un utilisateur
      */
     @Override
-    public List<ReservationBean> afficherLaListeDesReservationsParUtilisateur(Long id){
+    public List<EmpruntBean> afficherLaListeDesReservationsParUtilisateur(Long id){
         return iMicroserviceMyLibraryProxy.afficherLaListeDesReservationsParUtilisateur(id);
     }
 
@@ -100,7 +100,7 @@ public class IMicroserviceMyLibraryProxyServiceImpl implements IMicroserviceMyLi
      * @return le prêt prolongé
      */
     @Override
-    public ReservationBean prolongerPret(Long id, Long idUtilisateur){
+    public EmpruntBean prolongerPret(Long id, Long idUtilisateur){
         return iMicroserviceMyLibraryProxy.prolongerPret(id, idUtilisateur);
     }
 
@@ -110,7 +110,7 @@ public class IMicroserviceMyLibraryProxyServiceImpl implements IMicroserviceMyLi
      * @return la reservation recherchée
      */
     @Override
-    public ReservationBean afficherUneReservation(Long id){
+    public EmpruntBean afficherUneReservation(Long id){
        return iMicroserviceMyLibraryProxy.afficherUneReservation(id);
     }
 

@@ -10,7 +10,7 @@ import java.util.Date;
 @Getter
 @Setter
 public @Data
-class ReservationBean implements Serializable {
+class EmpruntBean implements Serializable {
 
     private Long id;
 
@@ -26,28 +26,28 @@ class ReservationBean implements Serializable {
 
     private Date dateDuJour = new Date();
 
-    private boolean prolongerPret;
+    private boolean prolongerEmprunt;
 
     @JsonProperty("copie")
     private CopieBean copieBean;
 
-    public ReservationBean(Long id, Long idUtilisateur, Date dateDeDebutPret, Date dateDeFinDuPret, boolean prolongerPret, CopieBean copieBean) {
+    public EmpruntBean(Long id, Long idUtilisateur, Date dateDeDebutPret, Date dateDeFinDuPret, boolean prolongerEmprunt, CopieBean copieBean) {
         this.id = id;
         this.idUtilisateur = idUtilisateur;
         this.dateDeDebutPret = dateDeDebutPret;
         this.dateDeFinDuPret = dateDeFinDuPret;
-        this.prolongerPret = prolongerPret;
+        this.prolongerEmprunt = prolongerEmprunt;
         this.copieBean = copieBean;
     }
 
     @Override
     public String toString() {
-        return "ReservationBean{" +
+        return "EmpruntBean{" +
                 "id=" + id +
                 ", idUtilisateur=" + idUtilisateur +
                 ", dateDeDebutPret=" + dateDeDebutPret +
                 ", dateDeFinDuPret=" + dateDeFinDuPret +
-                ", prolongerPret=" + prolongerPret +
+                ", prolongerPret=" + prolongerEmprunt +
                 ", copieBean=" + copieBean +
                 '}';
     }
