@@ -1,17 +1,17 @@
-package com.bibliotheque.microservicemylibrary.service.reservation;
+package com.bibliotheque.microservicemylibrary.service.emprunt;
 
-import com.bibliotheque.microservicemylibrary.dao.IReservationDao;
-import com.bibliotheque.microservicemylibrary.model.Reservation;
+import com.bibliotheque.microservicemylibrary.dao.IEmpruntDao;
+import com.bibliotheque.microservicemylibrary.model.Emprunt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 
 @Service
-public class IReservationServiceImpl implements IReservationService {
+public class IEmpruntServiceImpl implements IEmpruntService {
 
     @Autowired
-    private IReservationDao iReservationDao;
+    private IEmpruntDao iReservationDao;
 
     /**
      * Permet d'ajouter 4 semaines à une date
@@ -31,7 +31,7 @@ public class IReservationServiceImpl implements IReservationService {
      * @return la liste de toutes les réservations faites par l'utilisateur
      */
     @Override
-    public List<Reservation> findAllByIdUtilisateur(Long id) {
+    public List<Emprunt> findAllByIdUtilisateur(Long id) {
         return iReservationDao.findAllByIdUtilisateur(id);
     }
 
@@ -41,28 +41,33 @@ public class IReservationServiceImpl implements IReservationService {
      * @return la réservation
      */
     @Override
-    public Optional<Reservation> findById(Long id){
+    public Optional<Emprunt> findById(Long id){
         return iReservationDao.findById(id);
     }
 
     /**
      * Permet de sauvegarder une réservation
-     * @param reservation Objet à sauvegarder
+     * @param emprunt Objet à sauvegarder
      */
     @Override
-    public void save(Reservation reservation){
-        iReservationDao.save(reservation);
+    public void save(Emprunt emprunt){
+        iReservationDao.save(emprunt);
     }
 
     /**
-     * Permet de trouver les reservations à relancer
+     * Permet de trouver les emprunts à relancer
      * @param dateNow date du jour
      * @return la liste des réservations dont le retour du livre n'a pas été enregistré,
      * et dont la date de fin du prêt est avant la date du jour
      */
     @Override
-    public List<Reservation> relance(Date dateNow){
+    public List<Emprunt> relance(Date dateNow){
        return iReservationDao.findAllByDateRetourIsNullAndDateDeFinDuPretBefore(dateNow);
+    }
+
+    @Override
+    public Emprunt findByCopie_Id(Long id) {
+        return iReservationDao.findByCopie_Id(id);
     }
 
 }

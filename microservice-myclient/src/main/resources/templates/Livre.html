@@ -78,16 +78,18 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="dispo:${copieBeansDisponibles}">
-                        <td>isbn : <span th:text="${dispo.isbn}"></span></td>
-                        <td sec:authorize="isAuthenticated()"><form th:action="@{/reservation/{id}(id=${dispo.id})}" method="post"><button type="submit" onclick="return confirm('Confirmation de réservation')" class="btn-get-create">Réserver</button></form></td>
-                    </tr>
-                    <tr th:each="nondispo:${listIsbn}">
-                        <td>isbn : <span th:text="${nondispo.isbn}"></span></td>
-                        <td>date de retour prévue : <span></span></td>
-                        <td sec:authorize="isAuthenticated()"><button type="submit" onclick="return confirm('confirmez la réservation en liste attente')" class="btn-get-create">réservation en liste d'attente</button></td>
-                    </tr>
+                        <tr th:each="n:${mCopies}">
+                            <td>isbn : <span th:text="${n.copie.isbn}"></span></td>
+                            <td><span th:if="${n.copie.isDisponible() == false}">date de retour : </span><span th:text="${#dates.format(n?.emprunt?.dateDeFinDuPret, 'dd/MM/yyyy')}"></span></td>
+                            <td sec:authorize="isAuthenticated()"><span th:if="${n.copie.isDisponible() == true}"><span>  </span><form th:action="@{/emprunt/{id}(id=${n.copie.id})}" method="post"><button type="submit" onclick="return confirm('Confirmation de réservation')" class="btn-get-create">Réserver</button></form></span></td>
+                            <td sec:authorize="isAuthenticated()"><span th:if="${n.copie.isDisponible() == false}"><button type="submit" onclick="return confirm('confirmez la réservation en liste attente')" class="btn-get-create">réservation en liste d'attente</button></span></td>
+                        </tr>
+                        <tr>
+
+                        </tr>
                     </tbody>
+
+
                 </table>
             </div>
         </div>

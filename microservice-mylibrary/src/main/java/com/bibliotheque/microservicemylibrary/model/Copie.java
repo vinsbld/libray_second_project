@@ -1,11 +1,9 @@
 package com.bibliotheque.microservicemylibrary.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.List;
 
 @Entity
@@ -25,9 +23,9 @@ class Copie {
     @ManyToOne
     private Livre livre;
 
-    @JsonBackReference
+    @JsonManagedReference
     @OneToMany(mappedBy = "copie", fetch = FetchType.EAGER)
-    private List<Reservation> reservations;
+    private List<Emprunt> emprunts;
 
     @Override
     public String toString() {
@@ -36,7 +34,7 @@ class Copie {
                 ", isbn=" + isbn +
                 ", disponible=" + disponible +
                 ", livre=" + livre +
-                ", reservations=" + reservations +
+                ", emprunts=" + emprunts +
                 '}';
     }
 }

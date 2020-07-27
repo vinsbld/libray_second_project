@@ -1,5 +1,7 @@
 package com.bibliotheque.microservicemylibrary.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -10,7 +12,7 @@ import java.util.Date;
 @Entity
 @NoArgsConstructor
 public @Data
-class Reservation{
+class Emprunt {
 
     @Id
     @GeneratedValue
@@ -34,7 +36,7 @@ class Reservation{
 
     private boolean prolongerPret;
 
-    @JsonManagedReference
+    @JsonBackReference
     @ManyToOne
     private Copie copie;
 

@@ -1,9 +1,9 @@
 package com.bibliotheque.microservicemylibrary.controller;
 
 import com.bibliotheque.microservicemylibrary.model.Copie;
-import com.bibliotheque.microservicemylibrary.model.Reservation;
+import com.bibliotheque.microservicemylibrary.model.Emprunt;
 import com.bibliotheque.microservicemylibrary.service.copie.ICopieService;
-import com.bibliotheque.microservicemylibrary.service.reservation.IReservationService;
+import com.bibliotheque.microservicemylibrary.service.emprunt.IEmpruntService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,27 +16,27 @@ import java.util.Optional;
 
 
 @RestController
-public class ReservationController {
+public class EmpruntController {
 
     Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    private IReservationService iReservationService;
+    private IEmpruntService iEmpruntService;
 
     @Autowired
     private ICopieService copieService;
 
 
     @RequestMapping(value = "/listeDesReservations/{id}", method = RequestMethod.GET)
-    public List<Reservation> afficherLaListeDesReservationsParUtilisateur(@PathVariable("id") Long id){
-        List<Reservation> reservations = iReservationService.findAllByIdUtilisateur(id);
+    public List<Emprunt> afficherLaListeDesReservationsParUtilisateur(@PathVariable("id") Long id){
+        List<Emprunt> emprunts = iEmpruntService.findAllByIdUtilisateur(id);
         logger.info("demande la liste des reservation pour un utilisateur");
-        return reservations;
+        return emprunts;
     }
 
     @RequestMapping(value = "/reservation/{id}")
-    public Optional<Reservation> affivherUneReservation(@PathVariable("id")Long id){
-        Optional<Reservation>reservation = iReservationService.findById(id);
+    public Optional<Emprunt> affivherUneReservation(@PathVariable("id")Long id){
+        Optional<Emprunt>reservation = iEmpruntService.findById(id);
         logger.info("detail d'une reservation demandée");
         return reservation;
 
@@ -48,14 +48,14 @@ public class ReservationController {
         Copie copie = copieService.findById(id).get();
         copie.setDisponible(false);
         copieService.save(copie);
-        Reservation reservation = new Reservation();
-        reservation.setCopie(copie);
-        reservation.setDateDeDebutPret(date);
-        reservation.setDateDeFinDuPret(iReservationService.add4Weeks(date));
-        reservation.setProlongerPret(false);
-        reservation.setIdUtilisateur(idUtilisateur);
-        iReservationService.save(reservation);
-        logger.info("demande de reservation pour une copie d'un livre");
+        Emprunt emprunt = new Emprunt();
+        emprunt.setCopie(copie);
+        emprunt.setDateDeDebutPret(date);
+        emprunt.setDateDeFinDuPret(iEmpruntService.add4Weeks(date));
+        emprunt.setProlongerPret(false);
+        emprunt.setIdUtilisateur(idUtilisateur);
+        iEmpruntService.save(emprunt);
+        logger.info("demande de emprunt pour une copie d'un livre");
     }
 
 
@@ -63,24 +63,26 @@ public class ReservationController {
     public void prolongerPret(@PathVariable Long id,@RequestParam Long idUtilisateur){
 
         Date date = new Date(Calendar.getInstance().getTime().getTime());
-        Reservation reservation = iReservationService.findById(id).get();
-        reservation.setIdUtilisateur(idUtilisateur);
-        reservation.setProlongerPret(true);
-        reservation.setDateDeFinDuPret(iReservationService.add4Weeks(reservation.getDateDeFinDuPret()));
+        Emprunt emprunt = iEmpruntService.findById(id).get();
+        emprunt.setIdUtilisateur(idUtilisateur);
+        emprunt.setProlongerPret(true);
+        emprunt.setDateDeFinDuPret(iEmpruntService.add4Weeks(emprunt.getDateDeFinDuPret()));
         logger.info("demande de prolongation d'un prêt");
-        iReservationService.save(reservation);
+        iEmpruntService.save(emprunt);
     }
 
     @RequestMapping(value = "/retour/{id}", method = RequestMethod.POST)
     public void retournerUnPret(@PathVariable Long id,@RequestParam Long idUtilisateur){
 
         Date date = new Date(Calendar.getInstance().getTime().getTime());
-        Reservation reservation = iReservationService.findById(id).get();
-        reservation.setIdUtilisateur(idUtilisateur);
-        reservation.setDateRetour(date);
-        reservation.setRendu(true);
-        iReservationService.save(reservation);
+        Emprunt emprunt = iEmpruntService.findById(id).get();
+        emprunt.setIdUtilisateur(idUtilisateur);
+        emprunt.setDateRetour(date);
+        emprunt.setRendu(true);
+        iEmpruntService.save(emprunt);
 
     }
+
+
 
 }

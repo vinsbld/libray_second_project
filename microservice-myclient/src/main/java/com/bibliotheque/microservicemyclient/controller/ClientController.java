@@ -1,9 +1,6 @@
 package com.bibliotheque.microservicemyclient.controller;
 
-import com.bibliotheque.microservicemyclient.bean.CopieBean;
-import com.bibliotheque.microservicemyclient.bean.LivreBean;
-import com.bibliotheque.microservicemyclient.bean.ReservationBean;
-import com.bibliotheque.microservicemyclient.bean.UtilisateurBean;
+import com.bibliotheque.microservicemyclient.bean.*;
 import com.bibliotheque.microservicemyclient.service.myLibrary.IMicroserviceMyLibraryProxyService;
 import com.bibliotheque.microservicemyclient.service.myUsers.IMicroserviceMyUsersProxyService;
 import org.slf4j.Logger;
@@ -78,15 +75,9 @@ public class ClientController {
         model.addAttribute("copieBeansDisponibles", copieBeansDisponibles);
         model.addAttribute("nbCopiesDisponibles", copieBeansDisponibles.size());
 
-        List<CopieBean> nbTTCopies= iMicroserviceMyLibraryProxyService.afficherLesCopiesDunLivre(id);
-        model.addAttribute("nbTTCopies", nbTTCopies.size());
-
-        List<CopieBean> listIsbnDesLivres = iMicroserviceMyLibraryProxyService.afficherLesCopiesDunLivre(id);
-        model.addAttribute("listIsbn", listIsbnDesLivres);
-
-        ReservationBean reservationBean = iMicroserviceMyLibraryProxyService.afficherUneReservation(id);
-        model.addAttribute("dateDeRetour", reservationBean);
-
+        List<CopieBeanDTO> copiesDunLivre = iMicroserviceMyLibraryProxyService.afficherLesCopiesDunLivre(id);
+        model.addAttribute("nbTTCopies", copiesDunLivre.size());
+        model.addAttribute("mCopies", copiesDunLivre);
 
         logger.info("Le livre "+livreBean.getTitre()+" est en consultation");
 

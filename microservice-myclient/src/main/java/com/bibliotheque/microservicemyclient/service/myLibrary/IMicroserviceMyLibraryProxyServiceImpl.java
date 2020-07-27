@@ -1,12 +1,12 @@
 package com.bibliotheque.microservicemyclient.service.myLibrary;
 
 import com.bibliotheque.microservicemyclient.bean.CopieBean;
+import com.bibliotheque.microservicemyclient.bean.CopieBeanDTO;
 import com.bibliotheque.microservicemyclient.bean.LivreBean;
 import com.bibliotheque.microservicemyclient.bean.ReservationBean;
 import com.bibliotheque.microservicemyclient.proxies.IMicroserviceMyLibraryProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
@@ -36,15 +36,17 @@ public class IMicroserviceMyLibraryProxyServiceImpl implements IMicroserviceMyLi
         return iMicroserviceMyLibraryProxy.afficherUnLivre(id);
     }
 
+
     /**
      * permet de rechercher les copies d'un livre
      * @param id identifiant du livre
      * @return la liste des copies d'un livre
      */
     @Override
-    public List<CopieBean> afficherLesCopiesDunLivre(Long id){
+    public List<CopieBeanDTO> afficherLesCopiesDunLivre(Long id) {
         return iMicroserviceMyLibraryProxy.afficherLesCopiesDunLivre(id);
     }
+
 
     /**
      * Permet de rechercher une copie
@@ -57,9 +59,9 @@ public class IMicroserviceMyLibraryProxyServiceImpl implements IMicroserviceMyLi
     }
 
     /**
-     * Permet de rechercher les reservations d'un utilisateur
+     * Permet de rechercher les emprunts d'un utilisateur
      * @param id identifiant de l'utilisateur
-     * @return la liste des reservations d'un utilisateur
+     * @return la liste des emprunts d'un utilisateur
      */
     @Override
     public List<ReservationBean> afficherLaListeDesReservationsParUtilisateur(Long id){
@@ -74,6 +76,11 @@ public class IMicroserviceMyLibraryProxyServiceImpl implements IMicroserviceMyLi
     @Override
     public List<CopieBean> afficherLesCopiesDisponibles(Long id){
         return iMicroserviceMyLibraryProxy.afficherLesCopiesDisponibles(id);
+    }
+
+    @Override
+    public List<CopieBean> afficherLesCopiesNonDisponibles(Long id) {
+        return iMicroserviceMyLibraryProxy.afficherLesCopiesNonDisponibles(id);
     }
 
     /**
@@ -103,7 +110,7 @@ public class IMicroserviceMyLibraryProxyServiceImpl implements IMicroserviceMyLi
      * @return la reservation recherchée
      */
     @Override
-    public ReservationBean afficherUneReservation(@PathVariable("id")Long id){
+    public ReservationBean afficherUneReservation(Long id){
        return iMicroserviceMyLibraryProxy.afficherUneReservation(id);
     }
 
@@ -116,4 +123,5 @@ public class IMicroserviceMyLibraryProxyServiceImpl implements IMicroserviceMyLi
     public List<LivreBean> faireUneRechercheParTitre(@RequestParam(name = "mc", defaultValue = "") String mc){
         return iMicroserviceMyLibraryProxy.faireUneRechercheParTitre(mc);
     }
+
 }

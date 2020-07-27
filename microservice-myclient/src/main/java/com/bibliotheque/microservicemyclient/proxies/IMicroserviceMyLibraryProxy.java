@@ -1,6 +1,7 @@
 package com.bibliotheque.microservicemyclient.proxies;
 
 import com.bibliotheque.microservicemyclient.bean.CopieBean;
+import com.bibliotheque.microservicemyclient.bean.CopieBeanDTO;
 import com.bibliotheque.microservicemyclient.bean.LivreBean;
 import com.bibliotheque.microservicemyclient.bean.ReservationBean;
 import com.bibliotheque.microservicemyclient.configurations.FeignConfig;
@@ -29,13 +30,16 @@ public interface IMicroserviceMyLibraryProxy {
     /*===========================** Copies **===========================*/
 
     @GetMapping(value = "/copies/{id}")
-    List<CopieBean> afficherLesCopiesDunLivre(@PathVariable("id")Long id);
+    List<CopieBeanDTO> afficherLesCopiesDunLivre(@PathVariable("id")Long id);
 
     @GetMapping(value = "/copie/{id}")
     CopieBean afficherUneCopie(@PathVariable("id")Long id);
 
     @GetMapping(value = "/copies/dispos/{id}")
     List<CopieBean> afficherLesCopiesDisponibles(@PathVariable("id") Long id);
+
+    @GetMapping(value = "copies/nonDispos/{id}")
+    List<CopieBean> afficherLesCopiesNonDisponibles(@PathVariable("id")Long id);
 
     /*===========================** Reservations **===========================*/
 
@@ -50,5 +54,6 @@ public interface IMicroserviceMyLibraryProxy {
 
     @GetMapping(value = "/reservation/{id}")
     ReservationBean afficherUneReservation(@PathVariable("id")Long id);
+
 
 }
