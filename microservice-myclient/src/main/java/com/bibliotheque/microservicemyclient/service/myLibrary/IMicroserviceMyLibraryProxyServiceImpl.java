@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class IMicroserviceMyLibraryProxyServiceImpl implements IMicroserviceMyLibraryProxyService {
@@ -58,14 +59,16 @@ public class IMicroserviceMyLibraryProxyServiceImpl implements IMicroserviceMyLi
         return iMicroserviceMyLibraryProxy.afficherUneCopie(id);
     }
 
+
+
     /**
      * Permet de rechercher les emprunts d'un utilisateur
      * @param id identifiant de l'utilisateur
      * @return la liste des emprunts d'un utilisateur
      */
     @Override
-    public List<EmpruntBean> afficherLaListeDesEmpruntsParUtilisateur(Long id){
-        return iMicroserviceMyLibraryProxy.afficherLaListeDesReservationsParUtilisateur(id);
+    public List<EmpruntBean> afficherLaListeDesEmpruntsParUtilisateur(Long id) {
+        return iMicroserviceMyLibraryProxy.afficherLaListeDesEmpruntsParUtilisateur(id);
     }
 
     /**
@@ -78,15 +81,14 @@ public class IMicroserviceMyLibraryProxyServiceImpl implements IMicroserviceMyLi
         return iMicroserviceMyLibraryProxy.afficherLesCopiesDisponibles(id);
     }
 
-
     /**
-     * Permet de faire une demande de reservation d'une copie d'un livre
+     * Permet de faire une demande d'emprunt d'une copie d'un livre
      * @param id identifiant de la copie du livre
      * @param idUtilisateur identifiant de l'utilisateur
      */
     @Override
-    public void demandeEmprunt(Long id, Long idUtilisateur){
-        iMicroserviceMyLibraryProxy.demandeDeReservation(id, idUtilisateur);
+    public void demandeEmprunt(Long id, Long idUtilisateur) {
+    iMicroserviceMyLibraryProxy.demandeEmprunt(id, idUtilisateur);
     }
 
     /**
@@ -96,18 +98,18 @@ public class IMicroserviceMyLibraryProxyServiceImpl implements IMicroserviceMyLi
      * @return le prêt prolongé
      */
     @Override
-    public EmpruntBean prolongerPret(Long id, Long idUtilisateur){
-        return iMicroserviceMyLibraryProxy.prolongerPret(id, idUtilisateur);
+    public EmpruntBean prolongerEmprunt(Long id, Long idUtilisateur) {
+        return iMicroserviceMyLibraryProxy.prolongerEmprunt(id, idUtilisateur);
     }
 
     /**
-     * Permet de rechercher une reservation
+     * Permet de rechercher un emprunt
      * @param id identifiant de la reservation
-     * @return la reservation recherchée
+     * @return l'emprunt recherchée
      */
     @Override
-    public EmpruntBean afficherUnEmprunt(Long id){
-       return iMicroserviceMyLibraryProxy.afficherUneReservation(id);
+    public EmpruntBean afficherUnEmprunt(Long id) {
+        return iMicroserviceMyLibraryProxy.afficherUnEmprunt(id);
     }
 
     /**

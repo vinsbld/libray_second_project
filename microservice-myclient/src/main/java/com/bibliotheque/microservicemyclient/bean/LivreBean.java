@@ -32,7 +32,7 @@ public @Data
 
             public Integer nbrCopiesDisponibles;
 
-            @JsonProperty("copie")
+            @JsonProperty("copies")
             private List<CopieBean> copieBeans;
 
             public LivreBean(Long id, String titre, String nomAuteur, String prenomAuteur, Date dateEdition, String editeur, Integer nbCopies, Integer nbrCopiesDisponibles, List<CopieBean> copieBeans) {

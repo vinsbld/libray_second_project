@@ -15,19 +15,19 @@ public interface IEmpruntDao extends JpaRepository<Emprunt, Long> {
     //trouver toutes les emprunts par livre
     List<Emprunt>findAll();
 
-    //trouver une reservation par son id
+    //trouver un Emprunt par son id
     Optional<Emprunt> findById(Long id);
 
-    //trouver une reservation par utilisateur
+    //trouver un Emprunt par utilisateur
     List<Emprunt> findAllByIdUtilisateur(Long id);
 
-    //sauvegarder une reservation
+    //sauvegarder un Emprunt
     Emprunt save(Optional<Emprunt> reservation);
 
     //trouve les emprunts non retournées
     List<Emprunt> findAllByDateRetourIsNullAndAndDateDeFinEmpruntBefore(Date dateNow);
 
-    //trouver une reservation par copies de livre
+    //trouver un Emprunt par copies de livre
     Emprunt findByCopie_Id(Long id);
 
 }

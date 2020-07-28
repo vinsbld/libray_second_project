@@ -24,7 +24,7 @@ class CopieBean implements Serializable {
     @JsonProperty("livre")
     private LivreBean livreBean;
 
-    @JsonProperty("emprunt")
+    @JsonProperty("emprunts")
     private List<EmpruntBean> empruntBeans;
 
     public CopieBean(Long id, Integer isbn, boolean disponible, LivreBean livreBean, List<EmpruntBean> empruntBeans) {

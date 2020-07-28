@@ -7,6 +7,7 @@ import com.bibliotheque.microservicemyclient.bean.LivreBean;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface IMicroserviceMyLibraryProxyService {
 
@@ -24,7 +25,7 @@ public interface IMicroserviceMyLibraryProxyService {
 
     void demandeEmprunt(Long id, Long idUtilisateur);
 
-    EmpruntBean prolongerPret(Long id, Long idUtilisateur);
+    EmpruntBean prolongerEmprunt(Long id, Long idUtilisateur);
 
     EmpruntBean afficherUnEmprunt(Long id);
 

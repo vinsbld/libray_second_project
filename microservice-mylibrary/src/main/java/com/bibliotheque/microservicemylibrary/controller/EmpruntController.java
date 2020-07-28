@@ -27,23 +27,23 @@ public class EmpruntController {
     private ICopieService copieService;
 
 
-    @RequestMapping(value = "/listeDesReservations/{id}", method = RequestMethod.GET)
-    public List<Emprunt> afficherLaListeDesReservationsParUtilisateur(@PathVariable("id") Long id){
+    @RequestMapping(value = "/listeDesEmprunts/{id}", method = RequestMethod.GET)
+    public List<Emprunt> afficherLaListeDesEmpruntsParUtilisateur(@PathVariable("id") Long id){
         List<Emprunt> emprunts = iEmpruntService.findAllByIdUtilisateur(id);
         logger.info("demande la liste des reservation pour un utilisateur");
         return emprunts;
     }
 
-    @RequestMapping(value = "/reservation/{id}")
-    public Optional<Emprunt> affivherUneReservation(@PathVariable("id")Long id){
+    @RequestMapping(value = "/emprunt/{id}")
+    public Optional<Emprunt> afficherUnEmprunt(@PathVariable("id")Long id){
         Optional<Emprunt>reservation = iEmpruntService.findById(id);
         logger.info("detail d'une reservation demandée");
         return reservation;
 
     }
 
-    @RequestMapping(value = "/reserver/{id}", method = RequestMethod.POST)
-    public void demandeDeReservation(@PathVariable Long id, @RequestParam Long idUtilisateur){
+    @RequestMapping(value = "/emprunter/{id}", method = RequestMethod.POST)
+    public void demandeEmprunt(@PathVariable Long id, @RequestParam Long idUtilisateur){
         Date date = new Date(Calendar.getInstance().getTime().getTime());
         Copie copie = copieService.findById(id).get();
         copie.setDisponible(false);
@@ -60,7 +60,7 @@ public class EmpruntController {
 
 
     @RequestMapping(value = "/prolonger/{id}", method = RequestMethod.POST)
-    public void prolongerPret(@PathVariable Long id,@RequestParam Long idUtilisateur){
+    public void prolongerEmprunt(@PathVariable Long id,@RequestParam Long idUtilisateur){
 
         Date date = new Date(Calendar.getInstance().getTime().getTime());
         Emprunt emprunt = iEmpruntService.findById(id).get();
@@ -72,7 +72,7 @@ public class EmpruntController {
     }
 
     @RequestMapping(value = "/retour/{id}", method = RequestMethod.POST)
-    public void retournerUnPret(@PathVariable Long id,@RequestParam Long idUtilisateur){
+    public void retournerEmprunt(@PathVariable Long id,@RequestParam Long idUtilisateur){
 
         Date date = new Date(Calendar.getInstance().getTime().getTime());
         Emprunt emprunt = iEmpruntService.findById(id).get();

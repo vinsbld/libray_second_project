@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 import java.util.List;
+import java.util.Optional;
 
 @RequestMapping(value = "/microservice-mylibrary")
 @FeignClient(name ="zuul-server", contextId = "IMicroserviceMyLibraryProxy", configuration = FeignConfig.class, url = "http://localhost:9006")
@@ -41,19 +42,18 @@ public interface IMicroserviceMyLibraryProxy {
     @GetMapping(value = "copies/nonDispos/{id}")
     List<CopieBean> afficherLesCopiesNonDisponibles(@PathVariable("id")Long id);
 
-    /*===========================** Reservations **===========================*/
+    /*===========================** Emprunts **===========================*/
 
-    @GetMapping(value = "/listeDesReservations/{id}")
-    List<EmpruntBean> afficherLaListeDesReservationsParUtilisateur(@PathVariable("id")Long id);
+    @GetMapping(value = "/listeDesEmprunts/{id}")
+    List<EmpruntBean> afficherLaListeDesEmpruntsParUtilisateur(@PathVariable("id") Long id);
 
-    @PostMapping(value = "/reserver/{id}")
-    void demandeDeReservation(@PathVariable Long id, @RequestParam Long idUtilisateur);
+    @GetMapping(value = "/emprunt/{id}")
+    EmpruntBean afficherUnEmprunt(@PathVariable("id")Long id);
+
+    @PostMapping(value = "/emprunter/{id}")
+    void demandeEmprunt(@PathVariable Long id, @RequestParam Long idUtilisateur);
 
     @PostMapping(value = "/prolonger/{id}")
-    EmpruntBean prolongerPret(@PathVariable Long id, @RequestParam Long idUtilisateur);
-
-    @GetMapping(value = "/reservation/{id}")
-    EmpruntBean afficherUneReservation(@PathVariable("id")Long id);
-
+    EmpruntBean prolongerEmprunt(@PathVariable Long id, @RequestParam Long idUtilisateur);
 
 }
