@@ -27,6 +27,9 @@ class Copie {
     @OneToMany(mappedBy = "copie", fetch = FetchType.EAGER)
     private List<Emprunt> emprunts;
 
+    @OneToMany(mappedBy = "copieReservation", fetch = FetchType.LAZY)
+    private List<Reservation> reservations;
+
     @Override
     public String toString() {
         return "Copie{" +
