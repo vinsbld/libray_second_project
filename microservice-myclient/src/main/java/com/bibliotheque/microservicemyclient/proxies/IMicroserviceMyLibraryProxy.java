@@ -56,4 +56,5 @@ public interface IMicroserviceMyLibraryProxy {
     @PostMapping(value = "/prolonger/{id}")
     EmpruntBean prolongerEmprunt(@PathVariable Long id, @RequestParam Long idUtilisateur);
 
+
 }

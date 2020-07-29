@@ -35,17 +35,18 @@ public @Data
             @JsonProperty("copies")
             private List<CopieBean> copieBeans;
 
-            public LivreBean(Long id, String titre, String nomAuteur, String prenomAuteur, Date dateEdition, String editeur, Integer nbCopies, Integer nbrCopiesDisponibles, List<CopieBean> copieBeans) {
-                this.id = id;
-                this.titre = titre;
-                this.nomAuteur = nomAuteur;
-                this.prenomAuteur = prenomAuteur;
-                this.dateEdition = dateEdition;
-                this.editeur = editeur;
-                this.nbCopies = nbCopies;
-                this.nbrCopiesDisponibles = nbrCopiesDisponibles;
-                this.copieBeans = copieBeans;
-            }
+
+    public LivreBean(Long id, String titre, String nomAuteur, String prenomAuteur, Date dateEdition, String editeur, Integer nbCopies, Integer nbrCopiesDisponibles, List<CopieBean> copieBeans) {
+        this.id = id;
+        this.titre = titre;
+        this.nomAuteur = nomAuteur;
+        this.prenomAuteur = prenomAuteur;
+        this.dateEdition = dateEdition;
+        this.editeur = editeur;
+        this.nbCopies = nbCopies;
+        this.nbrCopiesDisponibles = nbrCopiesDisponibles;
+        this.copieBeans = copieBeans;
+    }
 
     @Override
     public String toString() {

@@ -31,7 +31,5 @@ public interface IEmpruntDao extends JpaRepository<Emprunt, Long> {
     //trouver un Emprunt par copies de livre
     Emprunt findByCopie_Id(Long id);
 
-    //trouver la date de retour la plus proche pour un emprunt
-    List<Emprunt> findAllByDateRetourIsNullAndDateDeFinEmpruntAsc(Long id);
 
 }

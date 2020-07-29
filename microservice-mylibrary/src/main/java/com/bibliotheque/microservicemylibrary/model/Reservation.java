@@ -8,7 +8,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import java.util.Date;
-import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -23,6 +22,4 @@ public class Reservation {
 
     private Date dateDeReservation;
 
-    @ManyToOne
-    private Livre livreReservation;
 }

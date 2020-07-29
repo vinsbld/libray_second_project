@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class IMicroserviceMyLibraryProxyServiceImpl implements IMicroserviceMyLibraryProxyService {
@@ -104,7 +103,7 @@ public class IMicroserviceMyLibraryProxyServiceImpl implements IMicroserviceMyLi
 
     /**
      * Permet de rechercher un emprunt
-     * @param id identifiant de la reservation
+     * @param id identifiant de l'emprunt
      * @return l'emprunt recherchée
      */
     @Override
@@ -121,5 +120,6 @@ public class IMicroserviceMyLibraryProxyServiceImpl implements IMicroserviceMyLi
     public List<LivreBean> faireUneRechercheParTitre(@RequestParam(name = "mc", defaultValue = "") String mc){
         return iMicroserviceMyLibraryProxy.faireUneRechercheParTitre(mc);
     }
+
 
 }

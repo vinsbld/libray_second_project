@@ -75,16 +75,6 @@ public class IEmpruntServiceImpl implements IEmpruntService {
         return iEmpruntDao.findByCopie_Id(id);
     }
 
-    /**
-     * permet de trouver la date de retour la plus proche pour un emprunt
-     * @param id identifiant d'un livre
-     * @return la liste des emprunts dont le retour du livre n'a pas été enregistré,
-     * et dont la date de fin d'emprunt est la plus proche
-     */
-    @Override
-    public List<Emprunt> findAllByDateRetourIsNullAndDateDeFinEmpruntAsc(Long id) {
-        return null;
-    }
 
 }
 
