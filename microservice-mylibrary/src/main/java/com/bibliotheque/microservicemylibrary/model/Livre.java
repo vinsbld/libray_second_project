@@ -36,6 +36,10 @@ class Livre {
     @OneToMany(mappedBy = "livre", fetch = FetchType.EAGER)
     private List<Copie> copies;
 
+    @JsonBackReference
+    @OneToMany
+    private List<Reservation> reservations;
+
     @Transient
     public Integer getNbrCopiesDisponibles(){
        Integer nbDispo = 0;

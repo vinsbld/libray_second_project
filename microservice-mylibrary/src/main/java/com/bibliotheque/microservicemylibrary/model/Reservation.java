@@ -1,5 +1,6 @@
 package com.bibliotheque.microservicemylibrary.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -21,5 +22,9 @@ public class Reservation {
     private Long idUtilisateur;
 
     private Date dateDeReservation;
+
+    @JsonManagedReference
+    @ManyToOne
+    private Livre livre;
 
 }
