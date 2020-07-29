@@ -73,7 +73,10 @@
                 <table class="table listTableDeco">
                     <thead>
                     <tr>
-                        <th>Exemplaires disponibles : <span th:text="${nbCopiesDisponibles}" style="color:#00FF00;"></span> / <span th:text="${nbTTCopies}"></span></th>
+                        <th>Exemplaires disponibles :
+                            <span th:if="${nbCopiesDisponibles > 0}"><span th:text="${nbCopiesDisponibles}" style="color:#00FF00;"></span> / <span th:text="${nbTTCopies}"></span></span>
+                            <span th:if="${nbCopiesDisponibles <= 0}"><span th:text="${nbCopiesDisponibles}" style="color: #b21f2d"></span> / <span th:text="${nbTTCopies}"></span></span>
+                        </th>
                         <th sec:authorize="isAuthenticated()"></th>
                     </tr>
                     </thead>

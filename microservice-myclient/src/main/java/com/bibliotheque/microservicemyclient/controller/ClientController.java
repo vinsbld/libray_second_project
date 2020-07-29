@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -108,10 +109,10 @@ public class ClientController {
         return "/Livres";
     }
 
-    /*============== #Reservation ======================*/
+    /*============== #Emprunt ======================*/
     //faire une reservation
-    @PostMapping("/reservation/{id}")
-    public String demandeDeReservation(Model model, @PathVariable("id")Long id){
+    @PostMapping("/emprunt/{id}")
+    public String demandeEmprunt(Model model, @PathVariable("id")Long id){
 
         UtilisateurBean utilisateurBean = (UtilisateurBean) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         utilisateurBean = iMicroserviceMyUsersProxyService.findById(utilisateurBean.getId());
