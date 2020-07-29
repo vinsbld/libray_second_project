@@ -27,4 +27,13 @@ public class Reservation {
     @ManyToOne
     private Livre livre;
 
+    @Override
+    public String toString() {
+        return "Reservation{" +
+                "id=" + id +
+                ", idUtilisateur=" + idUtilisateur +
+                ", dateDeReservation=" + dateDeReservation +
+                ", livre=" + livre +
+                '}';
+    }
 }

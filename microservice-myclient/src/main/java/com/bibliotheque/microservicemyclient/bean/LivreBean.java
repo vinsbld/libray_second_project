@@ -35,8 +35,11 @@ public @Data
             @JsonProperty("copies")
             private List<CopieBean> copieBeans;
 
+            @JsonProperty("reservations")
+            private List<ReservationBean> reservationBeans;
 
-    public LivreBean(Long id, String titre, String nomAuteur, String prenomAuteur, Date dateEdition, String editeur, Integer nbCopies, Integer nbrCopiesDisponibles, List<CopieBean> copieBeans) {
+
+    public LivreBean(Long id, String titre, String nomAuteur, String prenomAuteur, Date dateEdition, String editeur, Integer nbCopies, Integer nbrCopiesDisponibles, List<CopieBean> copieBeans, List<ReservationBean> reservationBeans) {
         this.id = id;
         this.titre = titre;
         this.nomAuteur = nomAuteur;
@@ -46,6 +49,7 @@ public @Data
         this.nbCopies = nbCopies;
         this.nbrCopiesDisponibles = nbrCopiesDisponibles;
         this.copieBeans = copieBeans;
+        this.reservationBeans = reservationBeans;
     }
 
     @Override
@@ -60,6 +64,7 @@ public @Data
                 ", nbCopies=" + nbCopies +
                 ", nbrCopiesDisponibles=" + nbrCopiesDisponibles +
                 ", copieBeans=" + copieBeans +
+                ", reservationBeans=" + reservationBeans +
                 '}';
     }
 }

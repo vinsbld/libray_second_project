@@ -56,6 +56,17 @@ class Livre {
         return copies.size();
     }
 
-
-
+    @Override
+    public String toString() {
+        return "Livre{" +
+                "id=" + id +
+                ", titre='" + titre + '\'' +
+                ", nomAuteur='" + nomAuteur + '\'' +
+                ", prenomAuteur='" + prenomAuteur + '\'' +
+                ", dateEdition=" + dateEdition +
+                ", editeur='" + editeur + '\'' +
+                ", copies=" + copies +
+                ", reservations=" + reservations +
+                '}';
+    }
 }
