@@ -11,10 +11,10 @@ public interface IEmpruntService {
     //ajoute 4 semaine à une date
     Date add4Weeks(Date date);
 
-    //affiche une liste de reservation pour un utilisateur
+    //affiche une liste d'emprunts pour un utilisateur
     List<Emprunt> findAllByIdUtilisateur(Long id);
 
-    //trouve une reservation par son id
+    //trouve un emprunt par son id
     Optional<Emprunt> findById(Long id);
 
     //enregistre une emprunt
@@ -23,7 +23,10 @@ public interface IEmpruntService {
     //trouve les emprunts non retournées par rapport à la date du jour
     List<Emprunt> relance(Date dateNow);
 
-    //trouver une reservation par copies de livre
+    //trouver un emprunt par copies de livre
     Emprunt findByCopie_Id(Long id);
+
+    //trouver la date de retour la plus proche pour un emprunt
+    List<Emprunt> findAllByDateRetourIsNullAndDateDeFinEmpruntAsc(Long id);
 
 }

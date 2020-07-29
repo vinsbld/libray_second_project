@@ -24,5 +24,5 @@ public class Reservation {
     private Date dateDeReservation;
 
     @ManyToOne
-    private Copie copieReservation;
+    private Livre livreReservation;
 }

@@ -1,5 +1,6 @@
 package com.bibliotheque.microservicemylibrary.dao;
 
+import com.bibliotheque.microservicemylibrary.model.Copie;
 import com.bibliotheque.microservicemylibrary.model.Emprunt;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -29,5 +30,8 @@ public interface IEmpruntDao extends JpaRepository<Emprunt, Long> {
 
     //trouver un Emprunt par copies de livre
     Emprunt findByCopie_Id(Long id);
+
+    //trouver la date de retour la plus proche pour un emprunt
+    List<Emprunt> findAllByDateRetourIsNullAndDateDeFinEmpruntAsc(Long id);
 
 }

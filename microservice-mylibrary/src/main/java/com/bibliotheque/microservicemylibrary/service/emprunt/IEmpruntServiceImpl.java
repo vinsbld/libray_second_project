@@ -26,9 +26,9 @@ public class IEmpruntServiceImpl implements IEmpruntService {
     return calendar.getTime();}
 
     /**
-     * Permet d'afficher la liste des réservations pour un utilisateur
+     * Permet d'afficher la liste des emprunts pour un utilisateur
      * @param id identifiant l'utilisateur
-     * @return la liste de toutes les réservations faites par l'utilisateur
+     * @return la liste de tous les emprunts faites par l'utilisateur
      */
     @Override
     public List<Emprunt> findAllByIdUtilisateur(Long id) {
@@ -36,9 +36,9 @@ public class IEmpruntServiceImpl implements IEmpruntService {
     }
 
     /**
-     * Permet de trouver une résercvation
-     * @param id identifiant de la réservation
-     * @return la réservation
+     * Permet de trouver un emprunt
+     * @param id identifiant de l'emprunt
+     * @return l'emprunt
      */
     @Override
     public Optional<Emprunt> findById(Long id){
@@ -46,7 +46,7 @@ public class IEmpruntServiceImpl implements IEmpruntService {
     }
 
     /**
-     * Permet de sauvegarder une réservation
+     * Permet de sauvegarder un emprunt
      * @param emprunt Objet à sauvegarder
      */
     @Override
@@ -57,7 +57,7 @@ public class IEmpruntServiceImpl implements IEmpruntService {
     /**
      * Permet de trouver les emprunts à relancer
      * @param dateNow date du jour
-     * @return la liste des réservations dont le retour du livre n'a pas été enregistré,
+     * @return la liste des emprunts dont le retour du livre n'a pas été enregistré,
      * et dont la date de fin du prêt est avant la date du jour
      */
     @Override
@@ -65,9 +65,25 @@ public class IEmpruntServiceImpl implements IEmpruntService {
        return iEmpruntDao.findAllByDateRetourIsNullAndAndDateDeFinEmpruntBefore(dateNow);
     }
 
+    /**
+     * permet de trouver un Emprunt par copies de livre
+     * @param id idetifiant de la copie
+     * @return l'emprunt de la copie
+     */
     @Override
     public Emprunt findByCopie_Id(Long id) {
         return iEmpruntDao.findByCopie_Id(id);
+    }
+
+    /**
+     * permet de trouver la date de retour la plus proche pour un emprunt
+     * @param id identifiant d'un livre
+     * @return la liste des emprunts dont le retour du livre n'a pas été enregistré,
+     * et dont la date de fin d'emprunt est la plus proche
+     */
+    @Override
+    public List<Emprunt> findAllByDateRetourIsNullAndDateDeFinEmpruntAsc(Long id) {
+        return null;
     }
 
 }

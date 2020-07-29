@@ -36,6 +36,9 @@ class Livre {
     @OneToMany(mappedBy = "livre", fetch = FetchType.EAGER)
     private List<Copie> copies;
 
+    @OneToMany(mappedBy = "livreReservation", fetch = FetchType.LAZY)
+    private List<Reservation> reservations;
+
     @Transient
     public Integer getNbrCopiesDisponibles(){
        Integer nbDispo = 0;
@@ -51,5 +54,7 @@ class Livre {
     public Integer getNbCopies(){
         return copies.size();
     }
+
+
 
 }
