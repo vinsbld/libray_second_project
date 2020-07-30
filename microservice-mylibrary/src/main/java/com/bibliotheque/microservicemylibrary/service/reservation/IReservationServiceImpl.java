@@ -30,6 +30,6 @@ public class IReservationServiceImpl implements IReservationService{
      */
     @Override
     public List<Reservation> findAllByIdUtilisateur(Long id) {
-        return null;
+        return iReservationDao.findAllByIdUtilisateur(id);
     }
 }

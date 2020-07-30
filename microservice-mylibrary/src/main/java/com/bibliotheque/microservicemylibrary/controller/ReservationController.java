@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 @RestController
 public class ReservationController {
@@ -33,6 +34,13 @@ public class ReservationController {
         reservation.setIdUtilisateur(idUtilisateur);
         iReservationService.save(reservation);
         logger.info("demande de réservation pour une copie d'un livre");
+    }
+
+    @RequestMapping(value = "/listeDesReservations/{id}", method = RequestMethod.GET)
+    public List<Reservation> afficherlesReservationsParUtilisateur(@PathVariable("id") Long id){
+        List<Reservation> reservations = iReservationService.findAllByIdUtilisateur(id);
+        logger.info("demande la liste des réservations pour un utilisateur");
+        return reservations;
     }
 
 }

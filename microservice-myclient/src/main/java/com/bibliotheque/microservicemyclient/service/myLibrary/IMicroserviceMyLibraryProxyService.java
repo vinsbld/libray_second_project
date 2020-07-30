@@ -1,9 +1,6 @@
 package com.bibliotheque.microservicemyclient.service.myLibrary;
 
-import com.bibliotheque.microservicemyclient.bean.CopieBean;
-import com.bibliotheque.microservicemyclient.bean.CopieBeanDTO;
-import com.bibliotheque.microservicemyclient.bean.EmpruntBean;
-import com.bibliotheque.microservicemyclient.bean.LivreBean;
+import com.bibliotheque.microservicemyclient.bean.*;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,6 +32,8 @@ public interface IMicroserviceMyLibraryProxyService {
     List<LivreBean> faireUneRechercheParTitre(@RequestParam(name = "mc", defaultValue = "") String mc);
 
     void demandeDeReservation(Long id, Long idUtilisateur);
+
+    List<ReservationBean> afficherlesReservationsParUtilisateur(Long id);
 
 
 }

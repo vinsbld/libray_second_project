@@ -24,7 +24,7 @@ class Copie {
     @ManyToOne
     private Livre livre;
 
-    @JsonManagedReference
+    @JsonBackReference
     @OneToMany(mappedBy = "copie", fetch = FetchType.EAGER)
     private List<Emprunt> emprunts;
 

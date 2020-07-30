@@ -30,14 +30,14 @@ public class EmpruntController {
     @RequestMapping(value = "/listeDesEmprunts/{id}", method = RequestMethod.GET)
     public List<Emprunt> afficherLaListeDesEmpruntsParUtilisateur(@PathVariable("id") Long id){
         List<Emprunt> emprunts = iEmpruntService.findAllByIdUtilisateur(id);
-        logger.info("demande la liste des reservation pour un utilisateur");
+        logger.info("demande la liste des emprunts pour un utilisateur");
         return emprunts;
     }
 
     @RequestMapping(value = "/emprunt/{id}")
     public Optional<Emprunt> afficherUnEmprunt(@PathVariable("id")Long id){
         Optional<Emprunt>reservation = iEmpruntService.findById(id);
-        logger.info("detail d'une reservation demandée");
+        logger.info("detail d'un emprunt demandée");
         return reservation;
 
     }

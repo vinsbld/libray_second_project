@@ -65,32 +65,40 @@
                         <th></th>
                     </tr>
                     </thead>
-
                     <tbody>
                     <tr th:each="mEmprunt:${empruntBeans}">
-                        <td th:text="${#dates.format(mEmprunt.dateDeDebutEmprunt, 'dd/MM/yyyy')}"></td>
-                        <td th:text="${#dates.format(mEmprunt.dateDeFinEmprunt, 'dd/MM/yyyy')}"></td>
-                        <td th:text="${mEmprunt?.copieBean?.livreBean?.titre}"></td>
-                        <td th:if="${(mEmprunt.isProlongerEmprunt()==false) and (mEmprunt.dateDeFinEmprunt>mEmprunt.getDateDuJour())}"><form th:action="@{/prolonger/{id}(id=${mEmprunt.id})}" method="post"><button type="submit" class="btn-get-create btn-xs ">Prolonger</button></form></td>
-                        <td th:if="${mEmprunt.isProlongerEmprunt()==true}"><span style="color:gray">Prolongation en cours</span></td>
-                        <td th:if="${mEmprunt.dateDeFinEmprunt<mEmprunt.getDateDuJour()}"><span style="color:red">Délais dépassé !</span></td>
+                            <td th:text="${#dates.format(mEmprunt.dateDeDebutEmprunt, 'dd/MM/yyyy')}"></td>
+                            <td th:text="${#dates.format(mEmprunt.dateDeFinEmprunt, 'dd/MM/yyyy')}"></td>
+                            <td th:text="${mEmprunt?.copieBean?.livreBean?.titre}"></td>
+                            <td th:if="${(mEmprunt.isProlongerEmprunt()==false) and (mEmprunt.dateDeFinEmprunt>mEmprunt.getDateDuJour())}">
+                                <form th:action="@{/prolonger/{id}(id=${mEmprunt.id})}" method="post">
+                                    <button type="submit" class="btn-get-create btn-xs ">Prolonger</button>
+                                </form>
+                            </td>
+                            <td th:if="${mEmprunt.isProlongerEmprunt()==true}">
+                                <span style="color:gray">Prolongation en cours</span>
+                            </td>
+                            <td th:if="${mEmprunt.dateDeFinEmprunt<mEmprunt.getDateDuJour()}">
+                                <span style="color:red">Délais dépassé !</span>
+                            </td>
                     </tr>
                     </tbody>
                 </table>
             </div>
-            <h1>Mes Reservations en cours</h1>
+            <h1>Mes Réservations en cours</h1>
             <div class="cstyle">
                 <table class="table listTableDeco">
                     <thead>
                     <tr>
-                        <th>Date de la réservation</th>
-                        <th>Ouvrage emprunté </th>
-                        <th>Date prévu du retour de l'ouvrage </th>
+                        <th>Date de la demande</th>
+                        <th>Ouvrage emprunté</th>
+                        <th>Date de retour prévue de l'ouvrage</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>
-
+                    <tr th:each="mRs:${reservationList}">
+                        <td th:text="${#dates.format(mRs.dateDeReservation, 'dd/MM/yyyy')}"></td>
+                        <td th:text="${mRs.copieBean.livreBean.titre}"></td>
                     </tr>
                     </tbody>
                 </table>

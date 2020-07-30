@@ -48,6 +48,9 @@ public class ClientController {
         List<EmpruntBean> empruntBeans = iMicroserviceMyLibraryProxyService.afficherLaListeDesEmpruntsParUtilisateur(utilisateurBean.getId());
         model.addAttribute("empruntBeans", empruntBeans);
 
+        List<ReservationBean> reservationBeans = iMicroserviceMyLibraryProxyService.afficherlesReservationsParUtilisateur(utilisateurBean.getId());
+        model.addAttribute("reservationList", reservationBeans);
+
         logger.info("L'utilisateur "+utilisateurBean+" id : "+utilisateurBean.getId()+ " consulte sa page profil");
 
         return "Profil";

@@ -1,6 +1,7 @@
 package com.bibliotheque.microservicemylibrary.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -34,7 +35,7 @@ class Emprunt {
 
     private boolean prolongerEmprunt;
 
-    @JsonBackReference
+    @JsonManagedReference
     @ManyToOne
     private Copie copie;
 

@@ -12,8 +12,8 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-public @Data
-class CopieBean implements Serializable {
+@Data
+public class CopieBean implements Serializable {
 
     private Long id;
 

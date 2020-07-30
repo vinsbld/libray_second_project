@@ -1,9 +1,6 @@
 package com.bibliotheque.microservicemyclient.service.myLibrary;
 
-import com.bibliotheque.microservicemyclient.bean.CopieBean;
-import com.bibliotheque.microservicemyclient.bean.CopieBeanDTO;
-import com.bibliotheque.microservicemyclient.bean.EmpruntBean;
-import com.bibliotheque.microservicemyclient.bean.LivreBean;
+import com.bibliotheque.microservicemyclient.bean.*;
 import com.bibliotheque.microservicemyclient.proxies.IMicroserviceMyLibraryProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -131,6 +128,16 @@ public class IMicroserviceMyLibraryProxyServiceImpl implements IMicroserviceMyLi
     @Override
     public void demandeDeReservation(Long id, Long idUtilisateur) {
         iMicroserviceMyLibraryProxy.demandeDeReservation(id, idUtilisateur);
+    }
+
+    /**
+     * Permet de rechercher les réservations d'un utilisateur
+     * @param id identifiant de l'utilisateur
+     * @return la liste des réservations d'un utilisateur
+     */
+    @Override
+    public List<ReservationBean> afficherlesReservationsParUtilisateur(Long id) {
+        return iMicroserviceMyLibraryProxy.afficherlesReservationsParUtilisateur(id);
     }
 
 

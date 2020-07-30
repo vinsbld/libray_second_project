@@ -1,10 +1,18 @@
 package com.bibliotheque.microservicemyclient.bean;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+import java.io.Serializable;
 import java.util.Date;
-
-public class ReservationBean {
+@NoArgsConstructor
+@Getter
+@Setter
+@Data
+public class ReservationBean implements Serializable {
 
     private Long id;
 
