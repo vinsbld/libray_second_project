@@ -46,7 +46,7 @@ public class ClientController {
         model.addAttribute("utilisateurBean", utilisateurBean);
 
         List<EmpruntBean> empruntBeans = iMicroserviceMyLibraryProxyService.afficherLaListeDesEmpruntsParUtilisateur(utilisateurBean.getId());
-        model.addAttribute("empruntBeans", empruntBeans);
+        model.addAttribute("empruntList", empruntBeans);
 
         List<ReservationBean> reservationBeans = iMicroserviceMyLibraryProxyService.afficherlesReservationsParUtilisateur(utilisateurBean.getId());
         model.addAttribute("reservationList", reservationBeans);

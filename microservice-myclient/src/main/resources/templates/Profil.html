@@ -66,7 +66,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="mEmprunt:${empruntBeans}">
+                    <tr th:each="mEmprunt:${empruntList}">
                             <td th:text="${#dates.format(mEmprunt.dateDeDebutEmprunt, 'dd/MM/yyyy')}"></td>
                             <td th:text="${#dates.format(mEmprunt.dateDeFinEmprunt, 'dd/MM/yyyy')}"></td>
                             <td th:text="${mEmprunt?.copieBean?.livreBean?.titre}"></td>
@@ -99,6 +99,7 @@
                     <tr th:each="mRs:${reservationList}">
                         <td th:text="${#dates.format(mRs.dateDeReservation, 'dd/MM/yyyy')}"></td>
                         <td th:text="${mRs.copieBean.livreBean.titre}"></td>
+                        <!--<td th:text="${#dates.format(mRs.copieBean.empruntBeans.get(mRs.copieBean.getId()).getDateDeFinEmprunt(), 'dd/MM/yyyy')}"></td>-->
                     </tr>
                     </tbody>
                 </table>

@@ -75,23 +75,40 @@
                     <tr>
                         <th>Exemplaires disponibles :
                             <span th:if="${nbCopiesDisponibles > 0}"><span th:text="${nbCopiesDisponibles}" style="color:#00FF00;"></span> / <span th:text="${nbTTCopies}"></span></span>
-                            <span th:if="${nbCopiesDisponibles <= 0}"><span th:text="${nbCopiesDisponibles}" style="color: #b21f2d"></span> / <span th:text="${nbTTCopies}"></span></span>
+                            <span th:if="${nbCopiesDisponibles == 0}"><span th:text="${nbCopiesDisponibles}" style="color: #b21f2d"></span> / <span th:text="${nbTTCopies}"></span></span>
                         </th>
+                        <th></th>
                     </tr>
                     </thead>
                     <tbody>
                         <tr th:each="n:${mCopies}">
-                            <td th:if="${n.copie.isDisponible() == false && n.emprunt.dateDeFinEmprunt > n.emprunt.dateDuJour}">isbn : <span th:text="${n.copie.isbn}"></span></td>
-                            <td><span th:if="${n.copie.isDisponible() == false && n.emprunt.dateDeFinEmprunt > n.emprunt.dateDuJour}">date de retour : <span th:text="${#dates.format(n?.emprunt?.dateDeFinEmprunt, 'dd/MM/yyyy')}"></span></span></td>
-                            <td sec:authorize="isAuthenticated()"><span th:if="${n.copie.isDisponible() == true}"><span><form th:action="@{/emprunter/{id}(id=${n.copie.id})}" method="post"><button type="submit" onclick="return confirm('Confirmation de réservation')" class="btn-get-create">Réserver</button></form></span></td>
-                            <td sec:authorize="isAuthenticated()"><span th:if="${n.copie.isDisponible() == false && n.emprunt.dateDeFinEmprunt > n.emprunt.dateDuJour}"><form th:action="@{/reserver/{id}(id=${n.copie.id})}" method="post"><button type="submit" onclick="return confirm('confirmez la réservation en liste attente')" class="btn-get-create">réservation en liste d'attente</button></form></span></td>
-                        </tr>
-                        <tr>
-
+                            <td th:if="${n.copie.isDisponible() == true && nbCopiesDisponibles > 0}">isbn :
+                                <span th:text="${n.copie.isbn}"></span>
+                            </td>
+                            <td th:if="${n.copie.isDisponible() == false && n.emprunt.dateDeFinEmprunt > n.emprunt.dateDuJour && nbCopiesDisponibles == 0}">isbn :
+                                <span th:text="${n.copie.isbn}"></span>
+                            </td>
+                            <td>
+                                <span th:if="${n.copie.isDisponible() == false && n.emprunt.dateDeFinEmprunt > n.emprunt.dateDuJour && nbCopiesDisponibles == 0}">date de retour :
+                                    <span th:text="${#dates.format(n?.emprunt?.dateDeFinEmprunt, 'dd/MM/yyyy')}"></span>
+                                </span>
+                            </td>
+                            <td sec:authorize="isAuthenticated()">
+                                <span th:if="${n.copie.isDisponible() == true && nbCopiesDisponibles > 0}">
+                                    <form th:action="@{/emprunter/{id}(id=${n.copie.id})}" method="post">
+                                        <button type="submit" onclick="return confirm('Confirmer emprunt')" class="btn-get-create">Emprunter</button>
+                                    </form>
+                                </span>
+                            </td>
+                            <td sec:authorize="isAuthenticated()">
+                                <span th:if="${n.copie.isDisponible() == false && n.emprunt.dateDeFinEmprunt > n.emprunt.dateDuJour && nbCopiesDisponibles == 0}">
+                                    <form th:action="@{/reserver/{id}(id=${n.copie.id})}" method="post">
+                                        <button type="submit" onclick="return confirm('confirmez la réservation en liste attente')" class="btn-get-create">réservation en liste d'attente</button>
+                                    </form>
+                                </span>
+                            </td>
                         </tr>
                     </tbody>
-
-
                 </table>
             </div>
         </div>
