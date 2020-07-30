@@ -35,22 +35,17 @@ public @Data
             @JsonProperty("copies")
             private List<CopieBean> copieBeans;
 
-            @JsonProperty("reservations")
-            private List<ReservationBean> reservationBeans;
-
-
-    public LivreBean(Long id, String titre, String nomAuteur, String prenomAuteur, Date dateEdition, String editeur, Integer nbCopies, Integer nbrCopiesDisponibles, List<CopieBean> copieBeans, List<ReservationBean> reservationBeans) {
-        this.id = id;
-        this.titre = titre;
-        this.nomAuteur = nomAuteur;
-        this.prenomAuteur = prenomAuteur;
-        this.dateEdition = dateEdition;
-        this.editeur = editeur;
-        this.nbCopies = nbCopies;
-        this.nbrCopiesDisponibles = nbrCopiesDisponibles;
-        this.copieBeans = copieBeans;
-        this.reservationBeans = reservationBeans;
-    }
+            public LivreBean(Long id, String titre, String nomAuteur, String prenomAuteur, Date dateEdition, String editeur, Integer nbCopies, Integer nbrCopiesDisponibles, List<CopieBean> copieBeans) {
+                this.id = id;
+                this.titre = titre;
+                this.nomAuteur = nomAuteur;
+                this.prenomAuteur = prenomAuteur;
+                this.dateEdition = dateEdition;
+                this.editeur = editeur;
+                this.nbCopies = nbCopies;
+                this.nbrCopiesDisponibles = nbrCopiesDisponibles;
+                this.copieBeans = copieBeans;
+            }
 
     @Override
     public String toString() {
@@ -64,7 +59,6 @@ public @Data
                 ", nbCopies=" + nbCopies +
                 ", nbrCopiesDisponibles=" + nbrCopiesDisponibles +
                 ", copieBeans=" + copieBeans +
-                ", reservationBeans=" + reservationBeans +
                 '}';
     }
 }

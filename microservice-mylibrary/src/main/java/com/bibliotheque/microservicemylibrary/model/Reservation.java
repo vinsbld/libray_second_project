@@ -25,7 +25,7 @@ public class Reservation {
 
     @JsonManagedReference
     @ManyToOne
-    private Livre livre;
+    private Copie copieReservation;
 
     @Override
     public String toString() {
@@ -33,7 +33,7 @@ public class Reservation {
                 "id=" + id +
                 ", idUtilisateur=" + idUtilisateur +
                 ", dateDeReservation=" + dateDeReservation +
-                ", livre=" + livre +
+                ", copieReservation=" + copieReservation +
                 '}';
     }
 }

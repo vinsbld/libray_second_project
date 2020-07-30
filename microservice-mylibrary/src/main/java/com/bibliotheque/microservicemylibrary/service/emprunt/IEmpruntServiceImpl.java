@@ -1,6 +1,7 @@
 package com.bibliotheque.microservicemylibrary.service.emprunt;
 
 import com.bibliotheque.microservicemylibrary.dao.IEmpruntDao;
+import com.bibliotheque.microservicemylibrary.model.Copie;
 import com.bibliotheque.microservicemylibrary.model.Emprunt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -1,5 +1,6 @@
 package com.bibliotheque.microservicemylibrary.service.emprunt;
 
+import com.bibliotheque.microservicemylibrary.model.Copie;
 import com.bibliotheque.microservicemylibrary.model.Emprunt;
 
 import java.util.Date;
@@ -17,7 +18,7 @@ public interface IEmpruntService {
     //trouve un emprunt par son id
     Optional<Emprunt> findById(Long id);
 
-    //enregistre une emprunt
+    //enregistrer une emprunt
     void save(Emprunt emprunt);
 
     //trouve les emprunts non retournées par rapport à la date du jour

@@ -123,5 +123,15 @@ public class IMicroserviceMyLibraryProxyServiceImpl implements IMicroserviceMyLi
         return iMicroserviceMyLibraryProxy.faireUneRechercheParTitre(mc);
     }
 
+    /**
+     * Permet de faire une demande de réservation d'une copie d'un livre
+     * @param id identifiant de la copie du livre
+     * @param idUtilisateur identifiant de l'utilisateur
+     */
+    @Override
+    public void demandeDeReservation(Long id, Long idUtilisateur) {
+        iMicroserviceMyLibraryProxy.demandeDeReservation(id, idUtilisateur);
+    }
+
 
 }

@@ -110,8 +110,8 @@ public class ClientController {
     }
 
     /*============== #Emprunt ======================*/
-    //faire une reservation
-    @PostMapping("/emprunt/{id}")
+    //faire un emprunt
+    @PostMapping("/emprunter/{id}")
     public String demandeEmprunt(Model model, @PathVariable("id")Long id){
 
         UtilisateurBean utilisateurBean = (UtilisateurBean) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -123,7 +123,7 @@ public class ClientController {
 
         iMicroserviceMyLibraryProxyService.demandeEmprunt(copieBean.getId(), utilisateurBean.getId());
 
-        logger.info("l'utilisateur : "+utilisateurBean.getPseudo()+ " id : " +utilisateurBean.getId()+" fait une demande de réservtion pour la copie isbn : "+copieBean.getIsbn());
+        logger.info("l'utilisateur : "+utilisateurBean.getPseudo()+ " id : " +utilisateurBean.getId()+" fait une demande d'emprunt pour la copie isbn : "+copieBean.getIsbn());
 
         return "redirect:/livres";
     }
@@ -138,10 +138,28 @@ public class ClientController {
         EmpruntBean empruntBean = iMicroserviceMyLibraryProxyService.afficherUnEmprunt(id);
         iMicroserviceMyLibraryProxyService.prolongerEmprunt(empruntBean.getId(), utilisateurBean.getId());
 
-        logger.info("l'utilisateur : "+utilisateurBean.getPseudo()+" a prolonger la réservation dont l' id est : "+ empruntBean.getId());
+        logger.info("l'utilisateur : "+utilisateurBean.getPseudo()+" a prolonger le prêt dont l' id est : "+ empruntBean.getId());
 
         return "redirect:/profil";
 
+    }
+
+    /*============== #Reservation ======================*/
+    @PostMapping("/reserver/{id}")
+    public String demandeDeReservation(Model model, @PathVariable("id") Long id){
+
+        UtilisateurBean utilisateurBean = (UtilisateurBean) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        utilisateurBean = iMicroserviceMyUsersProxyService.findById(utilisateurBean.getId());
+        model.addAttribute("utilisateurBean", utilisateurBean);
+
+        CopieBean copieBean = iMicroserviceMyLibraryProxyService.afficherUneCopie(id);
+        model.addAttribute("copie", copieBean);
+
+        iMicroserviceMyLibraryProxyService.demandeDeReservation(copieBean.getId(), utilisateurBean.getId());
+
+        logger.info("l'utilisateur : "+utilisateurBean.getPseudo()+ " id : " +utilisateurBean.getId()+" fait une demande de réservtion pour la copie isbn : "+copieBean.getIsbn());
+
+        return "redirect:/profil";
     }
 
 

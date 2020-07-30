@@ -23,7 +23,7 @@ public interface IEmpruntDao extends JpaRepository<Emprunt, Long> {
     List<Emprunt> findAllByIdUtilisateur(Long id);
 
     //sauvegarder un Emprunt
-    Emprunt save(Optional<Emprunt> reservation);
+    Emprunt save(Optional<Emprunt> emprunt);
 
     //trouve les emprunts non retournées
     List<Emprunt> findAllByDateRetourIsNullAndAndDateDeFinEmpruntBefore(Date dateNow);

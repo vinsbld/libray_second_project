@@ -12,14 +12,14 @@ public class ReservationBean {
 
     private Date dateDeReservation;
 
-    @JsonProperty("livre")
-    private LivreBean livreBean;
+    @JsonProperty("copieReservation")
+    private CopieBean copieBean;
 
-    public ReservationBean(Long id, Long idUtilisateur, Date dateDeReservation, LivreBean livreBean) {
+    public ReservationBean(Long id, Long idUtilisateur, Date dateDeReservation, CopieBean copieBean) {
         this.id = id;
         this.idUtilisateur = idUtilisateur;
         this.dateDeReservation = dateDeReservation;
-        this.livreBean = livreBean;
+        this.copieBean = copieBean;
     }
 
     @Override
@@ -28,7 +28,7 @@ public class ReservationBean {
                 "id=" + id +
                 ", idUtilisateur=" + idUtilisateur +
                 ", dateDeReservation=" + dateDeReservation +
-                ", livreBean=" + livreBean +
+                ", copieBean=" + copieBean +
                 '}';
     }
 }

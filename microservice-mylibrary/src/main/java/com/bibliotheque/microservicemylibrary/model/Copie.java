@@ -1,5 +1,6 @@
 package com.bibliotheque.microservicemylibrary.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
@@ -26,6 +27,10 @@ class Copie {
     @JsonManagedReference
     @OneToMany(mappedBy = "copie", fetch = FetchType.EAGER)
     private List<Emprunt> emprunts;
+
+    @JsonBackReference
+    @OneToMany(mappedBy = "copieReservation")
+    private List<Reservation> reservations;
 
     @Override
     public String toString() {

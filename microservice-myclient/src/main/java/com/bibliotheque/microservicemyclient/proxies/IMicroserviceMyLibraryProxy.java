@@ -39,9 +39,6 @@ public interface IMicroserviceMyLibraryProxy {
     @GetMapping(value = "/copies/dispos/{id}")
     List<CopieBean> afficherLesCopiesDisponibles(@PathVariable("id") Long id);
 
-    @GetMapping(value = "copies/nonDispos/{id}")
-    List<CopieBean> afficherLesCopiesNonDisponibles(@PathVariable("id")Long id);
-
     /*===========================** Emprunts **===========================*/
 
     @GetMapping(value = "/listeDesEmprunts/{id}")
@@ -56,5 +53,8 @@ public interface IMicroserviceMyLibraryProxy {
     @PostMapping(value = "/prolonger/{id}")
     EmpruntBean prolongerEmprunt(@PathVariable Long id, @RequestParam Long idUtilisateur);
 
+    /*===========================** Reservation **===========================*/
+    @PostMapping(value = "/reserver/{id}")
+    void demandeDeReservation(@PathVariable Long id, @RequestParam Long idUtilisateur);
 
 }

@@ -69,7 +69,7 @@
                         <td th:if="${mlivre.nbrCopiesDisponibles > 0}"><span th:text="${mlivre.nbrCopiesDisponibles}" style="color:#00FF00;"></span> / <span th:text="${mlivre.nbCopies}"></span></td>
                         <td th:if="${mlivre.nbrCopiesDisponibles <= 0}"><span th:text="${mlivre.nbrCopiesDisponibles}" style="color: #b21f2d"></span> / <span th:text="${mlivre.nbCopies}"></span></td>
                         <td th:if="${mlivre.nbrCopiesDisponibles <= 0}"><form th:action="@{/livre/{id}(id=${mlivre.id})}" method="get"><button class="btn-get-create">reserver</button></form>
-
+                        <td th:if="${mlivre.nbrCopiesDisponibles > 0}"><form th:action="@{/livre/{id}(id=${mlivre.id})}" method="get"><button class="btn-get-create">detail</button></form>
                         </td>
                     </tr>
                     </tbody>
