@@ -56,5 +56,5 @@ public interface IMicroserviceMyLibraryProxy {
     void demandeDeReservation(@PathVariable Long id, @RequestParam Long idUtilisateur);
 
     @GetMapping(value = "/listeDesReservations/{id}")
-    List<ReservationBean> afficherlesReservationsParUtilisateur(@PathVariable("id") Long id);
+    List<ReservationBeanDTO> afficherlesReservationsParUtilisateur(@PathVariable("id") Long id);
 }

@@ -136,7 +136,7 @@ public class IMicroserviceMyLibraryProxyServiceImpl implements IMicroserviceMyLi
      * @return la liste des réservations d'un utilisateur
      */
     @Override
-    public List<ReservationBean> afficherlesReservationsParUtilisateur(Long id) {
+    public List<ReservationBeanDTO> afficherlesReservationsParUtilisateur(Long id) {
         return iMicroserviceMyLibraryProxy.afficherlesReservationsParUtilisateur(id);
     }
 

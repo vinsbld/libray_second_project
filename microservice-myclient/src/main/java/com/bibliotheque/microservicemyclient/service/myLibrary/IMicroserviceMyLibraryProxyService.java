@@ -33,7 +33,7 @@ public interface IMicroserviceMyLibraryProxyService {
 
     void demandeDeReservation(Long id, Long idUtilisateur);
 
-    List<ReservationBean> afficherlesReservationsParUtilisateur(Long id);
+    List<ReservationBeanDTO> afficherlesReservationsParUtilisateur(Long id);
 
 
 }

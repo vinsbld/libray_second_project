@@ -29,7 +29,7 @@ class Copie {
     private List<Emprunt> emprunts;
 
     @JsonBackReference
-    @OneToMany(mappedBy = "copieReservation")
+    @OneToMany(mappedBy = "copie")
     private List<Reservation> reservations;
 
     @Override
@@ -40,6 +40,7 @@ class Copie {
                 ", disponible=" + disponible +
                 ", livre=" + livre +
                 ", emprunts=" + emprunts +
+                ", reservations=" + reservations +
                 '}';
     }
 }

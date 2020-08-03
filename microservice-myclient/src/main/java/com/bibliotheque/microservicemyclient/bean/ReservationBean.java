@@ -20,7 +20,7 @@ public class ReservationBean implements Serializable {
 
     private Date dateDeReservation;
 
-    @JsonProperty("copieReservation")
+    @JsonProperty("copie")
     private CopieBean copieBean;
 
     public ReservationBean(Long id, Long idUtilisateur, Date dateDeReservation, CopieBean copieBean) {

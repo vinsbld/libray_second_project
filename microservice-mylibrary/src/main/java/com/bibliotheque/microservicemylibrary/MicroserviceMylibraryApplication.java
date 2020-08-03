@@ -1,13 +1,11 @@
 package com.bibliotheque.microservicemylibrary;
 
 import com.bibliotheque.microservicemylibrary.dao.IEmailDao;
-import com.bibliotheque.microservicemylibrary.model.Copie;
-import com.bibliotheque.microservicemylibrary.model.Email;
-import com.bibliotheque.microservicemylibrary.model.Emprunt;
-import com.bibliotheque.microservicemylibrary.model.Livre;
+import com.bibliotheque.microservicemylibrary.model.*;
 import com.bibliotheque.microservicemylibrary.service.copie.ICopieService;
 import com.bibliotheque.microservicemylibrary.service.livre.ILivreService;
 import com.bibliotheque.microservicemylibrary.service.emprunt.IEmpruntService;
+import com.bibliotheque.microservicemylibrary.service.reservation.IReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -42,6 +40,9 @@ public class MicroserviceMylibraryApplication {
 	@Autowired
 	IEmailDao iEmailDao;
 
+	@Autowired
+	IReservationService iReservationService;
+
 	@PostConstruct
 	private void postConstruct(){
 
@@ -70,26 +71,14 @@ public class MicroserviceMylibraryApplication {
 		Copie copieLivre = new Copie();
 		copieLivre.setLivre(livre);
 		copieLivre.setIsbn(5422);
-		copieLivre.setDisponible(true);
+		copieLivre.setDisponible(false);
 		iCopieService.save(copieLivre);
 
 		Copie copieLivreLivre = new Copie();
 		copieLivreLivre.setLivre(livre);
 		copieLivreLivre.setIsbn(5424);
-		copieLivreLivre.setDisponible(true);
+		copieLivreLivre.setDisponible(false);
 		iCopieService.save(copieLivreLivre);
-
-		Copie copie1 = new Copie();
-		copie1.setLivre(livre1);
-		copie1.setIsbn(5528);
-		copie1.setDisponible(false);
-		iCopieService.save(copie1);
-
-		Copie copieLivre1 = new Copie();
-		copieLivre1.setLivre(livre1);
-		copieLivre1.setIsbn(1958);
-		copieLivre1.setDisponible(false);
-		iCopieService.save(copieLivre1);
 
 		Emprunt emprunt = new Emprunt();
 		emprunt.setCopie(copie);
@@ -100,6 +89,54 @@ public class MicroserviceMylibraryApplication {
 		emprunt.setRendu(false);
 		iEmpruntService.save(emprunt);
 
+		Emprunt emprunt3 = new Emprunt();
+		emprunt3.setCopie(copieLivre);
+		emprunt3.setIdUtilisateur(3L);
+		emprunt3.setDateDeDebutEmprunt(new GregorianCalendar(2020, Calendar.JULY, 25).getTime());
+		emprunt3.setDateDeFinEmprunt(iEmpruntService.add4Weeks(emprunt3.getDateDeDebutEmprunt()));
+		emprunt3.setProlongerEmprunt(false);
+		emprunt3.setRendu(false);
+		iEmpruntService.save(emprunt3);
+
+		Emprunt emprunt4 = new Emprunt();
+		emprunt4.setCopie(copieLivreLivre);
+		emprunt4.setIdUtilisateur(2L);
+		emprunt4.setDateDeDebutEmprunt(new GregorianCalendar(2020, Calendar.JULY, 31).getTime());
+		emprunt4.setDateDeFinEmprunt(iEmpruntService.add4Weeks(emprunt4.getDateDeDebutEmprunt()));
+		emprunt4.setProlongerEmprunt(false);
+		emprunt4.setRendu(false);
+		iEmpruntService.save(emprunt4);
+
+		Reservation reservation = new Reservation();
+		reservation.setIdUtilisateur(1L);
+		reservation.setDateDeReservation(new Date());
+		reservation.setCopie(copieLivre);
+		iReservationService.save(reservation);
+
+		Reservation reservation1 = new Reservation();
+		reservation1.setIdUtilisateur(2L);
+		reservation1.setCopie(copieLivre);
+		reservation1.setDateDeReservation(new GregorianCalendar(2020, Calendar.AUGUST, 1).getTime());
+		iReservationService.save(reservation1);
+
+		Reservation reservation2 = new Reservation();
+		reservation2.setIdUtilisateur(3L);
+		reservation2.setCopie(copieLivre);
+		reservation2.setDateDeReservation(new GregorianCalendar(2020, Calendar.AUGUST, 2).getTime());
+		iReservationService.save(reservation2);
+
+		Copie copie1 = new Copie();
+		copie1.setLivre(livre1);
+		copie1.setIsbn(5528);
+		copie1.setDisponible(true);
+		iCopieService.save(copie1);
+
+		Copie copieLivre1 = new Copie();
+		copieLivre1.setLivre(livre1);
+		copieLivre1.setIsbn(1958);
+		copieLivre1.setDisponible(false);
+		iCopieService.save(copieLivre1);
+
 		Emprunt emprunt2 = new Emprunt();
 		emprunt2.setCopie(copieLivre1);
 		emprunt2.setIdUtilisateur(2L);
@@ -108,14 +145,6 @@ public class MicroserviceMylibraryApplication {
 		emprunt2.setProlongerEmprunt(false);
 		iEmpruntService.save(emprunt2);
 
-		Emprunt emprunt1 = new Emprunt();
-		emprunt1.setCopie(copie1);
-		emprunt1.setIdUtilisateur(1L);
-		emprunt1.setDateDeDebutEmprunt(new Date());
-		emprunt1.setDateDeFinEmprunt(new GregorianCalendar(2020, Calendar.FEBRUARY, 24).getTime());
-		emprunt1.setProlongerEmprunt(false);
-		emprunt.setRendu(false);
-		iEmpruntService.save(emprunt1);
 
 		Email email = new Email();
 		email.setName("relance");
