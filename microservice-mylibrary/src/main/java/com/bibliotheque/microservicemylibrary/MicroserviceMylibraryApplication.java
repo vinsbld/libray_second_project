@@ -88,7 +88,7 @@ public class MicroserviceMylibraryApplication {
 		Copie copieLivre1 = new Copie();
 		copieLivre1.setLivre(livre1);
 		copieLivre1.setIsbn(1958);
-		copieLivre1.setDisponible(true);
+		copieLivre1.setDisponible(false);
 		iCopieService.save(copieLivre1);
 
 		Emprunt emprunt = new Emprunt();
@@ -99,6 +99,14 @@ public class MicroserviceMylibraryApplication {
 		emprunt.setProlongerEmprunt(false);
 		emprunt.setRendu(false);
 		iEmpruntService.save(emprunt);
+
+		Emprunt emprunt2 = new Emprunt();
+		emprunt2.setCopie(copieLivre1);
+		emprunt2.setIdUtilisateur(2L);
+		emprunt2.setDateDeDebutEmprunt(new Date());
+		emprunt2.setDateDeFinEmprunt(iEmpruntService.add4Weeks(emprunt2.getDateDeDebutEmprunt()));
+		emprunt2.setProlongerEmprunt(false);
+		iEmpruntService.save(emprunt2);
 
 		Emprunt emprunt1 = new Emprunt();
 		emprunt1.setCopie(copie1);

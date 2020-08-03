@@ -35,6 +35,19 @@ public class MicroserviceMyusersApplication {
 		utilisateur.setEmail("oc.projet07@gmail.com");
 		iUtilisateurDao.save(utilisateur);
 
+		Utilisateur utilisateur1 =new Utilisateur();
+		utilisateur1.setPseudo("pierre");
+		utilisateur1.setMotDePasse(passwordEncoder.encode("pierre"));
+		utilisateur1.setRoleEnums(Collections.singletonList(RoleEnum.USER));
+		utilisateur1.setEmail("oc.projet07@gmail.com");
+		iUtilisateurDao.save(utilisateur1);
+
+		Utilisateur utilisateur2 =new Utilisateur();
+		utilisateur2.setPseudo("marc");
+		utilisateur2.setMotDePasse(passwordEncoder.encode("marc"));
+		utilisateur2.setRoleEnums(Collections.singletonList(RoleEnum.USER));
+		utilisateur2.setEmail("oc.projet07@gmail.com");
+		iUtilisateurDao.save(utilisateur2);
 	}
 
 }
