@@ -80,6 +80,7 @@ public class ClientController {
         model.addAttribute("copieBeansDisponibles", copieBeansDisponibles);
         model.addAttribute("nbCopiesDisponibles", copieBeansDisponibles.size());
 
+
         List<CopieBeanDTO> copiesDunLivre = iMicroserviceMyLibraryProxyService.afficherLesCopiesDunLivre(id);
         model.addAttribute("nbTTCopies", copiesDunLivre.size());
         model.addAttribute("mCopies", copiesDunLivre);

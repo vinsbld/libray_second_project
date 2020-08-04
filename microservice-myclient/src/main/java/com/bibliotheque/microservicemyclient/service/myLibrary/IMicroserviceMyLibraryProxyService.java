@@ -35,5 +35,7 @@ public interface IMicroserviceMyLibraryProxyService {
 
     List<ReservationBeanDTO> afficherlesReservationsParUtilisateur(Long id);
 
+    List<ReservationBean> afficherLesreservationsParCopie(Long id);
+
 
 }

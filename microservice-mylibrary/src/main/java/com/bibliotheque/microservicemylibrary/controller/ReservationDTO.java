@@ -12,6 +12,7 @@ public class ReservationDTO {
     private Optional<Copie> copie;
     private Reservation reservation;
     private Emprunt emprunt;
+    private Integer position;
 
     public Optional<Copie> getCopie() {
         return copie;
@@ -37,4 +38,11 @@ public class ReservationDTO {
         this.emprunt = emprunt;
     }
 
+    public Integer getPosition() {
+        return position;
+    }
+
+    public void setPosition(Integer position) {
+        this.position = position;
+    }
 }

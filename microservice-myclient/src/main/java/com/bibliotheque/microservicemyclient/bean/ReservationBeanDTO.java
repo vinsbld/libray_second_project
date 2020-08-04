@@ -7,6 +7,7 @@ public class ReservationBeanDTO {
     private Optional<CopieBean> copie;
     private ReservationBean reservation;
     private EmpruntBean emprunt;
+    private Integer position;
 
     public Optional<CopieBean> getCopie() {
         return copie;
@@ -30,5 +31,13 @@ public class ReservationBeanDTO {
 
     public void setEmprunt(EmpruntBean emprunt) {
         this.emprunt = emprunt;
+    }
+
+    public Integer getPosition() {
+        return position;
+    }
+
+    public void setPosition(Integer position) {
+        this.position = position;
     }
 }

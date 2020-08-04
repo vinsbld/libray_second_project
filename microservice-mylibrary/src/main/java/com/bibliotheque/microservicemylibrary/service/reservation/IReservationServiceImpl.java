@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class IReservationServiceImpl implements IReservationService{
@@ -32,4 +31,17 @@ public class IReservationServiceImpl implements IReservationService{
     public List<Reservation> findAllByIdUtilisateur(Long id) {
         return iReservationDao.findAllByIdUtilisateur(id);
     }
+
+
+    /**
+     * permet d'afficher la liste de toutes les reservations pour une copie
+     * @param id identifiant de la copie
+     * @return la liste de toutes les reservations faite pour une copie
+     */
+    @Override
+    public List<Reservation> findAllByCopie_IdOrderByDateDeReservationAsc(Long id) {
+        return iReservationDao.findAllByCopie_IdOrderByDateDeReservationAsc(id);
+    }
+
+
 }

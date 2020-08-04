@@ -16,5 +16,9 @@ public interface IReservationDao extends JpaRepository<Reservation, Long> {
     //trouver toutes les réservations pour un utilisateur
     List<Reservation> findAllByIdUtilisateur(Long id);
 
+    //trouver toutes les réservations d'une copie
+    List<Reservation> findAllByCopie_IdOrderByDateDeReservationAsc(Long id);
+
+
 
 }

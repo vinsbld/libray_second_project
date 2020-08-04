@@ -3,7 +3,6 @@ package com.bibliotheque.microservicemylibrary.service.reservation;
 import com.bibliotheque.microservicemylibrary.model.Reservation;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface IReservationService {
 
@@ -12,4 +11,9 @@ public interface IReservationService {
 
     //trouver toutes les réservations pour un utilisateur
     List<Reservation> findAllByIdUtilisateur(Long id);
+
+    //trouver toutes les réservations d'une copie
+    List<Reservation>
+    findAllByCopie_IdOrderByDateDeReservationAsc(Long id);
+
 }

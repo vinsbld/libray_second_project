@@ -93,6 +93,7 @@
                         <th>Date de la demande</th>
                         <th>Ouvrage emprunté</th>
                         <th>Date de retour prévue de l'ouvrage</th>
+                        <th>Position dans la liste d'attente</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -100,6 +101,7 @@
                         <td th:text="${#dates.format(mRs.reservation.dateDeReservation, 'dd/MM/yyyy')}"></td>
                         <td th:text="${mRs.reservation.getCopieBean().getLivreBean().getTitre()}"></td>
                         <td th:text="${#dates.format(mRs.emprunt.dateDeFinEmprunt, 'dd/MM/yyyy')}"></td>
+                        <td th:text="${mRs.position}"></td>
                     </tr>
                     </tbody>
                 </table>
