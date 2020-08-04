@@ -1,6 +1,7 @@
 package com.bibliotheque.microservicemyclient.controller;
 
 import com.bibliotheque.microservicemyclient.bean.*;
+import com.bibliotheque.microservicemyclient.exeptions.CannotAddBookingException;
 import com.bibliotheque.microservicemyclient.service.myLibrary.IMicroserviceMyLibraryProxyService;
 import com.bibliotheque.microservicemyclient.service.myUsers.IMicroserviceMyUsersProxyService;
 import org.slf4j.Logger;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -150,18 +152,30 @@ public class ClientController {
 
     /*============== #Reservation ======================*/
     @PostMapping("/reserver/{id}")
-    public String demandeDeReservation(Model model, @PathVariable("id") Long id){
+    public String demandeDeReservation(Model model, @PathVariable("id") Long id, RedirectAttributes redirectAttributes){
 
-        UtilisateurBean utilisateurBean = (UtilisateurBean) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        utilisateurBean = iMicroserviceMyUsersProxyService.findById(utilisateurBean.getId());
-        model.addAttribute("utilisateurBean", utilisateurBean);
+        try {
+            UtilisateurBean utilisateurBean = (UtilisateurBean) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            utilisateurBean = iMicroserviceMyUsersProxyService.findById(utilisateurBean.getId());
+            model.addAttribute("utilisateurBean", utilisateurBean);
 
-        CopieBean copieBean = iMicroserviceMyLibraryProxyService.afficherUneCopie(id);
-        model.addAttribute("copie", copieBean);
+            CopieBean copieBean = iMicroserviceMyLibraryProxyService.afficherUneCopie(id);
+            model.addAttribute("copie", copieBean);
 
-        iMicroserviceMyLibraryProxyService.demandeDeReservation(copieBean.getId(), utilisateurBean.getId());
+            iMicroserviceMyLibraryProxyService.demandeDeReservation(copieBean.getId(), utilisateurBean.getId());
 
-        logger.info("l'utilisateur : "+utilisateurBean.getPseudo()+ " id : " +utilisateurBean.getId()+" fait une demande de réservtion pour la copie isbn : "+copieBean.getIsbn());
+            String messageOK = "votre de mande de réservation a été réalisé avec succes.";
+            redirectAttributes.addFlashAttribute("messageOK", messageOK);
+
+            logger.info("l'utilisateur : "+utilisateurBean.getPseudo()+ " id : " +utilisateurBean.getId()+" fait une demande de réservtion pour la copie isbn : "+copieBean.getIsbn());
+
+        }catch (Exception e){
+            e.printStackTrace();
+            if (e instanceof CannotAddBookingException){
+                String message = e.getMessage();
+                redirectAttributes.addFlashAttribute("messageErreur", message);
+            }
+        }
 
         return "redirect:/profil";
     }
