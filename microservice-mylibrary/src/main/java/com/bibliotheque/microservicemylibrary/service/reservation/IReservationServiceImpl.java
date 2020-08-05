@@ -1,7 +1,9 @@
 package com.bibliotheque.microservicemylibrary.service.reservation;
 
 import com.bibliotheque.microservicemylibrary.dao.IReservationDao;
+import com.bibliotheque.microservicemylibrary.model.Livre;
 import com.bibliotheque.microservicemylibrary.model.Reservation;
+import com.bibliotheque.microservicemylibrary.model.StateEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,19 +30,19 @@ public class IReservationServiceImpl implements IReservationService{
      * @return la liste de toutes les réservations faites par l'utilisateur
      */
     @Override
-    public List<Reservation> findAllByIdUtilisateur(Long id) {
-        return iReservationDao.findAllByIdUtilisateur(id);
+    public List<Reservation> findAllByIdUtilisateurAndStateEnumsOrderByDateDeReservationAsc(Long id, StateEnum stateEnum) {
+        return iReservationDao.findAllByIdUtilisateurAndStateEnumsOrderByDateDeReservationAsc(id, stateEnum);
     }
-
 
     /**
      * permet d'afficher la liste de toutes les reservations pour une copie
-     * @param id identifiant de la copie
-     * @return la liste de toutes les reservations faite pour une copie
+     * @param livre
+     * @param stateEnum
+     * @return la liste de toutes les reservations faite pour un livre
      */
     @Override
-    public List<Reservation> findAllByCopie_IdOrderByDateDeReservationAsc(Long id) {
-        return iReservationDao.findAllByCopie_IdOrderByDateDeReservationAsc(id);
+    public List<Reservation> findAllByLivreAndStateEnumsOrderByDateDeReservationAsc(Livre livre, StateEnum stateEnum) {
+        return findAllByLivreAndStateEnumsOrderByDateDeReservationAsc(livre, stateEnum);
     }
 
 

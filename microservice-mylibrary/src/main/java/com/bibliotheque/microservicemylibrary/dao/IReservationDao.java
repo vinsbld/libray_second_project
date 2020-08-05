@@ -1,6 +1,8 @@
 package com.bibliotheque.microservicemylibrary.dao;
 
+import com.bibliotheque.microservicemylibrary.model.Livre;
 import com.bibliotheque.microservicemylibrary.model.Reservation;
+import com.bibliotheque.microservicemylibrary.model.StateEnum;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -14,9 +16,9 @@ public interface IReservationDao extends JpaRepository<Reservation, Long> {
     Reservation save(Optional<Reservation> reservation);
 
     //trouver toutes les réservations pour un utilisateur
-    List<Reservation> findAllByIdUtilisateur(Long id);
+    List<Reservation> findAllByIdUtilisateurAndStateEnumsOrderByDateDeReservationAsc(Long id, StateEnum stateEnum);
 
-    //trouver toutes les réservations d'une copie
-    List<Reservation> findAllByCopie_IdOrderByDateDeReservationAsc(Long id);
+    //trouver toutes les réservations d'un livre
+    List<Reservation> findAllByLivreAndStateEnumsOrderByDateDeReservationAsc(Livre livre, StateEnum stateEnum);
 
 }
