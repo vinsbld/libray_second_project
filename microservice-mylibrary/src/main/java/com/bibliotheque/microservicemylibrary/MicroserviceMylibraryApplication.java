@@ -124,14 +124,14 @@ public class MicroserviceMylibraryApplication {
 
 		Reservation reservationLivreLmdMondesR_2 = new Reservation();
 		reservationLivreLmdMondesR_2.setLivre(livreLmdMondes);
-		reservationLivreLmdMondesR_2.setDateDeReservation(new Date());
+		reservationLivreLmdMondesR_2.setDateDeReservation(new GregorianCalendar(2020,10,07).getTime());
 		reservationLivreLmdMondesR_2.setStateEnums(StateEnum.enCours);
 		reservationLivreLmdMondesR_2.setIdUtilisateur(4L);
 		iReservationService.save(reservationLivreLmdMondesR_2);
 
 		Reservation reservationLivreLmdMondesR_3 = new Reservation();
 		reservationLivreLmdMondesR_3.setLivre(livreLmdMondes);
-		reservationLivreLmdMondesR_3.setDateDeReservation(new Date());
+		reservationLivreLmdMondesR_3.setDateDeReservation(new GregorianCalendar(2020,10,03).getTime());
 		reservationLivreLmdMondesR_3.setStateEnums(StateEnum.enCours);
 		reservationLivreLmdMondesR_3.setIdUtilisateur(5L);
 		iReservationService.save(reservationLivreLmdMondesR_3);

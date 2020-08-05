@@ -2,6 +2,7 @@ package com.bibliotheque.microservicemylibrary.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -32,7 +33,7 @@ class Livre {
 
     private String editeur;
 
-    @JsonBackReference
+    @JsonManagedReference
     @OneToMany(mappedBy = "livre", fetch = FetchType.EAGER)
     private List<Copie> copies;
 
@@ -67,6 +68,7 @@ class Livre {
                 ", dateEdition=" + dateEdition +
                 ", editeur='" + editeur + '\'' +
                 ", copies=" + copies +
+                ", reservations=" + reservations +
                 '}';
     }
 }

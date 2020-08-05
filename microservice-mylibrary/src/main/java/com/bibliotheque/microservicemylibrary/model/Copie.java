@@ -20,7 +20,7 @@ class Copie {
 
     private boolean disponible;
 
-    @JsonManagedReference
+    @JsonBackReference
     @ManyToOne
     private Livre livre;
 

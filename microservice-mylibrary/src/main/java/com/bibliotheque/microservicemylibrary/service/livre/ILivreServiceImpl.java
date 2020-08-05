@@ -24,13 +24,14 @@ public class ILivreServiceImpl implements ILivreService {
     public List<Livre> findAll(){return  mLivreDao.findAll();
     }
 
+
     /**
      * Permet la recherche d'un livre
      * @param id du livre
      * @return le livre
      */
     @Override
-    public Optional<Livre> findById(Long id){
+    public Optional<Livre> findById(Long id) {
         return mLivreDao.findById(id);
     }
 

@@ -24,25 +24,26 @@ public class IReservationServiceImpl implements IReservationService{
         iReservationDao.save(reservation);
     }
 
+
     /**
      * Permet d'afficher la liste des reservations pour un utilisateur
      * @param id identifiant l'utilisateur
      * @return la liste de toutes les réservations faites par l'utilisateur
      */
     @Override
-    public List<Reservation> findAllByIdUtilisateurAndStateEnumsOrderByDateDeReservationAsc(Long id, StateEnum stateEnum) {
-        return iReservationDao.findAllByIdUtilisateurAndStateEnumsOrderByDateDeReservationAsc(id, stateEnum);
+    public List<Reservation> findAllByIdUtilisateurOrderByDateDeReservationAsc(Long id) {
+        return iReservationDao.findAllByIdUtilisateurOrderByDateDeReservationAsc(id);
     }
 
     /**
      * permet d'afficher la liste de toutes les reservations pour un livre
-     * @param id identifiant du livre
+     * @param livre
      * @param stateEnum
-     * @return la liste de toutes les reservations faite pour un livre
+     * @return permet d'afficher la liste de toutes les reservations pour un livre
      */
     @Override
-    public List<Reservation> findAllByLivre_IdAndStateEnumsOrderByDateDeReservationAsc(Long id, StateEnum stateEnum) {
-        return iReservationDao.findAllByLivre_IdAndStateEnumsOrderByDateDeReservationAsc(id, stateEnum);
+    public List<Reservation> findAllByLivreAndStateEnumsOrderByDateDeReservationAsc(Livre livre, StateEnum stateEnum) {
+        return iReservationDao.findAllByLivreAndStateEnumsOrderByDateDeReservationAsc(livre, stateEnum);
     }
 
 

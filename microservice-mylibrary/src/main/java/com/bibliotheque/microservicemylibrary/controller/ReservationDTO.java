@@ -4,6 +4,7 @@ import com.bibliotheque.microservicemylibrary.model.Emprunt;
 import com.bibliotheque.microservicemylibrary.model.Livre;
 import com.bibliotheque.microservicemylibrary.model.Reservation;
 
+
 public class ReservationDTO {
 
     private Livre livre;
@@ -11,14 +12,6 @@ public class ReservationDTO {
     private Emprunt emprunt;
     private Integer position;
     private String stateEnum;
-
-    public String getStateEnum() {
-        return stateEnum;
-    }
-
-    public void setStateEnum(String stateEnum) {
-        this.stateEnum = stateEnum;
-    }
 
     public Livre getLivre() {
         return livre;
@@ -50,5 +43,13 @@ public class ReservationDTO {
 
     public void setPosition(Integer position) {
         this.position = position;
+    }
+
+    public String getStateEnum() {
+        return stateEnum;
+    }
+
+    public void setStateEnum(String stateEnum) {
+        this.stateEnum = stateEnum;
     }
 }

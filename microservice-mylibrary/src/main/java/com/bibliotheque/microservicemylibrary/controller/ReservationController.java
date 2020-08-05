@@ -25,18 +25,15 @@ public class ReservationController {
     private IReservationService iReservationService;
 
     @Autowired
-    private ICopieService iCopieService;
-
-    @Autowired
     private ILivreService iLivreService;
 
 
-    @RequestMapping(value = "/reserver/{id}", method = RequestMethod.POST)
-    public void demandeDeReservation(@PathVariable Long id, @RequestParam Long idUtilisateur){
+    @RequestMapping(value = "/reserver/", method = RequestMethod.POST)
+    public void demandeDeReservation(@RequestParam Long id, @RequestParam Long idUtilisateur){
 
         Date date = new Date(Calendar.getInstance().getTime().getTime());
         Reservation reservation = new Reservation();
-        reservation.setLivre(iLivreService.findById(id));
+        reservation.setLivre(iLivreService.findById(id).get());
         reservation.setDateDeReservation(date);
         reservation.setIdUtilisateur(idUtilisateur);
 
@@ -47,7 +44,7 @@ public class ReservationController {
         Integer reservationMax = (reservation.getLivre().getNbCopies())*2;
 
         //verification si l'utilisateur n'a pas déjà une réservation en cours pour cet ouvrage
-        List<Reservation> reservationList = iReservationService.findAllByIdUtilisateurAndStateEnumsOrderByDateDeReservationAsc(reservation.getLivre().getId(), StateEnum.enCours);
+        List<Reservation> reservationList = iReservationService.findAllByIdUtilisateurOrderByDateDeReservationAsc(reservation.getLivre().getId());
         for (Reservation r : reservationList) {
             if (r.getIdUtilisateur().equals(reservation.getIdUtilisateur())){
                 throw new CannotAddBookingException("ReservationExeption01");
@@ -74,7 +71,7 @@ public class ReservationController {
     @RequestMapping(value = "/listeDesReservations/{id}", method = RequestMethod.GET)
     public List<ReservationDTO> afficherlesReservationsParUtilisateur(@PathVariable("id") Long id){
 
-        List<Reservation> reservations = iReservationService.findAllByIdUtilisateurAndStateEnumsOrderByDateDeReservationAsc(id, StateEnum.enCours);
+        List<Reservation> reservations = iReservationService.findAllByIdUtilisateurOrderByDateDeReservationAsc(id);
         List<ReservationDTO> reservationDTOS = new ArrayList<>();
 
         for (Reservation r : reservations) {
@@ -82,11 +79,11 @@ public class ReservationController {
             rd.setReservation(r);
             Emprunt e = iEmpruntService.findByCopie_Id(r.getLivre().getId());
             rd.setEmprunt(e);
-            Livre l = iLivreService.findById(r.getLivre().getId());
-            rd.setLivre(l);
+            Optional<Livre> l = iLivreService.findById(r.getLivre().getId());
+            rd.setLivre(l.get());
 
             //afficher la position de l'utilisateur dans la liste de reservation
-            List<Reservation> rc = iReservationService.findAllByLivre_IdAndStateEnumsOrderByDateDeReservationAsc(l.getId(), StateEnum.enCours);
+            List<Reservation> rc = iReservationService.findAllByLivreAndStateEnumsOrderByDateDeReservationAsc(l.get(), StateEnum.enCours);
             for (int i = 0; i< rc.size(); i ++){
                 if (rc.get(i).getIdUtilisateur() == id){
                     rd.setPosition(i + 1);
@@ -99,10 +96,5 @@ public class ReservationController {
         return reservationDTOS;
     }
 
-    @RequestMapping(value = "/liste/{id}", method = RequestMethod.GET)
-    public List<Reservation> afficherLesreservationsParLivre(@PathVariable("id") Long id){
-        List<Reservation> reservations = iReservationService.findAllByLivre_IdAndStateEnumsOrderByDateDeReservationAsc(id, StateEnum.enCours);
-        return reservations;
-    }
 
 }
