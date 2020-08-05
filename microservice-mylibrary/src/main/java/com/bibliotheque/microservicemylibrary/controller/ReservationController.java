@@ -28,7 +28,7 @@ public class ReservationController {
     private ILivreService iLivreService;
 
 
-    @RequestMapping(value = "/reserver/", method = RequestMethod.POST)
+    @RequestMapping(value = "/reserver", method = RequestMethod.POST)
     public void demandeDeReservation(@RequestParam Long id, @RequestParam Long idUtilisateur){
 
         Date date = new Date(Calendar.getInstance().getTime().getTime());

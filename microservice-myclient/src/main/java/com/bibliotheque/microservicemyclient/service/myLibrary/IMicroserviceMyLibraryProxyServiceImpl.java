@@ -140,15 +140,6 @@ public class IMicroserviceMyLibraryProxyServiceImpl implements IMicroserviceMyLi
         return iMicroserviceMyLibraryProxy.afficherlesReservationsParUtilisateur(id);
     }
 
-    /**
-     * permet d'afficher les réservations par copie de livre
-     * @param id identifiant de la copie
-     * @return la liste des réservations pour la copie
-     */
-    @Override
-    public List<ReservationBean> afficherLesreservationsParCopie(Long id) {
-        return iMicroserviceMyLibraryProxy.afficherLesreservationsParCopie(id);
-    }
 
 
 }

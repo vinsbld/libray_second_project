@@ -43,6 +43,13 @@ class Livre {
 
 
     @Transient
+    public Integer getNbReservationsMax(){
+        Integer Rmax = (copies.size())*2;
+        return Rmax;
+    }
+
+
+    @Transient
     public Integer getNbrCopiesDisponibles(){
        Integer nbDispo = 0;
         for (Copie c : copies) {

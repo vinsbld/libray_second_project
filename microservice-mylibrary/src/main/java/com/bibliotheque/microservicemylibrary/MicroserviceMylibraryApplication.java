@@ -115,6 +115,20 @@ public class MicroserviceMylibraryApplication {
 		emprunt_copieLmdMondesCp_1.setProlongerEmprunt(false);
 		iEmpruntService.save(emprunt_copieLmdMondesCp_1);
 
+		Copie copieLmdMondesCp_2 = new Copie();
+		copieLmdMondesCp_2.setLivre(livreLmdMondes);
+		copieLmdMondesCp_2.setIsbn(1958);
+		copieLmdMondesCp_2.setDisponible(false);
+		iCopieService.save(copieLmdMondesCp_2);
+
+		Emprunt emprunt_copieLmdMondesCp_2 = new Emprunt();
+		emprunt_copieLmdMondesCp_2.setCopie(copieLmdMondesCp_2);
+		emprunt_copieLmdMondesCp_2.setIdUtilisateur(2L);
+		emprunt_copieLmdMondesCp_2.setDateDeDebutEmprunt(new Date());
+		emprunt_copieLmdMondesCp_2.setDateDeFinEmprunt(iEmpruntService.add4Weeks(emprunt_copieLmdMondesCp_2.getDateDeDebutEmprunt()));
+		emprunt_copieLmdMondesCp_2.setProlongerEmprunt(false);
+		iEmpruntService.save(emprunt_copieLmdMondesCp_2);
+
 		Reservation reservationLivreLmdMondesR_1 = new Reservation();
 		reservationLivreLmdMondesR_1.setLivre(livreLmdMondes);
 		reservationLivreLmdMondesR_1.setDateDeReservation(new Date());
@@ -137,19 +151,6 @@ public class MicroserviceMylibraryApplication {
 		iReservationService.save(reservationLivreLmdMondesR_3);
 
 
-		Copie copieLmdMondesCp_2 = new Copie();
-		copieLmdMondesCp_2.setLivre(livreLmdMondes);
-		copieLmdMondesCp_2.setIsbn(1958);
-		copieLmdMondesCp_2.setDisponible(false);
-		iCopieService.save(copieLmdMondesCp_2);
-
-		Emprunt emprunt_copieLmdMondesCp_2 = new Emprunt();
-		emprunt_copieLmdMondesCp_2.setCopie(copieLmdMondesCp_1);
-		emprunt_copieLmdMondesCp_2.setIdUtilisateur(2L);
-		emprunt_copieLmdMondesCp_2.setDateDeDebutEmprunt(new Date());
-		emprunt_copieLmdMondesCp_2.setDateDeFinEmprunt(iEmpruntService.add4Weeks(emprunt_copieLmdMondesCp_2.getDateDeDebutEmprunt()));
-		emprunt_copieLmdMondesCp_2.setProlongerEmprunt(false);
-		iEmpruntService.save(emprunt_copieLmdMondesCp_2);
 
 
 		Email email = new Email();

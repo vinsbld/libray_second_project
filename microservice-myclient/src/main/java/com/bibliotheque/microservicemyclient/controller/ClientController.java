@@ -150,8 +150,8 @@ public class ClientController {
     }
 
     /*============== #Reservation ======================*/
-    @PostMapping("/reserver/{id}")
-    public String demandeDeReservation(Model model, @PathVariable("id") Long id, RedirectAttributes redirectAttributes){
+    @PostMapping("/reserver")
+    public String demandeDeReservation(Model model, @RequestParam("id") Long id, RedirectAttributes redirectAttributes){
 
         try {
             UtilisateurBean utilisateurBean = (UtilisateurBean) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
