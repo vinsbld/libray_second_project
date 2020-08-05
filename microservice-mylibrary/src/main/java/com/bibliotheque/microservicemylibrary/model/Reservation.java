@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -20,10 +21,13 @@ public class Reservation {
 
     private Date dateDeReservation;
 
+    @ElementCollection(targetClass = StateEnum.class, fetch = FetchType.EAGER)
+    @Enumerated(EnumType.STRING)
+    private List<StateEnum> stateEnums;
+
     @JsonManagedReference
     @ManyToOne
     private Copie copie;
-
 
     @Override
     public String toString() {
@@ -31,6 +35,7 @@ public class Reservation {
                 "id=" + id +
                 ", idUtilisateur=" + idUtilisateur +
                 ", dateDeReservation=" + dateDeReservation +
+                ", stateEnums=" + stateEnums +
                 ", copie=" + copie +
                 '}';
     }

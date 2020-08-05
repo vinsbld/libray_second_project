@@ -20,13 +20,16 @@ public class ReservationBean implements Serializable {
 
     private Date dateDeReservation;
 
+    private String stateEnum;
+
     @JsonProperty("copie")
     private CopieBean copieBean;
 
-    public ReservationBean(Long id, Long idUtilisateur, Date dateDeReservation, CopieBean copieBean) {
+    public ReservationBean(Long id, Long idUtilisateur, Date dateDeReservation, String stateEnum, CopieBean copieBean) {
         this.id = id;
         this.idUtilisateur = idUtilisateur;
         this.dateDeReservation = dateDeReservation;
+        this.stateEnum = stateEnum;
         this.copieBean = copieBean;
     }
 
@@ -36,6 +39,7 @@ public class ReservationBean implements Serializable {
                 "id=" + id +
                 ", idUtilisateur=" + idUtilisateur +
                 ", dateDeReservation=" + dateDeReservation +
+                ", stateEnum='" + stateEnum + '\'' +
                 ", copieBean=" + copieBean +
                 '}';
     }

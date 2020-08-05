@@ -78,6 +78,9 @@
                             <span th:if="${nbCopiesDisponibles == 0}"><span th:text="${nbCopiesDisponibles}" style="color: #b21f2d"></span> / <span th:text="${nbTTCopies}"></span></span>
                         </th>
                         <th></th>
+                        <th th:if="${nbCopiesDisponibles == 0}">Liste d'attente :
+                            <span></span>
+                        </th>
                     </tr>
                     </thead>
                     <tbody>

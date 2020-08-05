@@ -32,6 +32,11 @@ class Copie {
     @OneToMany(mappedBy = "copie")
     private List<Reservation> reservations;
 
+    @Transient
+    Integer getNbReservations (){
+    return reservations.size();
+    }
+
     @Override
     public String toString() {
         return "Copie{" +

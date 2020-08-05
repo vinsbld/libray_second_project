@@ -72,8 +72,10 @@ public class ReservationController {
 
     @RequestMapping(value = "/listeDesReservations/{id}", method = RequestMethod.GET)
     public List<ReservationDTO> afficherlesReservationsParUtilisateur(@PathVariable("id") Long id){
+
         List<Reservation> reservations = iReservationService.findAllByIdUtilisateur(id);
         List<ReservationDTO> reservationDTOS = new ArrayList<>();
+
         for (Reservation r : reservations) {
             ReservationDTO rd = new ReservationDTO();
             rd.setReservation(r);
@@ -81,6 +83,7 @@ public class ReservationController {
             rd.setEmprunt(e);
             Optional<Copie> c = iCopieService.findById(r.getCopie().getId());
             rd.setCopie(c);
+            //afficher la position de l'utilisateur dans la liste de reservation
             List<Reservation> rc = iReservationService.findAllByCopie_IdOrderByDateDeReservationAsc(c.get().getId());
             for (int i = 0; i< rc.size(); i ++){
                 if (rc.get(i).getIdUtilisateur() == id){
