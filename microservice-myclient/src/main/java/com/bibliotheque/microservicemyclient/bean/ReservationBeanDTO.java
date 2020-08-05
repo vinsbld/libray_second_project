@@ -8,6 +8,15 @@ public class ReservationBeanDTO {
     private ReservationBean reservation;
     private EmpruntBean emprunt;
     private Integer position;
+    private String stateEnum;
+
+    public String getStateEnum() {
+        return stateEnum;
+    }
+
+    public void setStateEnum(String stateEnum) {
+        this.stateEnum = stateEnum;
+    }
 
     public Optional<CopieBean> getCopie() {
         return copie;

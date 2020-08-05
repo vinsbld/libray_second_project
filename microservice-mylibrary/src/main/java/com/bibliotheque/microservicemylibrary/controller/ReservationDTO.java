@@ -13,6 +13,15 @@ public class ReservationDTO {
     private Reservation reservation;
     private Emprunt emprunt;
     private Integer position;
+    private String stateEnum;
+
+    public String getStateEnum() {
+        return stateEnum;
+    }
+
+    public void setStateEnum(String stateEnum) {
+        this.stateEnum = stateEnum;
+    }
 
     public Optional<Copie> getCopie() {
         return copie;
