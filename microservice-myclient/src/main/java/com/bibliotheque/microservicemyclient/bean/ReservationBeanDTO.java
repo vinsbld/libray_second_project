@@ -4,26 +4,18 @@ import java.util.Optional;
 
 public class ReservationBeanDTO {
 
-    private Optional<CopieBean> copie;
+    private Optional<LivreBean> livre;
     private ReservationBean reservation;
     private EmpruntBean emprunt;
     private Integer position;
     private String stateEnum;
 
-    public String getStateEnum() {
-        return stateEnum;
+    public Optional<LivreBean> getLivre() {
+        return livre;
     }
 
-    public void setStateEnum(String stateEnum) {
-        this.stateEnum = stateEnum;
-    }
-
-    public Optional<CopieBean> getCopie() {
-        return copie;
-    }
-
-    public void setCopie(Optional<CopieBean> copie) {
-        this.copie = copie;
+    public void setLivre(Optional<LivreBean> livre) {
+        this.livre = livre;
     }
 
     public ReservationBean getReservation() {
@@ -48,5 +40,13 @@ public class ReservationBeanDTO {
 
     public void setPosition(Integer position) {
         this.position = position;
+    }
+
+    public String getStateEnum() {
+        return stateEnum;
+    }
+
+    public void setStateEnum(String stateEnum) {
+        this.stateEnum = stateEnum;
     }
 }

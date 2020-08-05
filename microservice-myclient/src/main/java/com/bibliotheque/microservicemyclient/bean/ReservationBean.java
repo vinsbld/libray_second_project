@@ -20,17 +20,20 @@ public class ReservationBean implements Serializable {
 
     private Date dateDeReservation;
 
+    private Integer position;
+
     private String stateEnum;
 
-    @JsonProperty("copie")
-    private CopieBean copieBean;
+    @JsonProperty("livre")
+    private LivreBean livreBean;
 
-    public ReservationBean(Long id, Long idUtilisateur, Date dateDeReservation, String stateEnum, CopieBean copieBean) {
+    public ReservationBean(Long id, Long idUtilisateur, Date dateDeReservation, Integer position, String stateEnum, LivreBean livreBean) {
         this.id = id;
         this.idUtilisateur = idUtilisateur;
         this.dateDeReservation = dateDeReservation;
+        this.position = position;
         this.stateEnum = stateEnum;
-        this.copieBean = copieBean;
+        this.livreBean = livreBean;
     }
 
     @Override
@@ -39,8 +42,9 @@ public class ReservationBean implements Serializable {
                 "id=" + id +
                 ", idUtilisateur=" + idUtilisateur +
                 ", dateDeReservation=" + dateDeReservation +
+                ", position=" + position +
                 ", stateEnum='" + stateEnum + '\'' +
-                ", copieBean=" + copieBean +
+                ", livreBean=" + livreBean +
                 '}';
     }
 }

@@ -32,20 +32,31 @@ public @Data
 
             public Integer nbrCopiesDisponibles;
 
+            private Integer  nbReservations;
+
+            private Integer nbReservationsMax;
+
             @JsonProperty("copies")
             private List<CopieBean> copieBeans;
 
-            public LivreBean(Long id, String titre, String nomAuteur, String prenomAuteur, Date dateEdition, String editeur, Integer nbCopies, Integer nbrCopiesDisponibles, List<CopieBean> copieBeans) {
-                this.id = id;
-                this.titre = titre;
-                this.nomAuteur = nomAuteur;
-                this.prenomAuteur = prenomAuteur;
-                this.dateEdition = dateEdition;
-                this.editeur = editeur;
-                this.nbCopies = nbCopies;
-                this.nbrCopiesDisponibles = nbrCopiesDisponibles;
-                this.copieBeans = copieBeans;
-            }
+            @JsonProperty("reservations")
+            private List<ReservationBean> reservationBeans;
+
+
+    public LivreBean(Long id, String titre, String nomAuteur, String prenomAuteur, Date dateEdition, String editeur, Integer nbCopies, Integer nbrCopiesDisponibles, Integer nbReservations, Integer nbReservationsMax, List<CopieBean> copieBeans, List<ReservationBean> reservationBeans) {
+        this.id = id;
+        this.titre = titre;
+        this.nomAuteur = nomAuteur;
+        this.prenomAuteur = prenomAuteur;
+        this.dateEdition = dateEdition;
+        this.editeur = editeur;
+        this.nbCopies = nbCopies;
+        this.nbrCopiesDisponibles = nbrCopiesDisponibles;
+        this.nbReservations = nbReservations;
+        this.nbReservationsMax = nbReservationsMax;
+        this.copieBeans = copieBeans;
+        this.reservationBeans = reservationBeans;
+    }
 
     @Override
     public String toString() {
@@ -58,7 +69,10 @@ public @Data
                 ", editeur='" + editeur + '\'' +
                 ", nbCopies=" + nbCopies +
                 ", nbrCopiesDisponibles=" + nbrCopiesDisponibles +
+                ", nbReservations=" + nbReservations +
+                ", nbReservationsMax=" + nbReservationsMax +
                 ", copieBeans=" + copieBeans +
+                ", reservationBeans=" + reservationBeans +
                 '}';
     }
 }
