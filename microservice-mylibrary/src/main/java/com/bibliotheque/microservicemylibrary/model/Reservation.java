@@ -39,4 +39,7 @@ public class Reservation {
                 ", livre=" + livre +
                 '}';
     }
+
+    public void setStateEnums(StateEnum enCours) {
+    }
 }

@@ -1,15 +1,12 @@
 package com.bibliotheque.microservicemylibrary.controller;
 
-import com.bibliotheque.microservicemylibrary.model.Copie;
 import com.bibliotheque.microservicemylibrary.model.Emprunt;
 import com.bibliotheque.microservicemylibrary.model.Livre;
 import com.bibliotheque.microservicemylibrary.model.Reservation;
 
-import java.util.Optional;
-
 public class ReservationDTO {
 
-    private Optional<Copie> copie;
+    private Livre livre;
     private Reservation reservation;
     private Emprunt emprunt;
     private Integer position;
@@ -23,12 +20,12 @@ public class ReservationDTO {
         this.stateEnum = stateEnum;
     }
 
-    public Optional<Copie> getCopie() {
-        return copie;
+    public Livre getLivre() {
+        return livre;
     }
 
-    public void setCopie(Optional<Copie> copie) {
-        this.copie = copie;
+    public void setLivre(Livre livre) {
+        this.livre = livre;
     }
 
     public Reservation getReservation() {

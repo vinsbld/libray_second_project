@@ -35,14 +35,14 @@ public class IReservationServiceImpl implements IReservationService{
     }
 
     /**
-     * permet d'afficher la liste de toutes les reservations pour une copie
-     * @param livre
+     * permet d'afficher la liste de toutes les reservations pour un livre
+     * @param id identifiant du livre
      * @param stateEnum
      * @return la liste de toutes les reservations faite pour un livre
      */
     @Override
-    public List<Reservation> findAllByLivreAndStateEnumsOrderByDateDeReservationAsc(Livre livre, StateEnum stateEnum) {
-        return findAllByLivreAndStateEnumsOrderByDateDeReservationAsc(livre, stateEnum);
+    public List<Reservation> findAllByLivre_IdAndStateEnumsOrderByDateDeReservationAsc(Long id, StateEnum stateEnum) {
+        return iReservationDao.findAllByLivre_IdAndStateEnumsOrderByDateDeReservationAsc(id, stateEnum);
     }
 
 

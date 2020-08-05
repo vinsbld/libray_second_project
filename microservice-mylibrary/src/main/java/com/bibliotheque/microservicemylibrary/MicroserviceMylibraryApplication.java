@@ -46,113 +46,119 @@ public class MicroserviceMylibraryApplication {
 	@PostConstruct
 	private void postConstruct(){
 
-		Livre livre = new Livre();
-		livre.setTitre("1984");
-		livre.setNomAuteur("Orwel");
-		livre.setPrenomAuteur("George");
-		livre.setDateEdition(new GregorianCalendar(2020,04,02).getTime());
-		livre.setEditeur("FOLIO");
-		iLivreService.save(livre);
+		Livre livre1984 = new Livre();
+		livre1984.setTitre("1984");
+		livre1984.setNomAuteur("Orwel");
+		livre1984.setPrenomAuteur("George");
+		livre1984.setDateEdition(new GregorianCalendar(2020,04,02).getTime());
+		livre1984.setEditeur("FOLIO");
+		iLivreService.save(livre1984);
 
-		Livre livre1 = new Livre();
-		livre1.setTitre("Le meilleur des mondes");
-		livre1.setPrenomAuteur("Aldous");
-		livre1.setNomAuteur("Huxley");
-		livre1.setDateEdition(new GregorianCalendar(2017,10,04).getTime());
-		livre1.setEditeur("POCHE");
-		iLivreService.save(livre1);
+		Copie copie1984c1 = new Copie();
+		copie1984c1.setLivre(livre1984);
+		copie1984c1.setIsbn(3458);
+		copie1984c1.setDisponible(false);
+		iCopieService.save(copie1984c1);
 
-		Copie copie = new Copie();
-		copie.setLivre(livre);
-		copie.setIsbn(3458);
-		copie.setDisponible(false);
-		iCopieService.save(copie);
+		Emprunt emprunt1984c1 = new Emprunt();
+		emprunt1984c1.setCopie(copie1984c1);
+		emprunt1984c1.setIdUtilisateur(1L);
+		emprunt1984c1.setDateDeDebutEmprunt(new Date());
+		emprunt1984c1.setDateDeFinEmprunt(iEmpruntService.add4Weeks(emprunt1984c1.getDateDeDebutEmprunt()));
+		emprunt1984c1.setProlongerEmprunt(false);
+		emprunt1984c1.setRendu(false);
+		iEmpruntService.save(emprunt1984c1);
 
-		Copie copieLivre = new Copie();
-		copieLivre.setLivre(livre);
-		copieLivre.setIsbn(5422);
-		copieLivre.setDisponible(false);
-		iCopieService.save(copieLivre);
 
-		Copie copieLivreLivre = new Copie();
-		copieLivreLivre.setLivre(livre);
-		copieLivreLivre.setIsbn(5424);
-		copieLivreLivre.setDisponible(false);
-		iCopieService.save(copieLivreLivre);
+		Copie copie1984c2 = new Copie();
+		copie1984c2.setLivre(livre1984);
+		copie1984c2.setIsbn(5422);
+		copie1984c2.setDisponible(false);
+		iCopieService.save(copie1984c2);
 
-		Emprunt emprunt = new Emprunt();
-		emprunt.setCopie(copie);
-		emprunt.setIdUtilisateur(1L);
-		emprunt.setDateDeDebutEmprunt(new Date());
-		emprunt.setDateDeFinEmprunt(iEmpruntService.add4Weeks(emprunt.getDateDeDebutEmprunt()));
-		emprunt.setProlongerEmprunt(false);
-		emprunt.setRendu(false);
-		iEmpruntService.save(emprunt);
+		Emprunt emprunt1984c2 = new Emprunt();
+		emprunt1984c2.setCopie(copie1984c2);
+		emprunt1984c2.setIdUtilisateur(3L);
+		emprunt1984c2.setDateDeDebutEmprunt(new GregorianCalendar(2020, Calendar.JULY, 25).getTime());
+		emprunt1984c2.setDateDeFinEmprunt(iEmpruntService.add4Weeks(emprunt1984c2.getDateDeDebutEmprunt()));
+		emprunt1984c2.setProlongerEmprunt(false);
+		emprunt1984c2.setRendu(false);
+		iEmpruntService.save(emprunt1984c2);
 
-		Emprunt emprunt3 = new Emprunt();
-		emprunt3.setCopie(copieLivre);
-		emprunt3.setIdUtilisateur(3L);
-		emprunt3.setDateDeDebutEmprunt(new GregorianCalendar(2020, Calendar.JULY, 25).getTime());
-		emprunt3.setDateDeFinEmprunt(iEmpruntService.add4Weeks(emprunt3.getDateDeDebutEmprunt()));
-		emprunt3.setProlongerEmprunt(false);
-		emprunt3.setRendu(false);
-		iEmpruntService.save(emprunt3);
 
-		Emprunt emprunt4 = new Emprunt();
-		emprunt4.setCopie(copieLivreLivre);
-		emprunt4.setIdUtilisateur(2L);
-		emprunt4.setDateDeDebutEmprunt(new GregorianCalendar(2020, Calendar.JULY, 31).getTime());
-		emprunt4.setDateDeFinEmprunt(iEmpruntService.add4Weeks(emprunt4.getDateDeDebutEmprunt()));
-		emprunt4.setProlongerEmprunt(false);
-		emprunt4.setRendu(false);
-		iEmpruntService.save(emprunt4);
+		Copie copie1984c3 = new Copie();
+		copie1984c3.setLivre(livre1984);
+		copie1984c3.setIsbn(5424);
+		copie1984c3.setDisponible(true);
+		iCopieService.save(copie1984c3);
 
-		Reservation reservation = new Reservation();
-		reservation.setIdUtilisateur(1L);
-		reservation.setDateDeReservation(new Date());
-		reservation.setCopie(copieLivre);
-		iReservationService.save(reservation);
 
-		Reservation reservation1 = new Reservation();
-		reservation1.setIdUtilisateur(2L);
-		reservation1.setCopie(copieLivre);
-		reservation1.setDateDeReservation(new GregorianCalendar(2020, Calendar.AUGUST, 1).getTime());
-		iReservationService.save(reservation1);
+		Livre livreLmdMondes = new Livre();
+		livreLmdMondes.setTitre("Le meilleur des mondes");
+		livreLmdMondes.setPrenomAuteur("Aldous");
+		livreLmdMondes.setNomAuteur("Huxley");
+		livreLmdMondes.setDateEdition(new GregorianCalendar(2017,10,04).getTime());
+		livreLmdMondes.setEditeur("POCHE");
+		iLivreService.save(livreLmdMondes);
 
-		Reservation reservation2 = new Reservation();
-		reservation2.setIdUtilisateur(3L);
-		reservation2.setCopie(copieLivre);
-		reservation2.setDateDeReservation(new GregorianCalendar(2020, Calendar.AUGUST, 2).getTime());
-		iReservationService.save(reservation2);
+		Copie copieLmdMondesCp_1 = new Copie();
+		copieLmdMondesCp_1.setLivre(livreLmdMondes);
+		copieLmdMondesCp_1.setIsbn(5528);
+		copieLmdMondesCp_1.setDisponible(false);
+		iCopieService.save(copieLmdMondesCp_1);
 
-		Copie copie1 = new Copie();
-		copie1.setLivre(livre1);
-		copie1.setIsbn(5528);
-		copie1.setDisponible(true);
-		iCopieService.save(copie1);
+		Emprunt emprunt_copieLmdMondesCp_1 = new Emprunt();
+		emprunt_copieLmdMondesCp_1.setCopie(copieLmdMondesCp_1);
+		emprunt_copieLmdMondesCp_1.setIdUtilisateur(1L);
+		emprunt_copieLmdMondesCp_1.setDateDeDebutEmprunt(new Date());
+		emprunt_copieLmdMondesCp_1.setDateDeFinEmprunt(iEmpruntService.add4Weeks(emprunt_copieLmdMondesCp_1.getDateDeDebutEmprunt()));
+		emprunt_copieLmdMondesCp_1.setProlongerEmprunt(false);
+		iEmpruntService.save(emprunt_copieLmdMondesCp_1);
 
-		Copie copieLivre1 = new Copie();
-		copieLivre1.setLivre(livre1);
-		copieLivre1.setIsbn(1958);
-		copieLivre1.setDisponible(false);
-		iCopieService.save(copieLivre1);
+		Reservation reservationLivreLmdMondesR_1 = new Reservation();
+		reservationLivreLmdMondesR_1.setLivre(livreLmdMondes);
+		reservationLivreLmdMondesR_1.setDateDeReservation(new Date());
+		reservationLivreLmdMondesR_1.setStateEnums(StateEnum.enCours);
+		reservationLivreLmdMondesR_1.setIdUtilisateur(3L);
+		iReservationService.save(reservationLivreLmdMondesR_1);
 
-		Emprunt emprunt2 = new Emprunt();
-		emprunt2.setCopie(copieLivre1);
-		emprunt2.setIdUtilisateur(2L);
-		emprunt2.setDateDeDebutEmprunt(new Date());
-		emprunt2.setDateDeFinEmprunt(iEmpruntService.add4Weeks(emprunt2.getDateDeDebutEmprunt()));
-		emprunt2.setProlongerEmprunt(false);
-		iEmpruntService.save(emprunt2);
+		Reservation reservationLivreLmdMondesR_2 = new Reservation();
+		reservationLivreLmdMondesR_2.setLivre(livreLmdMondes);
+		reservationLivreLmdMondesR_2.setDateDeReservation(new Date());
+		reservationLivreLmdMondesR_2.setStateEnums(StateEnum.enCours);
+		reservationLivreLmdMondesR_2.setIdUtilisateur(4L);
+		iReservationService.save(reservationLivreLmdMondesR_2);
+
+		Reservation reservationLivreLmdMondesR_3 = new Reservation();
+		reservationLivreLmdMondesR_3.setLivre(livreLmdMondes);
+		reservationLivreLmdMondesR_3.setDateDeReservation(new Date());
+		reservationLivreLmdMondesR_3.setStateEnums(StateEnum.enCours);
+		reservationLivreLmdMondesR_3.setIdUtilisateur(5L);
+		iReservationService.save(reservationLivreLmdMondesR_3);
+
+
+		Copie copieLmdMondesCp_2 = new Copie();
+		copieLmdMondesCp_2.setLivre(livreLmdMondes);
+		copieLmdMondesCp_2.setIsbn(1958);
+		copieLmdMondesCp_2.setDisponible(false);
+		iCopieService.save(copieLmdMondesCp_2);
+
+		Emprunt emprunt_copieLmdMondesCp_2 = new Emprunt();
+		emprunt_copieLmdMondesCp_2.setCopie(copieLmdMondesCp_1);
+		emprunt_copieLmdMondesCp_2.setIdUtilisateur(2L);
+		emprunt_copieLmdMondesCp_2.setDateDeDebutEmprunt(new Date());
+		emprunt_copieLmdMondesCp_2.setDateDeFinEmprunt(iEmpruntService.add4Weeks(emprunt_copieLmdMondesCp_2.getDateDeDebutEmprunt()));
+		emprunt_copieLmdMondesCp_2.setProlongerEmprunt(false);
+		iEmpruntService.save(emprunt_copieLmdMondesCp_2);
 
 
 		Email email = new Email();
 		email.setName("relance");
-		email.setObjet("relance pour livre non rendu");
+		email.setObjet("relance pour livre1984 non rendu");
 		email.setContenu("Bonjour, \n "+
 				"\n"+
-				"\tVous deviez rendre le livre [LIVRE_TITRE] à la blibliothèque au plus tard à la date : [DATE_FIN].\n" +
-				"à ce jour nous n'avons toujours pas enregistré le retour de ce livre.\n" +
+				"\tVous deviez rendre le livre1984 [LIVRE_TITRE] à la blibliothèque au plus tard à la date : [DATE_FIN].\n" +
+				"à ce jour nous n'avons toujours pas enregistré le retour de ce livre1984.\n" +
 				"Nous vous invitons à régulariser la situation dès à présent.\n" +
 				"\n"+
 				"Cordialement.");

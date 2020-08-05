@@ -1,11 +1,10 @@
 package com.bibliotheque.microservicemylibrary.controller;
 
 import com.bibliotheque.microservicemylibrary.exeptions.CannotAddBookingException;
-import com.bibliotheque.microservicemylibrary.model.Copie;
-import com.bibliotheque.microservicemylibrary.model.Emprunt;
-import com.bibliotheque.microservicemylibrary.model.Reservation;
+import com.bibliotheque.microservicemylibrary.model.*;
 import com.bibliotheque.microservicemylibrary.service.copie.ICopieService;
 import com.bibliotheque.microservicemylibrary.service.emprunt.IEmpruntService;
+import com.bibliotheque.microservicemylibrary.service.livre.ILivreService;
 import com.bibliotheque.microservicemylibrary.service.reservation.IReservationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,14 +27,16 @@ public class ReservationController {
     @Autowired
     private ICopieService iCopieService;
 
+    @Autowired
+    private ILivreService iLivreService;
+
 
     @RequestMapping(value = "/reserver/{id}", method = RequestMethod.POST)
     public void demandeDeReservation(@PathVariable Long id, @RequestParam Long idUtilisateur){
 
-        Copie copie = iCopieService.findById(id).get();
         Date date = new Date(Calendar.getInstance().getTime().getTime());
         Reservation reservation = new Reservation();
-        reservation.setCopie(copie);
+        reservation.setLivre(iLivreService.findById(id));
         reservation.setDateDeReservation(date);
         reservation.setIdUtilisateur(idUtilisateur);
 
@@ -43,10 +44,10 @@ public class ReservationController {
         la liste ne peut comporter qu'un maximum de personnes correspondant
         à 2x le nombre d'exemplaires de l'ouvrage.
         */
-        Integer reservationMax = (reservation.getCopie().getLivre().getNbCopies())*2;
+        Integer reservationMax = (reservation.getLivre().getNbCopies())*2;
 
         //verification si l'utilisateur n'a pas déjà une réservation en cours pour cet ouvrage
-        List<Reservation> reservationList = iReservationService.findAllByCopie_IdOrderByDateDeReservationAsc(copie.getId());
+        List<Reservation> reservationList = iReservationService.findAllByIdUtilisateurAndStateEnumsOrderByDateDeReservationAsc(reservation.getLivre().getId(), StateEnum.enCours);
         for (Reservation r : reservationList) {
             if (r.getIdUtilisateur().equals(reservation.getIdUtilisateur())){
                 throw new CannotAddBookingException("ReservationExeption01");
@@ -56,7 +57,7 @@ public class ReservationController {
         //verification si l'utilisateur n'a pas déjà un emprunt en cours pour cet ouvrage
         List<Emprunt> empruntList = iEmpruntService.findAllByIdUtilisateur(idUtilisateur);
         for (Emprunt e : empruntList) {
-            if (e.getCopie().getLivre().getId().equals(reservation.getCopie().getLivre().getId())){
+            if (e.getCopie().getLivre().getId().equals(reservation.getLivre().getId())){
                 throw new CannotAddBookingException("ReservationException02");
             }
         }
@@ -73,18 +74,19 @@ public class ReservationController {
     @RequestMapping(value = "/listeDesReservations/{id}", method = RequestMethod.GET)
     public List<ReservationDTO> afficherlesReservationsParUtilisateur(@PathVariable("id") Long id){
 
-        List<Reservation> reservations = iReservationService.findAllByIdUtilisateur(id);
+        List<Reservation> reservations = iReservationService.findAllByIdUtilisateurAndStateEnumsOrderByDateDeReservationAsc(id, StateEnum.enCours);
         List<ReservationDTO> reservationDTOS = new ArrayList<>();
 
         for (Reservation r : reservations) {
             ReservationDTO rd = new ReservationDTO();
             rd.setReservation(r);
-            Emprunt e = iEmpruntService.findByCopie_Id(r.getCopie().getId());
+            Emprunt e = iEmpruntService.findByCopie_Id(r.getLivre().getId());
             rd.setEmprunt(e);
-            Optional<Copie> c = iCopieService.findById(r.getCopie().getId());
-            rd.setCopie(c);
+            Livre l = iLivreService.findById(r.getLivre().getId());
+            rd.setLivre(l);
+
             //afficher la position de l'utilisateur dans la liste de reservation
-            List<Reservation> rc = iReservationService.findAllByCopie_IdOrderByDateDeReservationAsc(c.get().getId());
+            List<Reservation> rc = iReservationService.findAllByLivre_IdAndStateEnumsOrderByDateDeReservationAsc(l.getId(), StateEnum.enCours);
             for (int i = 0; i< rc.size(); i ++){
                 if (rc.get(i).getIdUtilisateur() == id){
                     rd.setPosition(i + 1);
@@ -98,8 +100,8 @@ public class ReservationController {
     }
 
     @RequestMapping(value = "/liste/{id}", method = RequestMethod.GET)
-    public List<Reservation> afficherLesreservationsParCopie(@PathVariable("id") Long id){
-        List<Reservation> reservations = iReservationService.findAllByCopie_IdOrderByDateDeReservationAsc(id);
+    public List<Reservation> afficherLesreservationsParLivre(@PathVariable("id") Long id){
+        List<Reservation> reservations = iReservationService.findAllByLivre_IdAndStateEnumsOrderByDateDeReservationAsc(id, StateEnum.enCours);
         return reservations;
     }
 

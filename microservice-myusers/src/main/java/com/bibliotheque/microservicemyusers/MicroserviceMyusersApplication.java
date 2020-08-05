@@ -48,6 +48,34 @@ public class MicroserviceMyusersApplication {
 		utilisateur2.setRoleEnums(Collections.singletonList(RoleEnum.USER));
 		utilisateur2.setEmail("oc.projet07@gmail.com");
 		iUtilisateurDao.save(utilisateur2);
+
+		Utilisateur utilisateur3 =new Utilisateur();
+		utilisateur3.setPseudo("joel");
+		utilisateur3.setMotDePasse(passwordEncoder.encode("joel"));
+		utilisateur3.setRoleEnums(Collections.singletonList(RoleEnum.USER));
+		utilisateur3.setEmail("oc.projet07@gmail.com");
+		iUtilisateurDao.save(utilisateur3);
+
+		Utilisateur utilisateur4 =new Utilisateur();
+		utilisateur4.setPseudo("pierik");
+		utilisateur4.setMotDePasse(passwordEncoder.encode("pierik"));
+		utilisateur4.setRoleEnums(Collections.singletonList(RoleEnum.USER));
+		utilisateur4.setEmail("oc.projet07@gmail.com");
+		iUtilisateurDao.save(utilisateur4);
+
+		Utilisateur utilisateur5 =new Utilisateur();
+		utilisateur5.setPseudo("paul");
+		utilisateur5.setMotDePasse(passwordEncoder.encode("paul"));
+		utilisateur5.setRoleEnums(Collections.singletonList(RoleEnum.USER));
+		utilisateur5.setEmail("oc.projet07@gmail.com");
+		iUtilisateurDao.save(utilisateur5);
+
+		Utilisateur utilisateur6 =new Utilisateur();
+		utilisateur6.setPseudo("leo");
+		utilisateur6.setMotDePasse(passwordEncoder.encode("leo"));
+		utilisateur6.setRoleEnums(Collections.singletonList(RoleEnum.USER));
+		utilisateur6.setEmail("oc.projet07@gmail.com");
+		iUtilisateurDao.save(utilisateur6);
 	}
 
 }
