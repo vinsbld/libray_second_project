@@ -27,9 +27,12 @@ public class ReservationController {
     @Autowired
     private ILivreService iLivreService;
 
+    @Autowired
+    private ICopieService iCopieService;
 
-    @RequestMapping(value = "/reserver", method = RequestMethod.POST)
-    public void demandeDeReservation(@RequestParam Long id, @RequestParam Long idUtilisateur){
+
+    @RequestMapping(value = "/reserver/{id}", method = RequestMethod.POST)
+    public void demandeDeReservation(@PathVariable("id") Long id, @RequestParam Long idUtilisateur){
 
         Date date = new Date(Calendar.getInstance().getTime().getTime());
         Reservation reservation = new Reservation();
@@ -81,6 +84,22 @@ public class ReservationController {
             rd.setEmprunt(e);
             Optional<Livre> l = iLivreService.findById(r.getLivre().getId());
             rd.setLivre(l.get());
+
+            //recuperer la date de retour la plus proche
+            List<Date> dates = new ArrayList<>();
+            List<Copie> copies = iCopieService.findAllByLivreId(l.get().getId());
+            for (Copie c : copies) {
+                List<Emprunt> emprunts = iEmpruntService.findAllByCopie_IdAndDateRetourIsNull(c.getId());
+                if (emprunts.size() > 0){
+                    Emprunt emprunt = emprunts.get(0);
+                    dates.add(emprunt.getDateDeFinEmprunt());
+                }
+            }
+            Collections.sort(dates);
+            if (dates.size() > 0){
+                Date dateLaPlusProche = dates.get(0);
+                l.get().setDateRetourLaPlusProche(dateLaPlusProche);
+            }
 
             //afficher la position de l'utilisateur dans la liste de reservation
             List<Reservation> rc = iReservationService.findAllByLivreAndStateEnumsOrderByDateDeReservationAsc(l.get(), StateEnum.enCours);

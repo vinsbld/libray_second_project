@@ -2,17 +2,16 @@ package com.bibliotheque.microservicemylibrary.controller;
 
 import com.bibliotheque.microservicemylibrary.model.Copie;
 import com.bibliotheque.microservicemylibrary.model.Emprunt;
+import com.bibliotheque.microservicemylibrary.model.Livre;
 import com.bibliotheque.microservicemylibrary.service.copie.ICopieService;
 import com.bibliotheque.microservicemylibrary.service.emprunt.IEmpruntService;
+import com.bibliotheque.microservicemylibrary.service.livre.ILivreService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 
 @RestController
@@ -24,14 +23,29 @@ public class EmpruntController {
     private IEmpruntService iEmpruntService;
 
     @Autowired
-    private ICopieService copieService;
+    private ICopieService iCopieService;
+
+    @Autowired
+    private ILivreService iLivreService;
 
 
     @RequestMapping(value = "/listeDesEmprunts/{id}", method = RequestMethod.GET)
-    public List<Emprunt> afficherLaListeDesEmpruntsParUtilisateur(@PathVariable("id") Long id){
+    public List<EmpruntDTO> afficherLaListeDesEmpruntsParUtilisateur(@PathVariable("id") Long id){
         List<Emprunt> emprunts = iEmpruntService.findAllByIdUtilisateur(id);
+        List<EmpruntDTO> empruntDTOS = new ArrayList<>();
+
+        for (Emprunt e : emprunts) {
+            EmpruntDTO eDTO = new EmpruntDTO();
+            eDTO.setEmprunt(e);
+            Optional<Copie> c = iCopieService.findById(e.getCopie().getId());
+            eDTO.setCopie(c.get());
+            Optional<Livre> l = iLivreService.findById(e.getCopie().getLivre().getId());
+            eDTO.setLivre(l.get());
+            empruntDTOS.add(eDTO);
+        }
+
         logger.info("demande la liste des emprunts pour un utilisateur");
-        return emprunts;
+        return empruntDTOS;
     }
 
     @RequestMapping(value = "/emprunt/{id}")
@@ -45,9 +59,9 @@ public class EmpruntController {
     @RequestMapping(value = "/emprunter/{id}", method = RequestMethod.POST)
     public void demandeEmprunt(@PathVariable Long id, @RequestParam Long idUtilisateur){
         Date date = new Date(Calendar.getInstance().getTime().getTime());
-        Copie copie = copieService.findById(id).get();
+        Copie copie = iCopieService.findById(id).get();
         copie.setDisponible(false);
-        copieService.save(copie);
+        iCopieService.save(copie);
         Emprunt emprunt = new Emprunt();
         emprunt.setCopie(copie);
         emprunt.setDateDeDebutEmprunt(date);

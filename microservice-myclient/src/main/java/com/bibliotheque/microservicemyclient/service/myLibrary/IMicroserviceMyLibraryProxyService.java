@@ -19,7 +19,7 @@ public interface IMicroserviceMyLibraryProxyService {
 
     CopieBean afficherUneCopie(Long id);
 
-    List<EmpruntBean> afficherLaListeDesEmpruntsParUtilisateur(Long id);
+    List<EmpruntBeanDTO> afficherLaListeDesEmpruntsParUtilisateur(Long id);
 
     List<CopieBean> afficherLesCopiesDisponibles(Long id);
 

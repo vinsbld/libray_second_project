@@ -65,7 +65,7 @@ public class IMicroserviceMyLibraryProxyServiceImpl implements IMicroserviceMyLi
      * @return la liste des emprunts d'un utilisateur
      */
     @Override
-    public List<EmpruntBean> afficherLaListeDesEmpruntsParUtilisateur(Long id) {
+    public List<EmpruntBeanDTO> afficherLaListeDesEmpruntsParUtilisateur(Long id) {
         return iMicroserviceMyLibraryProxy.afficherLaListeDesEmpruntsParUtilisateur(id);
     }
 

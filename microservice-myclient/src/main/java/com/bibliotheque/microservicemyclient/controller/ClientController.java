@@ -47,7 +47,7 @@ public class ClientController {
         UtilisateurBean utilisateurBean = (UtilisateurBean) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         model.addAttribute("utilisateurBean", utilisateurBean);
 
-        List<EmpruntBean> empruntBeans = iMicroserviceMyLibraryProxyService.afficherLaListeDesEmpruntsParUtilisateur(utilisateurBean.getId());
+        List<EmpruntBeanDTO> empruntBeans = iMicroserviceMyLibraryProxyService.afficherLaListeDesEmpruntsParUtilisateur(utilisateurBean.getId());
         model.addAttribute("empruntList", empruntBeans);
 
         List<ReservationBeanDTO> reservationBeans = iMicroserviceMyLibraryProxyService.afficherlesReservationsParUtilisateur(utilisateurBean.getId());
@@ -150,8 +150,8 @@ public class ClientController {
     }
 
     /*============== #Reservation ======================*/
-    @PostMapping("/reserver")
-    public String demandeDeReservation(Model model, @RequestParam("id") Long id, RedirectAttributes redirectAttributes){
+    @PostMapping("/reserver/{id}")
+    public String demandeDeReservation(Model model, @PathVariable("id") Long id, RedirectAttributes redirectAttributes){
 
         try {
             UtilisateurBean utilisateurBean = (UtilisateurBean) SecurityContextHolder.getContext().getAuthentication().getPrincipal();

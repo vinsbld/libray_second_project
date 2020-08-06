@@ -36,7 +36,7 @@ class Livre {
     private String editeur;
 
     @Transient
-    private Date dateRetourLaPlusProche = new Date();
+    private Date dateRetourLaPlusProche = getDateRetourLaPlusProche();
 
     @JsonManagedReference
     @OneToMany(mappedBy = "livre", fetch = FetchType.EAGER)
