@@ -110,7 +110,7 @@ public class MicroserviceMylibraryApplication {
 		Emprunt emprunt_copieLmdMondesCp_1 = new Emprunt();
 		emprunt_copieLmdMondesCp_1.setCopie(copieLmdMondesCp_1);
 		emprunt_copieLmdMondesCp_1.setIdUtilisateur(1L);
-		emprunt_copieLmdMondesCp_1.setDateDeDebutEmprunt(new Date());
+		emprunt_copieLmdMondesCp_1.setDateDeDebutEmprunt(new GregorianCalendar(2020,8,04).getTime());
 		emprunt_copieLmdMondesCp_1.setDateDeFinEmprunt(iEmpruntService.add4Weeks(emprunt_copieLmdMondesCp_1.getDateDeDebutEmprunt()));
 		emprunt_copieLmdMondesCp_1.setProlongerEmprunt(false);
 		iEmpruntService.save(emprunt_copieLmdMondesCp_1);

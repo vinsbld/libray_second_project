@@ -1,6 +1,5 @@
 package com.bibliotheque.microservicemylibrary.service.emprunt;
 
-import com.bibliotheque.microservicemylibrary.model.Copie;
 import com.bibliotheque.microservicemylibrary.model.Emprunt;
 
 import java.util.Date;
@@ -24,7 +23,10 @@ public interface IEmpruntService {
     //trouve les emprunts non retournées par rapport à la date du jour
     List<Emprunt> relance(Date dateNow);
 
-    //trouver un emprunt par copies de livre
+    //trouver un emprunt par copie de livre
     Emprunt findByCopie_Id(Long id);
+
+    //trouver tous les Emprunts pour une copie
+    List<Emprunt> findAllByCopie_IdAndDateRetourIsNull(Long id);
 
 }

@@ -79,8 +79,14 @@
                         </th>
                         <th></th>
                         <th th:if="${nbCopiesDisponibles == 0}">Liste d'attente :
-                            <span th:text="${}"> / </span>
-                            <span th:text="${}"></span>
+                            <span th:if="${livreBean.nbReservations < livreBean.nbReservationsMax}">
+                                <span th:text="${livreBean.nbReservations}" style="color:#00FF00;"></span> /
+                                <span th:text="${livreBean.nbReservationsMax}"></span>
+                            </span>
+                            <span th:if="${livreBean.nbReservations == livreBean.nbReservationsMax}">
+                                <span th:text="${livreBean.nbReservations}" style="color:#b21f2d;"></span> /
+                                <span th:text="${livreBean.nbReservationsMax}"></span>
+                            </span>
                         </th>
                     </tr>
                     </thead>

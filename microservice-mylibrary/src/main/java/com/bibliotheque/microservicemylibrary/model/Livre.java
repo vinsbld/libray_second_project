@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -33,11 +35,15 @@ class Livre {
 
     private String editeur;
 
+    @Transient
+    private Date dateRetourLaPlusProche = new Date();
+
     @JsonManagedReference
     @OneToMany(mappedBy = "livre", fetch = FetchType.EAGER)
     private List<Copie> copies;
 
     @JsonBackReference
+    @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(mappedBy = "livre")
     private List<Reservation> reservations;
 
@@ -47,6 +53,15 @@ class Livre {
         Integer Rmax = (copies.size())*2;
         return Rmax;
     }
+
+    @Transient
+    public Integer getNbReservations(){
+        Integer nB = 0;
+        for (Reservation r : reservations) {
+                nB++;
+            }return nB;
+        }
+
 
 
     @Transient
@@ -74,6 +89,7 @@ class Livre {
                 ", prenomAuteur='" + prenomAuteur + '\'' +
                 ", dateEdition=" + dateEdition +
                 ", editeur='" + editeur + '\'' +
+                ", dateRetourLaPlusProche=" + dateRetourLaPlusProche +
                 ", copies=" + copies +
                 ", reservations=" + reservations +
                 '}';

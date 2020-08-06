@@ -77,5 +77,17 @@ public class IEmpruntServiceImpl implements IEmpruntService {
     }
 
 
+
+    /**
+     * permet de trouver tous les emprunts par copie de livre
+     * @param id identifiant de la copie
+     * @return la liste des emprunts de la copie
+     */
+    @Override
+    public List<Emprunt> findAllByCopie_IdAndDateRetourIsNull(Long id) {
+        return iEmpruntDao.findAllByCopie_IdAndDateRetourIsNull(id);
+    }
+
+
 }
 

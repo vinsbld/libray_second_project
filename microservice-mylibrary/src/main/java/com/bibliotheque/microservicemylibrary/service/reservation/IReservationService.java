@@ -5,7 +5,6 @@ import com.bibliotheque.microservicemylibrary.model.Reservation;
 import com.bibliotheque.microservicemylibrary.model.StateEnum;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface IReservationService {
 

@@ -99,7 +99,7 @@
                     <tbody>
                     <tr th:each="mRs:${reservationList}">
                         <td th:text="${#dates.format(mRs.reservation.dateDeReservation, 'dd/MM/yyyy')}"></td>
-                        <td th:text="${mRs.reservation.getCopieBean().getLivreBean().getTitre()}"></td>
+                        <td th:text="${mRs.reservation.livreBean.titre}"></td>
                         <td th:text="${#dates.format(mRs.emprunt.dateDeFinEmprunt, 'dd/MM/yyyy')}"></td>
                         <td th:text="${mRs.position}"></td>
                     </tr>

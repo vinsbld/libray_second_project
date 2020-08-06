@@ -36,9 +36,9 @@ public class EmpruntController {
 
     @RequestMapping(value = "/emprunt/{id}")
     public Optional<Emprunt> afficherUnEmprunt(@PathVariable("id")Long id){
-        Optional<Emprunt>reservation = iEmpruntService.findById(id);
+        Optional<Emprunt>emprunt = iEmpruntService.findById(id);
         logger.info("detail d'un emprunt demandée");
-        return reservation;
+        return emprunt;
 
     }
 
