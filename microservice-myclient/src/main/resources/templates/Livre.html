@@ -121,11 +121,13 @@
                         <td th:if="${nbCopiesDisponibles == 0 && copieBeansDisponibles.size() == 0}">
                             <span th:text="${#dates.format(livreBean.dateRetourLaPlusProche, 'dd/MM/yyyy')}"></span>
                         </td>
-                        <td sec:authorize="isAuthenticated()">
-                            <form th:action="@{/reserver/{id}(id=${livreBean.id})}" method="post">
-                                <button type="submit" onclick="return confirm('Confirmer reservation')" class="btn-get-create">reserver</button>
-                            </form>
-                        </td>
+                        <span th:if="${livreBean.nbReservations < livreBean.nbReservationsMax}">
+                            <td sec:authorize="isAuthenticated()">
+                                <form th:action="@{/reserver/{id}(id=${livreBean.id})}" method="post">
+                                    <button type="submit" onclick="return confirm('Confirmer reservation')" class="btn-get-create">reserver</button>
+                                </form>
+                            </td>
+                        </span>
                     </tr>
                     </tbody>
                 </table>

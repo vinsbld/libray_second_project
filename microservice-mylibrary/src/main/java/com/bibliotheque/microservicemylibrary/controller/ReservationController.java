@@ -40,6 +40,7 @@ public class ReservationController {
         reservation.setDateDeReservation(date);
         reservation.setIdUtilisateur(idUtilisateur);
 
+
         /*
         la liste ne peut comporter qu'un maximum de personnes correspondant
         à 2x le nombre d'exemplaires de l'ouvrage.
@@ -68,7 +69,7 @@ public class ReservationController {
         }
 
         iReservationService.save(reservation);
-        logger.info("demande de réservation pour une copie d'un livre");
+        logger.info("demande de réservation pour un livre");
     }
 
     @RequestMapping(value = "/listeDesReservations/{id}", method = RequestMethod.GET)

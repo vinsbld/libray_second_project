@@ -158,15 +158,15 @@ public class ClientController {
             utilisateurBean = iMicroserviceMyUsersProxyService.findById(utilisateurBean.getId());
             model.addAttribute("utilisateurBean", utilisateurBean);
 
-            CopieBean copieBean = iMicroserviceMyLibraryProxyService.afficherUneCopie(id);
-            model.addAttribute("copie", copieBean);
+            LivreBean livreBean = iMicroserviceMyLibraryProxyService.afficherUnLivre(id);
+            model.addAttribute("livre", livreBean);
 
-            iMicroserviceMyLibraryProxyService.demandeDeReservation(copieBean.getId(), utilisateurBean.getId());
+            iMicroserviceMyLibraryProxyService.demandeDeReservation(livreBean.getId(), utilisateurBean.getId());
 
             String messageOK = "votre de mande de réservation a été réalisé avec succes.";
             redirectAttributes.addFlashAttribute("messageOK", messageOK);
 
-            logger.info("l'utilisateur : "+utilisateurBean.getPseudo()+ " id : " +utilisateurBean.getId()+" fait une demande de réservtion pour la copie isbn : "+copieBean.getIsbn());
+            logger.info("l'utilisateur : "+utilisateurBean.getPseudo()+ " id : " +utilisateurBean.getId()+" fait une demande de réservtion pour le livre : "+livreBean.getTitre());
 
         }catch (Exception e){
             e.printStackTrace();
