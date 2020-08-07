@@ -37,16 +37,14 @@ public class ReservationController {
         Date date = new Date(Calendar.getInstance().getTime().getTime());
         Reservation reservation = new Reservation();
         reservation.setLivre(iLivreService.findById(id).get());
+        reservation.setDateDeReservation(date);
         reservation.setIdUtilisateur(idUtilisateur);
         reservation.setStateEnums(StateEnum.enCours);
 
         List<Reservation> reservations = iReservationService.findByLivreOrderByDateDeReservationAsc(reservation.getLivre());
-        for (int i = 0; i < reservations.size(); i++){
+        for (int i = 0; i <= reservations.size(); i++){
             reservation.setPosition(i + 1);
         }
-
-        //trier les positions par dates et heures minutes secondes
-
 
 
         /*
