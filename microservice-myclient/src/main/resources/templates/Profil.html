@@ -94,6 +94,7 @@
                         <th>Ouvrage reservé</th>
                         <th>Date de retour prévue de l'ouvrage</th>
                         <th>Position dans la liste d'attente</th>
+                        <th></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -102,6 +103,11 @@
                         <td th:text="${mRs.reservation.livreBean.titre}"></td>
                         <td th:text="${#dates.format(mRs.livre.get().getDateRetourLaPlusProche(), 'dd/MM/yyyy')}"></td>
                         <td th:text="${mRs.reservation.position}"></td>
+                        <td>
+                            <form th:action="@{/annuler/reserver/{id}(id=${mRs.reservation.id})}" method="post">
+                                <button type="submit" onclick="return confirm('Confirmer annulation')" class="btn-get-create">annuler</button>
+                            </form>
+                        </td>
                     </tr>
                     </tbody>
                 </table>

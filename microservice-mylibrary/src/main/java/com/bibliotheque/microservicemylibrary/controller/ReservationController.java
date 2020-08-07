@@ -81,8 +81,11 @@ public class ReservationController {
     @RequestMapping(value = "/annuler/reserver/{id}", method = RequestMethod.POST)
     public void annulerReservation(@PathVariable("id") Long id, @RequestParam Long idUtilisateur){
         Optional<Reservation> reservation = iReservationService.findById(id);
+
         Reservation r = reservation.get();
         r.setStateEnums(StateEnum.annuler);
+        r.setPosition(null);
+
         logger.info("l'utilisateur : "+ idUtilisateur + " a annuler sa reservation pour le livre : "+r.getLivre().getTitre());
         iReservationService.save(r);
         /*if (r.getStateEnums()==StateEnum.annuler){

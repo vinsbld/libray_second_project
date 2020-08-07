@@ -178,6 +178,17 @@ public class ClientController {
 
         return "redirect:/profil";
     }
+    @PostMapping("/annuler/reserver/{id}")
+    public String annulerReservation(Model model, @PathVariable("id") Long id, RedirectAttributes redirectAttributes){
+
+        UtilisateurBean utilisateurBean = (UtilisateurBean) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        utilisateurBean = iMicroserviceMyUsersProxyService.findById(utilisateurBean.getId());
+        model.addAttribute("utilisateurBean", utilisateurBean);
+
+        iMicroserviceMyLibraryProxyService.annulerReservation(id, utilisateurBean.getId());
+
+        return "redirect:/livres";
+    }
 
 
 }

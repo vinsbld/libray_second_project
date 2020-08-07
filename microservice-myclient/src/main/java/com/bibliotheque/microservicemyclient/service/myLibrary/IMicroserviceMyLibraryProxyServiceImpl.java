@@ -140,6 +140,15 @@ public class IMicroserviceMyLibraryProxyServiceImpl implements IMicroserviceMyLi
         return iMicroserviceMyLibraryProxy.afficherlesReservationsParUtilisateur(id);
     }
 
+    /**
+     * permet d'annuler une reservation
+     * @param id identifiant de la reservation
+     * @param idUtilisateur identifiant de l'utilisateur
+     */
+    @Override
+    public void annulerReservation(Long id, Long idUtilisateur) {
+        iMicroserviceMyLibraryProxy.annulerReservation(id, idUtilisateur);
+    }
 
 
 }

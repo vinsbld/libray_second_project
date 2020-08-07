@@ -59,9 +59,11 @@ class Livre {
         Integer nB = 0;
         for (Reservation r : reservations) {
                 nB++;
+                if (r.getPosition()==null){
+                    nB = nB-1;
+                }
             }return nB;
         }
-
 
 
     @Transient
