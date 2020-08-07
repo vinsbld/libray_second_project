@@ -46,5 +46,14 @@ public class IReservationServiceImpl implements IReservationService{
         return iReservationDao.findAllByLivreAndStateEnumsOrderByDateDeReservationAsc(livre, stateEnum);
     }
 
+    /**
+     * permet d'afficher une reservation pour un livre
+     * @param livre
+     * @return la reservation pour un livre
+     */
+    @Override
+    public List<Reservation> findByLivreOrderByDateDeReservationAsc(Livre livre) {
+        return iReservationDao.findByLivreOrderByDateDeReservationAsc(livre);
+    }
 
 }

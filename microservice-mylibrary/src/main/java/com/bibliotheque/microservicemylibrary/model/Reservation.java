@@ -20,6 +20,8 @@ public class Reservation {
 
     private Date dateDeReservation;
 
+    private Integer position;
+
     @Enumerated(EnumType.STRING)
     private StateEnum stateEnums;
 
@@ -33,6 +35,7 @@ public class Reservation {
                 "id=" + id +
                 ", idUtilisateur=" + idUtilisateur +
                 ", dateDeReservation=" + dateDeReservation +
+                ", position=" + position +
                 ", stateEnums=" + stateEnums +
                 ", livre=" + livre +
                 '}';

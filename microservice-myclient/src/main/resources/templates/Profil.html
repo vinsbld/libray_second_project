@@ -101,7 +101,7 @@
                         <td th:text="${#dates.format(mRs.reservation.dateDeReservation, 'dd/MM/yyyy')}"></td>
                         <td th:text="${mRs.reservation.livreBean.titre}"></td>
                         <td th:text="${#dates.format(mRs.livre.get().getDateRetourLaPlusProche(), 'dd/MM/yyyy')}"></td>
-                        <td th:text="${mRs.position}"></td>
+                        <td th:text="${mRs.reservation.position}"></td>
                     </tr>
                     </tbody>
                 </table>

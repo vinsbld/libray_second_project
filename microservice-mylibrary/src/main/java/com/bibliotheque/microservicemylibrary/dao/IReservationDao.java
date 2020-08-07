@@ -21,4 +21,7 @@ public interface IReservationDao extends JpaRepository<Reservation, Long> {
     //trouver toutes les réservations d'un livre
     List<Reservation> findAllByLivreAndStateEnumsOrderByDateDeReservationAsc(Livre livre, StateEnum stateEnum);
 
+    //trouver une reservation pour un livre
+    List<Reservation> findByLivreOrderByDateDeReservationAsc(Livre livre);
+
 }
