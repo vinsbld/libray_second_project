@@ -15,13 +15,19 @@ public interface IReservationDao extends JpaRepository<Reservation, Long> {
     //sauvegarder une Reservation
     Reservation save(Optional<Reservation> reservation);
 
+    //supprimer une Reservation
+    void deleteById(Long id);
+
+    //trouver une reservation par son id
+    Optional<Reservation> findById(Long id);
+
     //trouver toutes les réservations pour un utilisateur
-    List<Reservation> findAllByIdUtilisateurOrderByDateDeReservationAsc(Long id);
+    List<Reservation> findAllByIdUtilisateurAndStateEnumsOrderByDateDeReservationAsc(Long id, StateEnum stateEnum);
 
     //trouver toutes les réservations d'un livre
     List<Reservation> findAllByLivreAndStateEnumsOrderByDateDeReservationAsc(Livre livre, StateEnum stateEnum);
 
     //trouver une reservation pour un livre
-    List<Reservation> findByLivreOrderByDateDeReservationAsc(Livre livre);
+    List<Reservation> findByLivreAndStateEnumsOrderByDateDeReservationAsc(Livre livre, StateEnum stateEnum);
 
 }

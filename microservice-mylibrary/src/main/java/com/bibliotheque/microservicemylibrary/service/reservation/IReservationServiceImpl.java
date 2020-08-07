@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class IReservationServiceImpl implements IReservationService{
@@ -24,16 +25,37 @@ public class IReservationServiceImpl implements IReservationService{
         iReservationDao.save(reservation);
     }
 
+    /**
+     * permet de supprimer les reservations
+     * @param id identifiant de la reservation
+     */
+    @Override
+    public void deleteById(Long id) {
+        iReservationDao.deleteById(id);
+    }
+
+    /**
+     * trouver une reservation
+     * @param id idendifiant de la reservation
+     * @return la reservation
+     */
+    @Override
+    public Optional<Reservation> findById(Long id) {
+        return iReservationDao.findById(id);
+    }
+
 
     /**
      * Permet d'afficher la liste des reservations pour un utilisateur
      * @param id identifiant l'utilisateur
+     * @param stateEnum état de la reservation
      * @return la liste de toutes les réservations faites par l'utilisateur
      */
     @Override
-    public List<Reservation> findAllByIdUtilisateurOrderByDateDeReservationAsc(Long id) {
-        return iReservationDao.findAllByIdUtilisateurOrderByDateDeReservationAsc(id);
+    public List<Reservation> findAllByIdUtilisateurAndStateEnumsOrderByDateDeReservationAsc(Long id, StateEnum stateEnum) {
+        return iReservationDao.findAllByIdUtilisateurAndStateEnumsOrderByDateDeReservationAsc(id, stateEnum);
     }
+
 
     /**
      * permet d'afficher la liste de toutes les reservations pour un livre
@@ -46,14 +68,16 @@ public class IReservationServiceImpl implements IReservationService{
         return iReservationDao.findAllByLivreAndStateEnumsOrderByDateDeReservationAsc(livre, stateEnum);
     }
 
+
     /**
      * permet d'afficher une reservation pour un livre
      * @param livre
+     * @param stateEnum
      * @return la reservation pour un livre
      */
     @Override
-    public List<Reservation> findByLivreOrderByDateDeReservationAsc(Livre livre) {
-        return iReservationDao.findByLivreOrderByDateDeReservationAsc(livre);
+    public List<Reservation> findByLivreAndStateEnumsOrderByDateDeReservationAsc(Livre livre, StateEnum stateEnum) {
+        return iReservationDao.findByLivreAndStateEnumsOrderByDateDeReservationAsc(livre, stateEnum);
     }
 
 }

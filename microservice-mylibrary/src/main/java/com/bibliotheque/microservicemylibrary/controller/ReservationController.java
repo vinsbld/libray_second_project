@@ -41,7 +41,7 @@ public class ReservationController {
         reservation.setIdUtilisateur(idUtilisateur);
         reservation.setStateEnums(StateEnum.enCours);
 
-        List<Reservation> reservations = iReservationService.findByLivreOrderByDateDeReservationAsc(reservation.getLivre());
+        List<Reservation> reservations = iReservationService.findByLivreAndStateEnumsOrderByDateDeReservationAsc(reservation.getLivre(), StateEnum.enCours);
         for (int i = 0; i <= reservations.size(); i++){
             reservation.setPosition(i + 1);
         }
@@ -54,7 +54,7 @@ public class ReservationController {
         Integer reservationMax = (reservation.getLivre().getNbCopies())*2;
 
         //verification si l'utilisateur n'a pas déjà une réservation en cours pour cet ouvrage
-        List<Reservation> reservationList = iReservationService.findAllByIdUtilisateurOrderByDateDeReservationAsc(reservation.getLivre().getId());
+        List<Reservation> reservationList = iReservationService.findAllByIdUtilisateurAndStateEnumsOrderByDateDeReservationAsc(reservation.getLivre().getId(), StateEnum.enCours);
         for (Reservation r : reservationList) {
             if (r.getIdUtilisateur().equals(reservation.getIdUtilisateur())){
                 throw new CannotAddBookingException("ReservationExeption01");
@@ -78,10 +78,22 @@ public class ReservationController {
         logger.info("demande de réservation pour un livre");
     }
 
+    @RequestMapping(value = "/annuler/reserver/{id}", method = RequestMethod.POST)
+    public void annulerReservation(@PathVariable("id") Long id, @RequestParam Long idUtilisateur){
+        Optional<Reservation> reservation = iReservationService.findById(id);
+        Reservation r = reservation.get();
+        r.setStateEnums(StateEnum.annuler);
+        logger.info("l'utilisateur : "+ idUtilisateur + " a annuler sa reservation pour le livre : "+r.getLivre().getTitre());
+        iReservationService.save(r);
+        /*if (r.getStateEnums()==StateEnum.annuler){
+            iReservationService.deleteById(r.getId());
+        }*/
+    }
+
     @RequestMapping(value = "/listeDesReservations/{id}", method = RequestMethod.GET)
     public List<ReservationDTO> afficherlesReservationsParUtilisateur(@PathVariable("id") Long id){
 
-        List<Reservation> reservations = iReservationService.findAllByIdUtilisateurOrderByDateDeReservationAsc(id);
+        List<Reservation> reservations = iReservationService.findAllByIdUtilisateurAndStateEnumsOrderByDateDeReservationAsc(id, StateEnum.enCours);
         List<ReservationDTO> reservationDTOS = new ArrayList<>();
 
         for (Reservation r : reservations) {
