@@ -22,6 +22,11 @@ public class Reservation {
 
     private Integer position;
 
+    private boolean emailEnvoyer = false;
+
+    private Date dateEmail;
+
+
     @Enumerated(EnumType.STRING)
     private StateEnum stateEnums;
 

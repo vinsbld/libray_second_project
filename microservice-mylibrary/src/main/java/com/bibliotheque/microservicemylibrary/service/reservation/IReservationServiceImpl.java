@@ -80,4 +80,15 @@ public class IReservationServiceImpl implements IReservationService{
         return iReservationDao.findByLivreAndStateEnumsOrderByDateDeReservationAsc(livre, stateEnum);
     }
 
+    /**
+     * permet de d'afficher les reservations dont le mail a été envoyé ou non seulon l'état de la reservation
+     * @param emailEnvoyer
+     * @param stateEnum
+     * @return les reservations
+     */
+    @Override
+    public List<Reservation> findByEmailEnvoyerAndStateEnums(Boolean emailEnvoyer, StateEnum stateEnum) {
+        return iReservationDao.findByEmailEnvoyerAndStateEnums(emailEnvoyer, stateEnum);
+    }
+
 }

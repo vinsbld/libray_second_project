@@ -158,11 +158,11 @@ public class MicroserviceMylibraryApplication {
 
 		Email email = new Email();
 		email.setName("relance");
-		email.setObjet("relance pour livre1984 non rendu");
+		email.setObjet("relance pour livre non rendu");
 		email.setContenu("Bonjour, \n "+
 				"\n"+
-				"\tVous deviez rendre le livre1984 [LIVRE_TITRE] à la blibliothèque au plus tard à la date : [DATE_FIN].\n" +
-				"à ce jour nous n'avons toujours pas enregistré le retour de ce livre1984.\n" +
+				"\tVous deviez rendre le livre [LIVRE_TITRE] à la blibliothèque au plus tard à la date : [DATE_FIN].\n" +
+				"à ce jour nous n'avons toujours pas enregistré le retour de ce livre.\n" +
 				"Nous vous invitons à régulariser la situation dès à présent.\n" +
 				"\n"+
 				"Cordialement.");

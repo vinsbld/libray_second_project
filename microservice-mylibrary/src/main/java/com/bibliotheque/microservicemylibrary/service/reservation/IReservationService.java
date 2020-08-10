@@ -27,4 +27,7 @@ public interface IReservationService {
     //trouver une reservation pour un livre
     List<Reservation> findByLivreAndStateEnumsOrderByDateDeReservationAsc(Livre livre, StateEnum stateEnum);
 
+    //trouver les reservations dont le mail de reservation à été envoyer
+    List<Reservation> findByEmailEnvoyerAndStateEnums(Boolean emailEnvoyer, StateEnum stateEnum);
+
 }
