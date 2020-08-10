@@ -1,21 +1,24 @@
 package com.bibliotheque.microservicemylibrary.batch;
 
 
+import com.bibliotheque.microservicemylibrary.beans.UtilisateurBean;
 import com.bibliotheque.microservicemylibrary.dao.IEmailDao;
 import com.bibliotheque.microservicemylibrary.dao.IReservationDao;
+import com.bibliotheque.microservicemylibrary.model.Email;
 import com.bibliotheque.microservicemylibrary.model.Reservation;
 import com.bibliotheque.microservicemylibrary.model.StateEnum;
+import com.bibliotheque.microservicemylibrary.outils.EmailTypeReservation;
 import com.bibliotheque.microservicemylibrary.proxies.IMicroserviceMyUsersProxy;
-import com.bibliotheque.microservicemylibrary.service.reservation.IReservationService;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.batch.core.StepContribution;
 import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.batch.repeat.RepeatStatus;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -44,22 +47,60 @@ public class MyTaskTwo implements Tasklet {
 
         List<Reservation> reservationList = iReservationDao.findByEmailEnvoyerAndStateEnums(true, StateEnum.enCours);
 
-        if (reservationList.size() > 0){
+        if (reservationList.size() > 0) {
             for (Reservation r : reservationList) {
-                Date deadLine = DateUtils.addDays(r.getDateEmail(), 2);
-                if (dateDuJour.after(deadLine)){
+                Date deadLine = DateUtils.addDays(r.getDateEnvoiEmail(), 2);
+                if (dateDuJour.after(deadLine)) {
                     r.setStateEnums(StateEnum.annuler);
-
-                    List<Reservation> reservations = iReservationDao.findByLivreAndStateEnumsOrderByDateDeReservationAsc(r.getLivre(), StateEnum.enCours);
-                    if (reservations.size() > 0){
-                        Reservation envoiMailReservation = reservations.get(0);
-                        envoiMailReservation.setDateEmail(dateDuJour);
-                    }
+                    ArrayList<EmailTypeReservation> emailTypeReservations = new ArrayList<>();
+                    UtilisateurBean utilisateurBean = iMicroserviceMyUsersProxy.findById(r.getIdUtilisateur());
+                    emailTypeReservations.add(new EmailTypeReservation(utilisateurBean.getEmail(), r.getLivre().getTitre(), oldFormat.format(deadLine)));
+                    iReservationDao.save(r);
                 }
             }
         }
 
-        return null;
+        List<EmailTypeReservation> emailTypeReservationList = new ArrayList<>();
+        this.sendRevival(emailTypeReservationList);
+
+        System.out.println("fin du batch de réservation");
+        return RepeatStatus.FINISHED;
+    }
+
+                    /*List<Reservation> reservations = iReservationDao.findByLivreAndStateEnumsOrderByDateDeReservationAsc(r.getLivre(), StateEnum.enCours);
+                    if (reservations.size() > 0){
+                        Reservation reservation = reservations.get(0);
+                        reservation.setDateEnvoiEmail(dateDuJour);
+
+                        ArrayList<EmailTypeReservation> emailTypeReservations = new ArrayList<>();
+                        Date dateOfDeadLine = DateUtils.addDays(reservation.getDateEnvoiEmail(), 2);
+                        UtilisateurBean utilisateurBean = iMicroserviceMyUsersProxy.findById(reservation.getIdUtilisateur());
+                        emailTypeReservations.add(new EmailTypeReservation(utilisateurBean.getEmail(), reservation.getLivre().getTitre(), oldFormat.format(dateOfDeadLine)));
+
+                        reservation.setEmailEnvoyer(true);
+                        iReservationDao.save(reservation);
+                    }*/
+
+
+    private void sendRevival(List<EmailTypeReservation> emailTypeReservations){
+
+        Email email = iEmailDao.findByName("reservation");
+
+        for (EmailTypeReservation e : emailTypeReservations) {
+            String text = email.getContenu()
+                    .replace("[LIVRE_TITRE]", e.getTitre())
+                    .replace("[DEADLINE]", e.getDeadLine());
+            this.sendSimpleMessage(e.getEmail(), email.getObjet(), text);
+        }
+
+    }
+
+    private void sendSimpleMessage(String email, String objet, String contenu) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(email);
+        message.setSubject(objet);
+        message.setText(contenu);
+        sender.send(message);
     }
 }
 

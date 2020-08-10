@@ -30,4 +30,7 @@ public interface IReservationService {
     //trouver les reservations dont le mail de reservation à été envoyer
     List<Reservation> findByEmailEnvoyerAndStateEnums(Boolean emailEnvoyer, StateEnum stateEnum);
 
+    //trouver toutes les reservations
+    List<Reservation> findAll();
+
 }

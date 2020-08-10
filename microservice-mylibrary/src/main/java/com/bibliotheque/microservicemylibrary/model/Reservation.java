@@ -24,7 +24,7 @@ public class Reservation {
 
     private boolean emailEnvoyer = false;
 
-    private Date dateEmail;
+    private Date dateEnvoiEmail;
 
 
     @Enumerated(EnumType.STRING)
@@ -41,6 +41,8 @@ public class Reservation {
                 ", idUtilisateur=" + idUtilisateur +
                 ", dateDeReservation=" + dateDeReservation +
                 ", position=" + position +
+                ", emailEnvoyer=" + emailEnvoyer +
+                ", dateEnvoiEmail=" + dateEnvoiEmail +
                 ", stateEnums=" + stateEnums +
                 ", livre=" + livre +
                 '}';

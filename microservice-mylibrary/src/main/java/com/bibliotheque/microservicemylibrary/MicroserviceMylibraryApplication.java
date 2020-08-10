@@ -147,10 +147,12 @@ public class MicroserviceMylibraryApplication {
 
 		Reservation reservationLivreLmdMondesR_3 = new Reservation();
 		reservationLivreLmdMondesR_3.setLivre(livreLmdMondes);
-		reservationLivreLmdMondesR_3.setDateDeReservation(new GregorianCalendar(2020,8,03).getTime());
+		reservationLivreLmdMondesR_3.setDateDeReservation(new GregorianCalendar(2020,7,07).getTime());
 		reservationLivreLmdMondesR_3.setStateEnums(StateEnum.enCours);
 		reservationLivreLmdMondesR_3.setIdUtilisateur(5L);
 		reservationLivreLmdMondesR_3.setPosition(1);
+		reservationLivreLmdMondesR_3.setDateEnvoiEmail(new GregorianCalendar(2020,7,07).getTime());
+		reservationLivreLmdMondesR_3.setEmailEnvoyer(true);
 		iReservationService.save(reservationLivreLmdMondesR_3);
 
 
@@ -167,6 +169,19 @@ public class MicroserviceMylibraryApplication {
 				"\n"+
 				"Cordialement.");
 		iEmailDao.save(email);
+
+
+		Email emailReservation = new Email();
+		emailReservation.setName("reservation");
+		emailReservation.setObjet("reservation d'ouvrage");
+		emailReservation.setContenu("Bonjour, \n "+
+				"\n"+
+				"\tL'ouvrage [LIVRE_TITRE] est de nouveau disponible à la blibliothèque. \n" +
+				"Vous pouvez venir emprunter l'ouvrage jusqu'au : [DEADLINE] \n" +
+				"passer cette date l'ouvrage sera remis en circulation."+
+				"\n" +
+				"Cordialement.");
+		iEmailDao.save(emailReservation);
 
 	}
 

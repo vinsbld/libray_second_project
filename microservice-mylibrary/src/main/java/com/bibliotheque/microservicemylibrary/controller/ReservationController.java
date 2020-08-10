@@ -137,5 +137,10 @@ public class ReservationController {
         return reservationDTOS;
     }
 
+    @RequestMapping(value = "/reservations", method = RequestMethod.GET)
+    public List<Reservation> listDeToutesLesReservations(){
+        List<Reservation> reservations = iReservationService.findAll();
+        return reservations;
+    }
 
 }

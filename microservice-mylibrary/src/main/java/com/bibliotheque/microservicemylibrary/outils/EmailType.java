@@ -6,7 +6,8 @@ import java.util.Date;
 
 
 @NoArgsConstructor
-public @Data  class EmailType {
+@Data
+public class EmailType {
 
     @NonNull String email;
     @NonNull String titre;

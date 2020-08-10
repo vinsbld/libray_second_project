@@ -18,6 +18,9 @@ public interface IReservationDao extends JpaRepository<Reservation, Long> {
     //supprimer une Reservation
     void deleteById(Long id);
 
+    //trouver toutes les reservations
+    List<Reservation> findAll();
+
     //trouver une reservation par son id
     Optional<Reservation> findById(Long id);
 
@@ -30,6 +33,6 @@ public interface IReservationDao extends JpaRepository<Reservation, Long> {
     //trouver une reservation pour un livre
     List<Reservation> findByLivreAndStateEnumsOrderByDateDeReservationAsc(Livre livre, StateEnum stateEnum);
 
-    //trouver les reservations dont le mail de reservation à été envoyer
+    //trouver les reservations dont le mail de reservation à été envoyer ou non et par status
     List<Reservation> findByEmailEnvoyerAndStateEnums(Boolean emailEnvoyer, StateEnum stateEnum);
 }
