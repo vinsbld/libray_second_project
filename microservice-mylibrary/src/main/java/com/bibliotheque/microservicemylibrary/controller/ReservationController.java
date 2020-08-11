@@ -139,7 +139,7 @@ public class ReservationController {
 
     @RequestMapping(value = "/reservations", method = RequestMethod.GET)
     public List<Reservation> listDeToutesLesReservations(){
-        List<Reservation> reservations = iReservationService.findAll();
+        List<Reservation> reservations = iReservationService.findByEmailEnvoyerAndStateEnums(true, StateEnum.enCours);
         return reservations;
     }
 

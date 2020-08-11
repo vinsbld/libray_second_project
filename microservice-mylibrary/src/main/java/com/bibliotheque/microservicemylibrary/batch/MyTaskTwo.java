@@ -24,11 +24,11 @@ import java.util.List;
 
 public class MyTaskTwo implements Tasklet {
 
+
     private final IReservationDao iReservationDao;
     private final IEmailDao iEmailDao;
     private final IMicroserviceMyUsersProxy iMicroserviceMyUsersProxy;
     private final JavaMailSenderImpl sender;
-
 
     public MyTaskTwo(IReservationDao iReservationDao, IEmailDao iEmailDao, IMicroserviceMyUsersProxy iMicroserviceMyUsersProxy, JavaMailSenderImpl sender) {
         this.iReservationDao = iReservationDao;
@@ -46,41 +46,54 @@ public class MyTaskTwo implements Tasklet {
         Date dateDuJour = new Date();
 
         List<Reservation> reservationList = iReservationDao.findByEmailEnvoyerAndStateEnums(true, StateEnum.enCours);
-
         if (reservationList.size() > 0) {
             for (Reservation r : reservationList) {
                 Date deadLine = DateUtils.addDays(r.getDateEnvoiEmail(), 2);
                 if (dateDuJour.after(deadLine)) {
-                    r.setStateEnums(StateEnum.annuler);
                     ArrayList<EmailTypeReservation> emailTypeReservations = new ArrayList<>();
                     UtilisateurBean utilisateurBean = iMicroserviceMyUsersProxy.findById(r.getIdUtilisateur());
                     emailTypeReservations.add(new EmailTypeReservation(utilisateurBean.getEmail(), r.getLivre().getTitre(), oldFormat.format(deadLine)));
+                    r.setStateEnums(StateEnum.annuler);
                     iReservationDao.save(r);
+                    List<EmailTypeReservation> emailTypeReservationList = new ArrayList<>(emailTypeReservations);
+                    this.sendCancelRevival(emailTypeReservationList);
                 }
             }
         }
 
-        List<EmailTypeReservation> emailTypeReservationList = new ArrayList<>();
-        this.sendRevival(emailTypeReservationList);
+
+       List<Reservation> reservations = iReservationDao.findByLivreAndStateEnumsOrderByDateDeReservationAsc(reservationList.get(0).getLivre(), StateEnum.enCours);
+        if (reservations.size() > 0){
+            Reservation reservation = reservations.get(0);
+            reservation.setDateEnvoiEmail(dateDuJour);
+            reservation.setEmailEnvoyer(true);
+            Date dateOfDeadLine = DateUtils.addDays(reservation.getDateEnvoiEmail(), 2);
+            ArrayList<EmailTypeReservation> emailTypeReservations1 = new ArrayList<>();
+            UtilisateurBean utilisateurBean = iMicroserviceMyUsersProxy.findById(reservation.getIdUtilisateur());
+            emailTypeReservations1.add(new EmailTypeReservation(utilisateurBean.getEmail(), reservation.getLivre().getTitre(), oldFormat.format(dateOfDeadLine)));
+            iReservationDao.save(reservation);
+            List<EmailTypeReservation> emailTypeReservationList1 = new ArrayList<>(emailTypeReservations1);
+            this.sendRevival(emailTypeReservationList1);
+        }
+
 
         System.out.println("fin du batch de réservation");
         return RepeatStatus.FINISHED;
     }
 
-                    /*List<Reservation> reservations = iReservationDao.findByLivreAndStateEnumsOrderByDateDeReservationAsc(r.getLivre(), StateEnum.enCours);
-                    if (reservations.size() > 0){
-                        Reservation reservation = reservations.get(0);
-                        reservation.setDateEnvoiEmail(dateDuJour);
 
-                        ArrayList<EmailTypeReservation> emailTypeReservations = new ArrayList<>();
-                        Date dateOfDeadLine = DateUtils.addDays(reservation.getDateEnvoiEmail(), 2);
-                        UtilisateurBean utilisateurBean = iMicroserviceMyUsersProxy.findById(reservation.getIdUtilisateur());
-                        emailTypeReservations.add(new EmailTypeReservation(utilisateurBean.getEmail(), reservation.getLivre().getTitre(), oldFormat.format(dateOfDeadLine)));
+    private void sendCancelRevival(List<EmailTypeReservation> emailTypeReservations){
 
-                        reservation.setEmailEnvoyer(true);
-                        iReservationDao.save(reservation);
-                    }*/
+        Email email = iEmailDao.findByName("annulationReservation");
 
+        for (EmailTypeReservation e : emailTypeReservations) {
+            String text = email.getContenu()
+                    .replace("[LIVRE_TITRE]", e.getTitre())
+                    .replace("[DEADLINE]", e.getDeadLine());
+            this.sendSimpleMessage(e.getEmail(), email.getObjet(), text);
+        }
+
+    }
 
     private void sendRevival(List<EmailTypeReservation> emailTypeReservations){
 

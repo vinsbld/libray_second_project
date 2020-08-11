@@ -53,7 +53,6 @@ public class MyTaskOne implements Tasklet {
             for (Emprunt res : empruntList) {
                 UtilisateurBean utilisateurBean = iMicroserviceMyUsersProxy.findById(res.getIdUtilisateur());
                 emailType.add(new EmailType(utilisateurBean.getEmail(), res.getCopie().getLivre().getTitre(), oldFormat.format(res.getDateDeFinEmprunt())));
-
             }
 
         List<EmailType> emailList = new ArrayList<>(emailType);

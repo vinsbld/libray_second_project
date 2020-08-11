@@ -139,7 +139,7 @@ public class MicroserviceMylibraryApplication {
 
 		Reservation reservationLivreLmdMondesR_2 = new Reservation();
 		reservationLivreLmdMondesR_2.setLivre(livreLmdMondes);
-		reservationLivreLmdMondesR_2.setDateDeReservation(new GregorianCalendar(2020,8,05).getTime());
+		reservationLivreLmdMondesR_2.setDateDeReservation(new GregorianCalendar(2020,7,05).getTime());
 		reservationLivreLmdMondesR_2.setStateEnums(StateEnum.enCours);
 		reservationLivreLmdMondesR_2.setIdUtilisateur(4L);
 		reservationLivreLmdMondesR_2.setPosition(2);
@@ -151,7 +151,7 @@ public class MicroserviceMylibraryApplication {
 		reservationLivreLmdMondesR_3.setStateEnums(StateEnum.enCours);
 		reservationLivreLmdMondesR_3.setIdUtilisateur(5L);
 		reservationLivreLmdMondesR_3.setPosition(1);
-		reservationLivreLmdMondesR_3.setDateEnvoiEmail(new GregorianCalendar(2020,7,07).getTime());
+		reservationLivreLmdMondesR_3.setDateEnvoiEmail(new GregorianCalendar(2020,5,07).getTime());
 		reservationLivreLmdMondesR_3.setEmailEnvoyer(true);
 		iReservationService.save(reservationLivreLmdMondesR_3);
 
@@ -182,6 +182,20 @@ public class MicroserviceMylibraryApplication {
 				"\n" +
 				"Cordialement.");
 		iEmailDao.save(emailReservation);
+
+
+		Email emailAnnulationReservation = new Email();
+		emailAnnulationReservation.setName("annulationReservation");
+		emailAnnulationReservation.setObjet("annulation de reservation d'ouvrage");
+		emailAnnulationReservation.setContenu("Bonjour, \n "+
+				"\n"+
+				"\tSauf erreur de notre part, \n" +
+				"Vous n'êtes pas venu emprunter l'ouvrage [LIVRE_TITRE] à la blibliothèque dans le délai qui vous était imparti  \n" +
+				"Vous aviez jusqu'au : [DEADLINE]  pour venir l'emprunter." +
+				"L'ouvrage a donc été remis en circulation  \n" +
+				"\n" +
+				"Cordialement.");
+		iEmailDao.save(emailAnnulationReservation);
 
 	}
 

@@ -59,8 +59,11 @@ public class BatchConfig {
         return jobs.get("demoJob")
                 .incrementer(new RunIdIncrementer())
                 .start(stepOne())
+                .next(stepTwo())
                 .build();
     }
+
+
 
 
 }
