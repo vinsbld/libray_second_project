@@ -1,12 +1,12 @@
 package com.bibliotheque.microservicemylibrary.controller;
 
+import com.bibliotheque.microservicemylibrary.beans.UtilisateurBean;
 import com.bibliotheque.microservicemylibrary.dto.EmpruntDTO;
-import com.bibliotheque.microservicemylibrary.model.Copie;
-import com.bibliotheque.microservicemylibrary.model.Emprunt;
-import com.bibliotheque.microservicemylibrary.model.Livre;
+import com.bibliotheque.microservicemylibrary.model.*;
 import com.bibliotheque.microservicemylibrary.service.copie.ICopieService;
 import com.bibliotheque.microservicemylibrary.service.emprunt.IEmpruntService;
 import com.bibliotheque.microservicemylibrary.service.livre.ILivreService;
+import com.bibliotheque.microservicemylibrary.service.reservation.IReservationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,9 +29,13 @@ public class EmpruntController {
     @Autowired
     private ILivreService iLivreService;
 
+    @Autowired
+    private IReservationService iReservationService;
+
 
     @RequestMapping(value = "/listeDesEmprunts/{id}", method = RequestMethod.GET)
     public List<EmpruntDTO> afficherLaListeDesEmpruntsParUtilisateur(@PathVariable("id") Long id){
+
         List<Emprunt> emprunts = iEmpruntService.findAllByIdUtilisateur(id);
         List<EmpruntDTO> empruntDTOS = new ArrayList<>();
 
@@ -59,11 +63,16 @@ public class EmpruntController {
 
     @RequestMapping(value = "/emprunter/{id}", method = RequestMethod.POST)
     public void demandeEmprunt(@PathVariable Long id, @RequestParam Long idUtilisateur){
+
         Date date = new Date(Calendar.getInstance().getTime().getTime());
         Copie copie = iCopieService.findById(id).get();
+        Emprunt emprunt = new Emprunt();
+
+        //verifier que l'utilisateur n'a pas déjà un emprunt en cours pour cet ouvrage
+        if (emprunt.getIdUtilisateur().equals(copie))
+
         copie.setDisponible(false);
         iCopieService.save(copie);
-        Emprunt emprunt = new Emprunt();
         emprunt.setCopie(copie);
         emprunt.setDateDeDebutEmprunt(date);
         emprunt.setDateDeFinEmprunt(iEmpruntService.add4Weeks(date));
@@ -96,10 +105,18 @@ public class EmpruntController {
         emprunt.setRendu(true);
         iEmpruntService.save(emprunt);
 
+        List<Reservation> reservations = iReservationService.findByLivreAndStateEnumsOrderByDateDeReservationAsc(emprunt.getCopie().getLivre(), StateEnum.enCours);
+        if (reservations.size() > 0){
+            emprunt.getCopie().setDisponible(false);
+            iEmpruntService.save(emprunt);
+            Reservation reservation = reservations.get(0);
+            reservation.setDateEnvoiEmail(date);
+            reservation.setEmailEnvoyer(true);
+            reservation.getIdUtilisateur();
+            iReservationService.save(reservation);
+        }
+
     }
-
-
-
 
 
 }
