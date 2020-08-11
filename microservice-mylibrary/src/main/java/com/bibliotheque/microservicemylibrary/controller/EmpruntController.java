@@ -68,18 +68,33 @@ public class EmpruntController {
         Copie copie = iCopieService.findById(id).get();
         Emprunt emprunt = new Emprunt();
 
-        //verifier que l'utilisateur n'a pas déjà un emprunt en cours pour cet ouvrage
-        if (emprunt.getIdUtilisateur().equals(copie))
-
-        copie.setDisponible(false);
-        iCopieService.save(copie);
-        emprunt.setCopie(copie);
-        emprunt.setDateDeDebutEmprunt(date);
-        emprunt.setDateDeFinEmprunt(iEmpruntService.add4Weeks(date));
-        emprunt.setProlongerEmprunt(false);
-        emprunt.setIdUtilisateur(idUtilisateur);
-        iEmpruntService.save(emprunt);
-        logger.info("demande de emprunt pour une copie d'un livre");
+        List<Reservation> reservations = iReservationService.findByLivreAndStateEnumsOrderByDateDeReservationAsc(copie.getLivre(), StateEnum.enCours);
+        if (reservations.size() > 0){
+            Reservation reservation = reservations.get(0);
+            if (reservation.getIdUtilisateur().equals(emprunt.getIdUtilisateur())){
+                copie.setDisponible(false);
+                iCopieService.save(copie);
+                emprunt.setCopie(copie);
+                emprunt.setDateDeDebutEmprunt(date);
+                emprunt.setDateDeFinEmprunt(iEmpruntService.add4Weeks(date));
+                emprunt.setProlongerEmprunt(false);
+                emprunt.setIdUtilisateur(reservation.getIdUtilisateur());
+                iEmpruntService.save(emprunt);
+                reservation.setStateEnums(StateEnum.terminer);
+                iReservationService.save(reservation);
+                logger.info("demande emprunt à partir de la reservation :"+ reservation.getId() +" de l'utilisateur : "+reservation.getIdUtilisateur());
+            }
+        }else {
+            copie.setDisponible(false);
+            iCopieService.save(copie);
+            emprunt.setCopie(copie);
+            emprunt.setDateDeDebutEmprunt(date);
+            emprunt.setDateDeFinEmprunt(iEmpruntService.add4Weeks(date));
+            emprunt.setProlongerEmprunt(false);
+            emprunt.setIdUtilisateur(idUtilisateur);
+            iEmpruntService.save(emprunt);
+            logger.info("demande emprunt pour une copie : "+emprunt.getCopie().getIsbn()+ "du livre : "+emprunt.getCopie().getLivre().getTitre()+"pour l'utilisteur : "+emprunt.getIdUtilisateur());
+        }
     }
 
 
