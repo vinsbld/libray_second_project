@@ -1,5 +1,6 @@
 package com.bibliotheque.microservicemylibrary.controller;
 
+import com.bibliotheque.microservicemylibrary.dto.EmpruntDTO;
 import com.bibliotheque.microservicemylibrary.model.Copie;
 import com.bibliotheque.microservicemylibrary.model.Emprunt;
 import com.bibliotheque.microservicemylibrary.model.Livre;

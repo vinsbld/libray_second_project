@@ -1,6 +1,9 @@
 package com.bibliotheque.microservicemyclient.controller;
 
 import com.bibliotheque.microservicemyclient.bean.*;
+import com.bibliotheque.microservicemyclient.dto.CopieBeanDTO;
+import com.bibliotheque.microservicemyclient.dto.EmpruntBeanDTO;
+import com.bibliotheque.microservicemyclient.dto.ReservationBeanDTO;
 import com.bibliotheque.microservicemyclient.exeptions.CannotAddBookingException;
 import com.bibliotheque.microservicemyclient.service.myLibrary.IMicroserviceMyLibraryProxyService;
 import com.bibliotheque.microservicemyclient.service.myUsers.IMicroserviceMyUsersProxyService;
@@ -16,9 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 public class ClientController {

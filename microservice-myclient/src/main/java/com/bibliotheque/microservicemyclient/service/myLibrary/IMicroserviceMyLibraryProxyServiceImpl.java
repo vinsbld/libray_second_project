@@ -1,6 +1,9 @@
 package com.bibliotheque.microservicemyclient.service.myLibrary;
 
 import com.bibliotheque.microservicemyclient.bean.*;
+import com.bibliotheque.microservicemyclient.dto.CopieBeanDTO;
+import com.bibliotheque.microservicemyclient.dto.EmpruntBeanDTO;
+import com.bibliotheque.microservicemyclient.dto.ReservationBeanDTO;
 import com.bibliotheque.microservicemyclient.proxies.IMicroserviceMyLibraryProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

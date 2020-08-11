@@ -1,4 +1,7 @@
-package com.bibliotheque.microservicemyclient.bean;
+package com.bibliotheque.microservicemyclient.dto;
+
+import com.bibliotheque.microservicemyclient.bean.CopieBean;
+import com.bibliotheque.microservicemyclient.bean.EmpruntBean;
 
 public class CopieBeanDTO {
 

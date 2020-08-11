@@ -1,4 +1,4 @@
-package com.bibliotheque.microservicemylibrary.controller;
+package com.bibliotheque.microservicemylibrary.dto;
 
 import com.bibliotheque.microservicemylibrary.model.Emprunt;
 import com.bibliotheque.microservicemylibrary.model.Livre;

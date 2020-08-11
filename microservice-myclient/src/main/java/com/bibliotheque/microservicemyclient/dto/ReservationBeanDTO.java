@@ -1,4 +1,8 @@
-package com.bibliotheque.microservicemyclient.bean;
+package com.bibliotheque.microservicemyclient.dto;
+
+import com.bibliotheque.microservicemyclient.bean.EmpruntBean;
+import com.bibliotheque.microservicemyclient.bean.LivreBean;
+import com.bibliotheque.microservicemyclient.bean.ReservationBean;
 
 import java.util.Optional;
 

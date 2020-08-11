@@ -1,10 +1,12 @@
 package com.bibliotheque.microservicemyclient.service.myLibrary;
 
 import com.bibliotheque.microservicemyclient.bean.*;
+import com.bibliotheque.microservicemyclient.dto.CopieBeanDTO;
+import com.bibliotheque.microservicemyclient.dto.EmpruntBeanDTO;
+import com.bibliotheque.microservicemyclient.dto.ReservationBeanDTO;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface IMicroserviceMyLibraryProxyService {
 

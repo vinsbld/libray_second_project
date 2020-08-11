@@ -2,13 +2,15 @@ package com.bibliotheque.microservicemyclient.proxies;
 
 import com.bibliotheque.microservicemyclient.bean.*;
 import com.bibliotheque.microservicemyclient.configurations.FeignConfig;
+import com.bibliotheque.microservicemyclient.dto.CopieBeanDTO;
+import com.bibliotheque.microservicemyclient.dto.EmpruntBeanDTO;
+import com.bibliotheque.microservicemyclient.dto.ReservationBeanDTO;
 import org.springframework.cloud.netflix.ribbon.RibbonClient;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
 
 import java.util.List;
-import java.util.Optional;
 
 @RequestMapping(value = "/microservice-mylibrary")
 @FeignClient(name ="zuul-server", contextId = "IMicroserviceMyLibraryProxy", configuration = FeignConfig.class, url = "http://localhost:9006")
