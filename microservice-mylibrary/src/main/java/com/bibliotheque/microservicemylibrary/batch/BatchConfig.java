@@ -1,7 +1,7 @@
 package com.bibliotheque.microservicemylibrary.batch;
 
 import com.bibliotheque.microservicemylibrary.dao.IEmailDao;
-import com.bibliotheque.microservicemylibrary.dao.IReservationDao;
+import com.bibliotheque.microservicemylibrary.dao.IEmpruntDao;
 import com.bibliotheque.microservicemylibrary.proxies.IMicroserviceMyUsersProxy;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -25,7 +25,7 @@ public class BatchConfig {
     private StepBuilderFactory steps;
 
     @Autowired
-    private IReservationDao iReservationDao;
+    private IEmpruntDao iEmpruntDao;
 
     @Autowired
     private IEmailDao iEmailDao;
@@ -39,7 +39,7 @@ public class BatchConfig {
     @Bean
     public Step stepOne() {
         return steps.get("stepOne")
-                .tasklet(new MyTaskOne(iReservationDao, iEmailDao, iMicroserviceMyUsersProxy, sender))
+                .tasklet(new MyTaskOne(iEmpruntDao, iEmailDao, iMicroserviceMyUsersProxy, sender))
                 .build();
     }
 

@@ -3,11 +3,11 @@ package com.bibliotheque.microservicemylibrary;
 import com.bibliotheque.microservicemylibrary.dao.IEmailDao;
 import com.bibliotheque.microservicemylibrary.model.Copie;
 import com.bibliotheque.microservicemylibrary.model.Email;
+import com.bibliotheque.microservicemylibrary.model.Emprunt;
 import com.bibliotheque.microservicemylibrary.model.Livre;
-import com.bibliotheque.microservicemylibrary.model.Reservation;
 import com.bibliotheque.microservicemylibrary.service.copie.ICopieService;
 import com.bibliotheque.microservicemylibrary.service.livre.ILivreService;
-import com.bibliotheque.microservicemylibrary.service.reservation.IReservationService;
+import com.bibliotheque.microservicemylibrary.service.reservation.IEmpruntService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -37,7 +37,7 @@ public class MicroserviceMylibraryApplication {
 	ICopieService iCopieService;
 
 	@Autowired
-	IReservationService iReservationService;
+    IEmpruntService iEmpruntService;
 
 	@Autowired
 	IEmailDao iEmailDao;
@@ -91,23 +91,23 @@ public class MicroserviceMylibraryApplication {
 		copieLivre1.setDisponible(true);
 		iCopieService.save(copieLivre1);
 
-		Reservation reservation = new Reservation();
-		reservation.setCopie(copie);
-		reservation.setIdUtilisateur(1L);
-		reservation.setDateDeDebutPret(new Date());
-		reservation.setDateDeFinDuPret(iReservationService.add4Weeks(reservation.getDateDeDebutPret()));
-		reservation.setProlongerPret(false);
-		reservation.setRendu(false);
-		iReservationService.save(reservation);
+		Emprunt emprunt = new Emprunt();
+		emprunt.setCopie(copie);
+		emprunt.setIdUtilisateur(1L);
+		emprunt.setDateDeDebutEmprunt(new Date());
+		emprunt.setDateDeFinEmprunt(iEmpruntService.add4Weeks(emprunt.getDateDeDebutEmprunt()));
+		emprunt.setProlongerEmprunt(false);
+		emprunt.setRendu(false);
+		iEmpruntService.save(emprunt);
 
-		Reservation reservation1 = new Reservation();
-		reservation1.setCopie(copie1);
-		reservation1.setIdUtilisateur(1L);
-		reservation1.setDateDeDebutPret(new Date());
-		reservation1.setDateDeFinDuPret(new GregorianCalendar(2020, Calendar.FEBRUARY, 24).getTime());
-		reservation1.setProlongerPret(false);
-		reservation.setRendu(false);
-		iReservationService.save(reservation1);
+		Emprunt emprunt1 = new Emprunt();
+		emprunt1.setCopie(copie1);
+		emprunt1.setIdUtilisateur(1L);
+		emprunt1.setDateDeDebutEmprunt(new Date());
+		emprunt1.setDateDeFinEmprunt(new GregorianCalendar(2020, Calendar.FEBRUARY, 24).getTime());
+		emprunt1.setProlongerEmprunt(false);
+		emprunt.setRendu(false);
+		iEmpruntService.save(emprunt1);
 
 		Email email = new Email();
 		email.setName("relance");

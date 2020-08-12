@@ -57,9 +57,9 @@ public class IMicroserviceMyLibraryProxyServiceImpl implements IMicroserviceMyLi
     }
 
     /**
-     * Permet de rechercher les reservations d'un utilisateur
+     * Permet de rechercher les emprunts d'un utilisateur
      * @param id identifiant de l'utilisateur
-     * @return la liste des reservations d'un utilisateur
+     * @return la liste des emprunts d'un utilisateur
      */
     @Override
     public List<ReservationBean> afficherLaListeDesReservationsParUtilisateur(Long id){

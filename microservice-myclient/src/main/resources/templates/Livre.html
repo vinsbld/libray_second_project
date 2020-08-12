@@ -82,7 +82,7 @@
 
                     <tr th:each="dispo:${copieBeansDisponibles}">
                         <td>isbn : <span th:text="${dispo.isbn}"></span></td>
-                        <td sec:authorize="isAuthenticated()"><form th:action="@{/reservation/{id}(id=${dispo.id})}" method="post"><button type="submit" onclick="return confirm('Confirmation de réservation')" class="btn-get-create">Réserver</button></form></td>
+                        <td sec:authorize="isAuthenticated()"><form th:action="@{/emprunt/{id}(id=${dispo.id})}" method="post"><button type="submit" onclick="return confirm('Confirmation de réservation')" class="btn-get-create">Réserver</button></form></td>
                     </tr>
                     </tbody>
                 </table>

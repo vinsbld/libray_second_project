@@ -10,7 +10,7 @@ import java.util.Date;
 @Entity
 @NoArgsConstructor
 public @Data
-class Reservation{
+class Emprunt {
 
     @Id
     @GeneratedValue
@@ -20,10 +20,10 @@ class Reservation{
     private Long idUtilisateur;
 
     @DateTimeFormat(pattern="dd-MM-yyyy")
-    private Date dateDeDebutPret;
+    private Date dateDeDebutEmprunt;
 
     @DateTimeFormat(pattern="yyyy-MM-dd")
-    private Date dateDeFinDuPret;
+    private Date dateDeFinEmprunt;
 
     private Date dateRetour;
 
@@ -32,7 +32,7 @@ class Reservation{
     @Transient
     private Date dateDuJour = new Date();
 
-    private boolean prolongerPret;
+    private boolean prolongerEmprunt;
 
     @JsonManagedReference
     @ManyToOne

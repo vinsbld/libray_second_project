@@ -2,9 +2,9 @@ package com.bibliotheque.microservicemylibrary.batch;
 
 import com.bibliotheque.microservicemylibrary.beans.UtilisateurBean;
 import com.bibliotheque.microservicemylibrary.dao.IEmailDao;
-import com.bibliotheque.microservicemylibrary.dao.IReservationDao;
+import com.bibliotheque.microservicemylibrary.dao.IEmpruntDao;
 import com.bibliotheque.microservicemylibrary.model.Email;
-import com.bibliotheque.microservicemylibrary.model.Reservation;
+import com.bibliotheque.microservicemylibrary.model.Emprunt;
 import com.bibliotheque.microservicemylibrary.outils.EmailType;
 import com.bibliotheque.microservicemylibrary.proxies.IMicroserviceMyUsersProxy;
 import org.springframework.batch.core.StepContribution;
@@ -22,7 +22,7 @@ import java.util.List;
 public class MyTaskOne implements Tasklet {
 
 
-    private final IReservationDao iReservationDao;
+    private final IEmpruntDao iEmpruntDao;
     private final IEmailDao iEmailDao;
     private final IMicroserviceMyUsersProxy iMicroserviceMyUsersProxy;
     private final JavaMailSenderImpl sender;
@@ -30,8 +30,8 @@ public class MyTaskOne implements Tasklet {
     /**
      * Tache par batch permettant de relancer les utilisateurs qui n'ont pas rendu leurs livres
      */
-    public MyTaskOne(IReservationDao iReservationDao, IEmailDao iEmailDao, IMicroserviceMyUsersProxy iMicroserviceMyUsersProxy, JavaMailSenderImpl sender) {
-        this.iReservationDao = iReservationDao;
+    public MyTaskOne(IEmpruntDao iEmpruntDao, IEmailDao iEmailDao, IMicroserviceMyUsersProxy iMicroserviceMyUsersProxy, JavaMailSenderImpl sender) {
+        this.iEmpruntDao = iEmpruntDao;
         this.iEmailDao = iEmailDao;
         this.iMicroserviceMyUsersProxy = iMicroserviceMyUsersProxy;
         this.sender = sender;
@@ -45,12 +45,12 @@ public class MyTaskOne implements Tasklet {
 
         SimpleDateFormat oldFormat = new SimpleDateFormat("dd/MM/yyyy");
         Date date = new Date();
-       List<Reservation>reservationList = iReservationDao.findAllByDateRetourIsNullAndDateDeFinDuPretBefore(date);
+       List<Emprunt> empruntList = iEmpruntDao.findAllByDateRetourIsNullAndDateDeFinDuPretBefore(date);
 
         ArrayList<EmailType> emailType = new ArrayList<>();
 
-        if (reservationList.size() > 0)
-            for (Reservation res : reservationList) {
+        if (empruntList.size() > 0)
+            for (Emprunt res : empruntList) {
                 UtilisateurBean utilisateurBean = iMicroserviceMyUsersProxy.findById(res.getIdUtilisateur());
                 emailType.add(new EmailType(utilisateurBean.getEmail(), res.getCopie().getLivre().getTitre(), oldFormat.format(res.getDateDeFinDuPret())));
 

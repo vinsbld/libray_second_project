@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.List;
 
 @Entity
@@ -27,7 +26,7 @@ class Copie {
 
     @JsonBackReference
     @OneToMany(mappedBy = "copie", fetch = FetchType.EAGER)
-    private List<Reservation> reservations;
+    private List<Emprunt> emprunts;
 
     @Override
     public String toString() {
@@ -36,7 +35,7 @@ class Copie {
                 ", isbn=" + isbn +
                 ", disponible=" + disponible +
                 ", livre=" + livre +
-                ", reservations=" + reservations +
+                ", emprunts=" + emprunts +
                 '}';
     }
 }
