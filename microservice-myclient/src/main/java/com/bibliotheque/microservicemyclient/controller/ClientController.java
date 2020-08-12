@@ -4,6 +4,7 @@ import com.bibliotheque.microservicemyclient.bean.CopieBean;
 import com.bibliotheque.microservicemyclient.bean.LivreBean;
 import com.bibliotheque.microservicemyclient.bean.ReservationBean;
 import com.bibliotheque.microservicemyclient.bean.UtilisateurBean;
+import com.bibliotheque.microservicemyclient.exeptions.CannotExtendBorrowingException;
 import com.bibliotheque.microservicemyclient.service.myLibrary.IMicroserviceMyLibraryProxyService;
 import com.bibliotheque.microservicemyclient.service.myUsers.IMicroserviceMyUsersProxyService;
 import org.slf4j.Logger;
@@ -132,13 +133,22 @@ public class ClientController {
     @PostMapping("/prolonger/{id}")
     public String prolongerLePret(Model model, @PathVariable("id")Long id){
 
-        UtilisateurBean utilisateurBean = (UtilisateurBean) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        model.addAttribute("utilisateurBean", utilisateurBean);
+        try {
+            UtilisateurBean utilisateurBean = (UtilisateurBean) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            model.addAttribute("utilisateurBean", utilisateurBean);
 
-        ReservationBean reservationBean = iMicroserviceMyLibraryProxyService.afficherUneReservation(id);
-        iMicroserviceMyLibraryProxyService.prolongerPret(reservationBean.getId(), utilisateurBean.getId());
+            ReservationBean reservationBean = iMicroserviceMyLibraryProxyService.afficherUneReservation(id);
+            iMicroserviceMyLibraryProxyService.prolongerPret(reservationBean.getId(), utilisateurBean.getId());
 
-        logger.info("l'utilisateur : "+utilisateurBean.getPseudo()+" a prolonger la réservation dont l' id est : "+reservationBean.getId());
+            logger.info("l'utilisateur : "+utilisateurBean.getPseudo()+" a prolonger la réservation dont l' id est : "+reservationBean.getId());
+
+            }catch (Exception e){
+                    e.printStackTrace();
+                    if (e instanceof CannotExtendBorrowingException){
+                        String message = e.getMessage();
+                        model.addAttribute("errorMessage", message);
+                    }
+            }
 
         return "redirect:/profil";
 
