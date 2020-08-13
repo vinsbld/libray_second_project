@@ -33,5 +33,8 @@ public interface IEmpruntDao extends JpaRepository<Emprunt, Long> {
     //trouver tous les Emprunts pour une copie
     List<Emprunt> findAllByCopie_IdAndDateRetourIsNull(Long id);
 
+    //trouver la liste de tous les emprunts par utilisateur dont la date de retour est null
+    List<Emprunt> findAllByIdUtilisateurAndDateRetourIsNull(Long id);
+
 
 }

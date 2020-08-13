@@ -89,5 +89,16 @@ public class IEmpruntServiceImpl implements IEmpruntService {
     }
 
 
+    /**
+     * permet de trouver la liste de tous les emprunts pour un utilisateur dont la date de retour est null
+     * @param id identifiant de l'utilisateur
+     * @return la liste de tous les emprunts pour un utilisateur dont la date de retour est null
+     */
+    @Override
+    public List<Emprunt> findAllByIdUtilisateurAndDateRetourIsNull(Long id) {
+        return iEmpruntDao.findAllByIdUtilisateurAndDateRetourIsNull(id);
+    }
+
+
 }
 

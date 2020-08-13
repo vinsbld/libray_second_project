@@ -2,6 +2,7 @@ package com.bibliotheque.microservicemylibrary.controller;
 
 import com.bibliotheque.microservicemylibrary.beans.UtilisateurBean;
 import com.bibliotheque.microservicemylibrary.dto.EmpruntDTO;
+import com.bibliotheque.microservicemylibrary.exeptions.CannotAddBorrowingException;
 import com.bibliotheque.microservicemylibrary.model.*;
 import com.bibliotheque.microservicemylibrary.service.copie.ICopieService;
 import com.bibliotheque.microservicemylibrary.service.emprunt.IEmpruntService;
@@ -67,6 +68,12 @@ public class EmpruntController {
         Date date = new Date(Calendar.getInstance().getTime().getTime());
         Copie copie = iCopieService.findById(id).get();
         Emprunt emprunt = new Emprunt();
+
+        //verifier si l'utilisateur n'a pas déjà un emprunt en cours pour cet ouvrage
+        List<Emprunt> emprunts = iEmpruntService.findAllByIdUtilisateurAndDateRetourIsNull(idUtilisateur);
+        if (emprunts.contains(copie.getLivre().getId())){
+            throw new CannotAddBorrowingException("Vous avez déjà un emprunt en cours pour cet ouvrage");
+        }
 
         List<Reservation> reservations = iReservationService.findByLivreAndStateEnumsOrderByDateDeReservationAsc(copie.getLivre(), StateEnum.enCours);
         if (reservations.size() > 0){
