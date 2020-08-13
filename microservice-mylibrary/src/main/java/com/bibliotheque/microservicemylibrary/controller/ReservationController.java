@@ -58,21 +58,21 @@ public class ReservationController {
         List<Reservation> reservationList = iReservationService.findAllByIdUtilisateurAndStateEnumsOrderByDateDeReservationAsc(reservation.getLivre().getId(), StateEnum.enCours);
         for (Reservation r : reservationList) {
             if (r.getIdUtilisateur().equals(reservation.getIdUtilisateur())){
-                throw new CannotAddBookingException("ReservationExeption01");
+                throw new CannotAddBookingException("réservation impossible, vous avez déjà une réservation en cours pour cet ouvrage");
             }
         }
 
         //verification si l'utilisateur n'a pas déjà un emprunt en cours pour cet ouvrage
-        List<Emprunt> empruntList = iEmpruntService.findAllByIdUtilisateur(idUtilisateur);
+        List<Emprunt> empruntList = iEmpruntService.findAllByIdUtilisateurAndDateRetourIsNull(idUtilisateur);
         for (Emprunt e : empruntList) {
             if (e.getCopie().getLivre().getId().equals(reservation.getLivre().getId())){
-                throw new CannotAddBookingException("ReservationException02");
+                throw new CannotAddBookingException("réservation impossible, vous avez déjà un emprunt en cours pour cet ouvrage");
             }
         }
 
         //verification que la liste n'est pas complète
         if (reservationList.size() >= reservationMax){
-            throw new CannotAddBookingException("ReservationException03");
+            throw new CannotAddBookingException("réservation impossible, la liste des réservations por cet ouvrage est compléte");
         }
 
         iReservationService.save(reservation);
@@ -89,9 +89,7 @@ public class ReservationController {
 
         logger.info("l'utilisateur : "+ idUtilisateur + " a annuler sa reservation pour le livre : "+r.getLivre().getTitre());
         iReservationService.save(r);
-        /*if (r.getStateEnums()==StateEnum.annuler){
-            iReservationService.deleteById(r.getId());
-        }*/
+
     }
 
     @RequestMapping(value = "/listeDesReservations/{id}", method = RequestMethod.GET)
