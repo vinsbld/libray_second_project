@@ -72,7 +72,7 @@ public class ReservationController {
 
         //verification que la liste n'est pas complète
         if (reservationList.size() >= reservationMax){
-            throw new CannotAddBookingException("réservation impossible, la liste des réservations por cet ouvrage est compléte");
+            throw new CannotAddBookingException("réservation impossible, la liste des réservations pour cet ouvrage est compléte");
         }
 
         iReservationService.save(reservation);
