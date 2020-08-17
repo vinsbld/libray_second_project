@@ -9,7 +9,7 @@ import java.util.Date;
 @NoArgsConstructor
 @Getter
 @Setter
-public @Data
+public
 class EmpruntBean implements Serializable {
 
     private Long id;

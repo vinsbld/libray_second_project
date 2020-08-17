@@ -13,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-public @Data
+public
         class LivreBean implements Serializable {
 
             private Long id;

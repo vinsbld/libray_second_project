@@ -1,16 +1,19 @@
 package com.bibliotheque.microservicemylibrary.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.Date;
+
 import java.util.List;
+
 
 @Entity
 @NoArgsConstructor
-public @Data
+@Getter
+@Setter
+public
 class Copie {
 
     @Id
@@ -29,14 +32,4 @@ class Copie {
     @OneToMany(mappedBy = "copie", fetch = FetchType.EAGER)
     private List<Emprunt> emprunts;
 
-    @Override
-    public String toString() {
-        return "Copie{" +
-                "id=" + id +
-                ", isbn=" + isbn +
-                ", disponible=" + disponible +
-                ", livre=" + livre +
-                ", emprunts=" + emprunts +
-                '}';
-    }
 }

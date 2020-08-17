@@ -11,7 +11,6 @@ import java.util.Date;
 @NoArgsConstructor
 @Getter
 @Setter
-@Data
 public class ReservationBean implements Serializable {
 
     private Long id;

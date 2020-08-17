@@ -14,7 +14,9 @@ import java.util.List;
 
 @Entity
 @NoArgsConstructor
-public @Data
+@Getter
+@Setter
+public
 class Livre {
 
     @Id
@@ -82,18 +84,5 @@ class Livre {
         return copies.size();
     }
 
-    @Override
-    public String toString() {
-        return "Livre{" +
-                "id=" + id +
-                ", titre='" + titre + '\'' +
-                ", nomAuteur='" + nomAuteur + '\'' +
-                ", prenomAuteur='" + prenomAuteur + '\'' +
-                ", dateEdition=" + dateEdition +
-                ", editeur='" + editeur + '\'' +
-                ", dateRetourLaPlusProche=" + dateRetourLaPlusProche +
-                ", copies=" + copies +
-                ", reservations=" + reservations +
-                '}';
-    }
+
 }

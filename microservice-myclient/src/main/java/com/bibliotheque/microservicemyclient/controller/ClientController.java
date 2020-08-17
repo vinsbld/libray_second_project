@@ -133,7 +133,8 @@ public class ClientController {
             iMicroserviceMyLibraryProxyService.demandeEmprunt(copieBean.getId(), utilisateurBean.getId());
 
             String validMessage = "votre demande d'emprunt a été réalisé avec succes.";
-            redirectAttributes.addFlashAttribute("validMessage", validMessage);
+            redirectAttributes.addFlashAttribute("validMessage", "votre demande d'emprunt a été réalisé avec succes.");
+            model.addAttribute("validMessage", validMessage);
 
             logger.info("l'utilisateur : "+utilisateurBean.getPseudo()+ " id : " +utilisateurBean.getId()+" fait une demande d'emprunt pour la copie isbn : "+copieBean.getIsbn());
 

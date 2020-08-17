@@ -75,14 +75,25 @@
                     <tr>
                         <th>Emprunt</th>
                         <th>Exemplaires disponibles :
-                            <span th:if="${nbCopiesDisponibles > 0}"><span th:text="${nbCopiesDisponibles}" style="color:#00FF00;"></span> / <span th:text="${nbTTCopies}"></span></span>
-                            <span th:if="${nbCopiesDisponibles == 0}"><span th:text="${nbCopiesDisponibles}" style="color: #b21f2d"></span> / <span th:text="${nbTTCopies}"></span></span>
+                            <span th:if="${nbCopiesDisponibles > 0}">
+                                <span th:text="${nbCopiesDisponibles}" style="color:#00FF00;"></span> /
+                                <span th:text="${nbTTCopies}"></span>
+                            </span>
+                            <span th:if="${nbCopiesDisponibles == 0}">
+                                <span th:text="${nbCopiesDisponibles}" style="color: #b21f2d"></span> /
+                                <span th:text="${nbTTCopies}"></span>
+                            </span>
                         </th>
-                        <th></th>
                     </tr>
                     </thead>
                     <tbody>
                         <tr th:each="n:${mCopies}">
+                            <div th:if="${validMessage != null}" class="alert-success" role="alert">
+                                <p th:text="${validMessage}"></p>
+                            </div>
+                            <div th:if="${messageErreur != null}" class="alert-warning" role="alert">
+                                <p th:text="${messageErreur}"></p>
+                            </div>
                             <td th:if="${n.copie.isDisponible() == true && nbCopiesDisponibles > 0}">isbn :
                                 <span th:text="${n.copie.isbn}"></span>
                             </td>
@@ -124,6 +135,12 @@
                         <span th:if="${livreBean.nbReservations < livreBean.nbReservationsMax}">
                             <td sec:authorize="isAuthenticated()">
                                 <form th:action="@{/reserver/{id}(id=${livreBean.id})}" method="post">
+                                    <div th:if="${validMessage != null}" class="alert-success" role="alert">
+                                        <p th:text="${validMessage}"></p>
+                                    </div>
+                                    <div th:if="${messageErreur != null}" class="alert-warning" role="alert">
+                                        <p th:text="${messageErreur}"></p>
+                                    </div>
                                     <button type="submit" onclick="return confirm('Confirmer reservation')" class="btn-get-create">reserver</button>
                                 </form>
                             </td>

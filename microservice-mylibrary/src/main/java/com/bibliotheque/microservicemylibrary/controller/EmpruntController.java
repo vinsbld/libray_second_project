@@ -71,9 +71,22 @@ public class EmpruntController {
 
         //verifier si l'utilisateur n'a pas déjà un emprunt en cours pour cet ouvrage
         List<Emprunt> emprunts = iEmpruntService.findAllByIdUtilisateurAndDateRetourIsNull(idUtilisateur);
-        if (emprunts.contains(copie.getLivre().getId())){
-            throw new CannotAddBorrowingException("Vous avez déjà un emprunt en cours pour cet ouvrage");
+        ArrayList<EmpruntDTO> empruntDTOS = new ArrayList<>();
+        for (Emprunt e : emprunts) {
+            EmpruntDTO eDto = new EmpruntDTO();
+            Optional<Copie> c = iCopieService.findById(copie.getId());
+            eDto.setCopie(c.get());
+            Optional<Livre> l = iLivreService.findById(copie.getLivre().getId());
+            eDto.setLivre(l.get());
+            empruntDTOS.add(eDto);
+            for (EmpruntDTO d : empruntDTOS ) {
+                if (d.getCopie().getLivre().getId().equals(e.getCopie().getLivre().getId())){
+                    throw new CannotAddBorrowingException("Vous avez déjà un emprunt en cours pour cet ouvrage");
+                }
+            }
+
         }
+
 
         List<Reservation> reservations = iReservationService.findByLivreAndStateEnumsOrderByDateDeReservationAsc(copie.getLivre(), StateEnum.enCours);
         if (reservations.size() > 0){

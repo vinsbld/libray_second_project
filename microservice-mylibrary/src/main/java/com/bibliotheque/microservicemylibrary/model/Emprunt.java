@@ -11,7 +11,9 @@ import java.util.List;
 
 @Entity
 @NoArgsConstructor
-public @Data
+@Getter
+@Setter
+public
 class Emprunt {
 
     @Id
@@ -40,18 +42,6 @@ class Emprunt {
     @ManyToOne
     private Copie copie;
 
-    @Override
-    public String toString() {
-        return "Emprunt{" +
-                "id=" + id +
-                ", idUtilisateur=" + idUtilisateur +
-                ", dateDeDebutEmprunt=" + dateDeDebutEmprunt +
-                ", dateDeFinEmprunt=" + dateDeFinEmprunt +
-                ", dateRetour=" + dateRetour +
-                ", rendu=" + rendu +
-                ", dateDuJour=" + dateDuJour +
-                ", prolongerEmprunt=" + prolongerEmprunt +
-                ", copie=" + copie +
-                '}';
-    }
+
+
 }

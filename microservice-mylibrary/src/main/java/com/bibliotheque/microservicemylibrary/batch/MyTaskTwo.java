@@ -41,7 +41,6 @@ public class MyTaskTwo implements Tasklet {
     @Override
     public RepeatStatus execute(StepContribution stepContribution, ChunkContext chunkContext) throws Exception {
 
-        System.out.println("debut du batch de réservation");
         SimpleDateFormat oldFormat = new SimpleDateFormat("dd/MM/yyyy");
         Date dateDuJour = new Date();
 
@@ -50,6 +49,7 @@ public class MyTaskTwo implements Tasklet {
             for (Reservation r : reservationList) {
                 Date deadLine = DateUtils.addDays(r.getDateEnvoiEmail(), 2);
                 if (dateDuJour.after(deadLine)) {
+                    System.out.println("debut du batch annulation réservation");
                     ArrayList<EmailTypeReservation> emailTypeReservations = new ArrayList<>();
                     UtilisateurBean utilisateurBean = iMicroserviceMyUsersProxy.findById(r.getIdUtilisateur());
                     emailTypeReservations.add(new EmailTypeReservation(utilisateurBean.getEmail(), r.getLivre().getTitre(), oldFormat.format(deadLine)));
@@ -57,6 +57,7 @@ public class MyTaskTwo implements Tasklet {
                     iReservationDao.save(r);
                     List<EmailTypeReservation> emailTypeReservationList = new ArrayList<>(emailTypeReservations);
                     this.sendCancelRevival(emailTypeReservationList);
+                    System.out.println("fin du batch annulation réservation");
                 }
             }
         }
@@ -64,6 +65,7 @@ public class MyTaskTwo implements Tasklet {
 
        List<Reservation> reservations = iReservationDao.findByLivreAndStateEnumsOrderByDateDeReservationAsc(reservationList.get(0).getLivre(), StateEnum.enCours);
         if (reservations.size() > 0){
+            System.out.println("debut du batch réservation");
             Reservation reservation = reservations.get(0);
             reservation.setDateEnvoiEmail(dateDuJour);
             reservation.setEmailEnvoyer(true);
@@ -74,10 +76,9 @@ public class MyTaskTwo implements Tasklet {
             iReservationDao.save(reservation);
             List<EmailTypeReservation> emailTypeReservationList1 = new ArrayList<>(emailTypeReservations1);
             this.sendRevival(emailTypeReservationList1);
+            System.out.println("fin du batch de réservation");
         }
 
-
-        System.out.println("fin du batch de réservation");
         return RepeatStatus.FINISHED;
     }
 

@@ -1,16 +1,15 @@
 package com.bibliotheque.microservicemylibrary.model;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
 @NoArgsConstructor
 @RequiredArgsConstructor
 @Entity
-public @Data
+@Getter
+@Setter
+public
 class Email {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
