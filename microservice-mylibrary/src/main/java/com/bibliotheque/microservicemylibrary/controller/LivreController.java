@@ -1,6 +1,6 @@
 package com.bibliotheque.microservicemylibrary.controller;
 
-import com.bibliotheque.microservicemylibrary.exeptions.LivresNotFoundExeption;
+import com.bibliotheque.microservicemylibrary.exeptions.LivresNotFoundException;
 import com.bibliotheque.microservicemylibrary.model.Copie;
 import com.bibliotheque.microservicemylibrary.model.Emprunt;
 import com.bibliotheque.microservicemylibrary.model.Livre;
@@ -33,7 +33,7 @@ public class LivreController {
     @RequestMapping(value = "/livres")
     public List<Livre> ListeDeLivres(){
         List<Livre> livres = iLivreService.findAll();
-        if (livres.isEmpty()) throw new LivresNotFoundExeption("Il n'y a pas de livres");
+        if (livres.isEmpty()) throw new LivresNotFoundException("Il n'y a pas de livres");
         logger.info("Récupération de la liste des produits");
         return livres;
     }

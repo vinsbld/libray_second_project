@@ -56,7 +56,7 @@ public class IMicroserviceMyLibraryProxyServiceImpl implements IMicroserviceMyLi
      * @return la copie recherchée
      */
     @Override
-    public CopieBean afficherUneCopie(Long id){
+    public CopieBeanDTO afficherUneCopie(Long id){
         return iMicroserviceMyLibraryProxy.afficherUneCopie(id);
     }
 

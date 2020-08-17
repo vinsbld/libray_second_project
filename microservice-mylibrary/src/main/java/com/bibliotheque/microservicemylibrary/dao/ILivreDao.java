@@ -30,6 +30,7 @@ ILivreDao extends JpaRepository<Livre, Long> {
     @Query("select n from Livre n where lower(n.nomAuteur) like lower(concat('%',:x,'%')) order by n.id")
     List<Livre> chercherParNomAuteur(@Param("x")String motcle);
 
+    Optional<Livre> findByCopiesId(Long id);
 
 }
 

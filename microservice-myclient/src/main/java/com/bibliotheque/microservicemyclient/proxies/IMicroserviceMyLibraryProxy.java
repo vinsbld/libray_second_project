@@ -33,7 +33,7 @@ public interface IMicroserviceMyLibraryProxy {
     List<CopieBeanDTO> afficherLesCopiesDunLivre(@PathVariable("id")Long id);
 
     @GetMapping(value = "/copie/{id}")
-    CopieBean afficherUneCopie(@PathVariable("id")Long id);
+    CopieBeanDTO afficherUneCopie(@PathVariable("id")Long id);
 
     @GetMapping(value = "/copies/dispos/{id}")
     List<CopieBean> afficherLesCopiesDisponibles(@PathVariable("id") Long id);

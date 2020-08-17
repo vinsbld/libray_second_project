@@ -54,7 +54,18 @@
                     </tr>
                 </table>
             </div>
+
+            <p></p>
+            <div th:if="${validMessage != null}" class="alert-success" role="alert">
+                <p th:text="${validMessage}"></p>
+            </div>
+            <div th:if="${messageErreur != null}" class="alert-warning" role="alert">
+                <p th:text="${messageErreur}"></p>
+            </div>
+            <p></p>
+
             <h1>Mes Emprunts en cours</h1>
+
             <div class="cstyle">
                 <table class="table listTableDeco">
                     <thead>

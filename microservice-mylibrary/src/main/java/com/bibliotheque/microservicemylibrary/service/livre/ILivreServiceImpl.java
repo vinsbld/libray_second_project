@@ -55,6 +55,10 @@ public class ILivreServiceImpl implements ILivreService {
         return mLivreDao.chercherParTitre(motCle);
     }
 
+    @Override
+    public Optional<Livre> findByCopiesId(Long id) {
+        return mLivreDao.findByCopiesId(id);
+    }
 
 
 }

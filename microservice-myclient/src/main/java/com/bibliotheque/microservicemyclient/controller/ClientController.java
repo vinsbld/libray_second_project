@@ -122,23 +122,25 @@ public class ClientController {
     @PostMapping("/emprunter/{id}")
     public String demandeEmprunt(Model model, @PathVariable("id")Long id, RedirectAttributes redirectAttributes){
 
+        UtilisateurBean utilisateurBean = (UtilisateurBean) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        utilisateurBean = iMicroserviceMyUsersProxyService.findById(utilisateurBean.getId());
+        model.addAttribute("utilisateurBean", utilisateurBean);
+
+        CopieBeanDTO copieBean = iMicroserviceMyLibraryProxyService.afficherUneCopie(id);
+        model.addAttribute("copie", copieBean);
+
+
         try {
-            UtilisateurBean utilisateurBean = (UtilisateurBean) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            utilisateurBean = iMicroserviceMyUsersProxyService.findById(utilisateurBean.getId());
-            model.addAttribute("utilisateurBean", utilisateurBean);
-
-            CopieBean copieBean = iMicroserviceMyLibraryProxyService.afficherUneCopie(id);
-            model.addAttribute("copie", copieBean);
-
             iMicroserviceMyLibraryProxyService.demandeEmprunt(copieBean.getId(), utilisateurBean.getId());
 
-            String validMessage = "votre demande d'emprunt a été réalisé avec succes.";
-            redirectAttributes.addFlashAttribute("validMessage", "votre demande d'emprunt a été réalisé avec succes.");
+            String validMessage = "votre demande d'emprunt a été réalisé avec succès.";
+            redirectAttributes.addFlashAttribute("validMessage", validMessage);
             model.addAttribute("validMessage", validMessage);
 
             logger.info("l'utilisateur : "+utilisateurBean.getPseudo()+ " id : " +utilisateurBean.getId()+" fait une demande d'emprunt pour la copie isbn : "+copieBean.getIsbn());
-
-        }catch (Exception e) {
+            return "redirect:/profil";
+        }
+        catch (Exception e) {
             e.printStackTrace();
             if (e instanceof CannotAddBorrowingException) {
                 String message = e.getMessage();
@@ -146,7 +148,7 @@ public class ClientController {
             }
         }
 
-        return "redirect:/livres";
+        return "redirect:/livre/"+copieBean.getLivre().getId();
     }
 
     //prolonger un pret
@@ -169,21 +171,22 @@ public class ClientController {
     @PostMapping("/reserver/{id}")
     public String demandeDeReservation(Model model, @PathVariable("id") Long id, RedirectAttributes redirectAttributes){
 
+        UtilisateurBean utilisateurBean = (UtilisateurBean) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        utilisateurBean = iMicroserviceMyUsersProxyService.findById(utilisateurBean.getId());
+        model.addAttribute("utilisateurBean", utilisateurBean);
+
+        LivreBean livreBean = iMicroserviceMyLibraryProxyService.afficherUnLivre(id);
+        model.addAttribute("livre", livreBean);
+
         try {
-            UtilisateurBean utilisateurBean = (UtilisateurBean) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            utilisateurBean = iMicroserviceMyUsersProxyService.findById(utilisateurBean.getId());
-            model.addAttribute("utilisateurBean", utilisateurBean);
-
-            LivreBean livreBean = iMicroserviceMyLibraryProxyService.afficherUnLivre(id);
-            model.addAttribute("livre", livreBean);
-
             iMicroserviceMyLibraryProxyService.demandeDeReservation(livreBean.getId(), utilisateurBean.getId());
 
-            String validMessage = "votre demande de réservation a été réalisé avec succes.";
+            String validMessage = "votre demande de réservation a été réalisé avec succès.";
             redirectAttributes.addFlashAttribute("validMessage", validMessage);
 
             logger.info("l'utilisateur : "+utilisateurBean.getPseudo()+ " id : " +utilisateurBean.getId()+" fait une demande de réservtion pour le livre : "+livreBean.getTitre());
 
+            return "redirect:/profil";
         }catch (Exception e){
             e.printStackTrace();
             if (e instanceof CannotAddBookingException){
@@ -192,7 +195,7 @@ public class ClientController {
             }
         }
 
-        return "redirect:/profil";
+        return "redirect:/livre/"+id;
     }
     @PostMapping("/annuler/reserver/{id}")
     public String annulerReservation(Model model, @PathVariable("id") Long id, RedirectAttributes redirectAttributes){

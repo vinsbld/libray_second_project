@@ -58,7 +58,7 @@ public class ReservationController {
         List<Reservation> reservationList = iReservationService.findAllByIdUtilisateurAndStateEnumsOrderByDateDeReservationAsc(reservation.getLivre().getId(), StateEnum.enCours);
         for (Reservation r : reservationList) {
             if (r.getIdUtilisateur().equals(reservation.getIdUtilisateur())){
-                throw new CannotAddBookingException("réservation impossible, vous avez déjà une réservation en cours pour cet ouvrage");
+                throw new CannotAddBookingException("cannotBookingException01");
             }
         }
 
@@ -66,13 +66,13 @@ public class ReservationController {
         List<Emprunt> empruntList = iEmpruntService.findAllByIdUtilisateurAndDateRetourIsNull(idUtilisateur);
         for (Emprunt e : empruntList) {
             if (e.getCopie().getLivre().getId().equals(reservation.getLivre().getId())){
-                throw new CannotAddBookingException("réservation impossible, vous avez déjà un emprunt en cours pour cet ouvrage");
+                throw new CannotAddBookingException("cannotBookingException02");
             }
         }
 
         //verification que la liste n'est pas complète
         if (reservationList.size() >= reservationMax){
-            throw new CannotAddBookingException("réservation impossible, la liste des réservations pour cet ouvrage est compléte");
+            throw new CannotAddBookingException("cannotBookingException03");
         }
 
         iReservationService.save(reservation);

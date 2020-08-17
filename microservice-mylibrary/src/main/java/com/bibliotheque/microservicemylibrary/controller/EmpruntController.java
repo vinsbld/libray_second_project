@@ -81,7 +81,7 @@ public class EmpruntController {
             empruntDTOS.add(eDto);
             for (EmpruntDTO d : empruntDTOS ) {
                 if (d.getCopie().getLivre().getId().equals(e.getCopie().getLivre().getId())){
-                    throw new CannotAddBorrowingException("Vous avez déjà un emprunt en cours pour cet ouvrage");
+                    throw new CannotAddBorrowingException("cannotBorrowException01");
                 }
             }
 

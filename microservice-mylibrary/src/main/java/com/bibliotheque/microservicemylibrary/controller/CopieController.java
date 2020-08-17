@@ -3,8 +3,10 @@ package com.bibliotheque.microservicemylibrary.controller;
 import com.bibliotheque.microservicemylibrary.dto.CopieDTO;
 import com.bibliotheque.microservicemylibrary.model.Copie;
 import com.bibliotheque.microservicemylibrary.model.Emprunt;
+import com.bibliotheque.microservicemylibrary.model.Livre;
 import com.bibliotheque.microservicemylibrary.service.copie.ICopieService;
 import com.bibliotheque.microservicemylibrary.service.emprunt.IEmpruntService;
+import com.bibliotheque.microservicemylibrary.service.livre.ILivreService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,9 @@ public class CopieController {
     @Autowired
     private IEmpruntService iEmpruntService;
 
+    @Autowired
+    private ILivreService iLivreService;
+
     @RequestMapping(value = "/copies/{id}")
     public List<CopieDTO> afficherLesCopiesDunLivre(@PathVariable("id")Long id){
         List<Copie>copieList = iCopieService.findAllByLivreId(id);
@@ -45,10 +50,18 @@ public class CopieController {
 
 
     @RequestMapping(value = "/copie/{id}")
-    public Optional<Copie> afficherUneCopie(@PathVariable("id")Long id){
+    public CopieDTO afficherUneCopie(@PathVariable("id")Long id){
         Optional<Copie> copie = iCopieService.findById(id);
+        Optional<Livre> livre = iLivreService.findByCopiesId(copie.get().getId());
+        CopieDTO copieDTO = new CopieDTO();
+        copieDTO.setLivre(livre.get());
+        copieDTO.setCopie(copie.get());
+        copieDTO.setId(copie.get().getId());
+        copieDTO.setIsbn(copie.get().getIsbn());
+        Emprunt r = iEmpruntService.findByCopie_Id(copie.get().getId());
+        copieDTO.setEmprunt(r);
         logger.info("demande d'une copie d'un livre");
-        return copie;
+        return copieDTO;
     }
 
     @RequestMapping(value = "/copies/dispos/{id}")

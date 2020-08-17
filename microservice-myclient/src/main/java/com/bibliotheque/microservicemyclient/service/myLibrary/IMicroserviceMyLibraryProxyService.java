@@ -24,7 +24,7 @@ public interface IMicroserviceMyLibraryProxyService {
 
     List<CopieBeanDTO> afficherLesCopiesDunLivre(Long id);
 
-    CopieBean afficherUneCopie(Long id);
+    CopieBeanDTO afficherUneCopie(Long id);
 
     /*===========================** Emprunt **===========================*/
 

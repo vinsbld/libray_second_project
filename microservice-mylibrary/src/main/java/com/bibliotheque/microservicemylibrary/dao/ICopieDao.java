@@ -31,4 +31,5 @@ ICopieDao extends JpaRepository<Copie, Long> {
     @Query("SELECT c FROM Copie c WHERE c.disponible = false and c.livre.id = :id")
     List<Copie> getCopieLivresIndisponibles(Long id);
 
+
 }
