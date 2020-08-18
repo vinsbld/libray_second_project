@@ -163,10 +163,7 @@ public class ClientController {
 
         logger.info("l'utilisateur : "+utilisateurBean.getPseudo()+" a prolonger le prêt dont l' id est : "+ empruntBean.getId());
 
-        UtilisateurBean utilisateurBean = (UtilisateurBean) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        utilisateurBean = iMicroserviceMyUsersProxyService.findById(utilisateurBean.getId());
-        model.addAttribute("utilisateurBean", utilisateurBean);
-
+        return "redirect:/profil";
     }
 
     /*============== #Reservation ======================*/
