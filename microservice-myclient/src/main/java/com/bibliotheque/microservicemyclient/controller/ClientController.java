@@ -1,10 +1,11 @@
 package com.bibliotheque.microservicemyclient.controller;
 
-import com.bibliotheque.microservicemyclient.bean.CopieBean;
-import com.bibliotheque.microservicemyclient.bean.LivreBean;
-import com.bibliotheque.microservicemyclient.bean.ReservationBean;
-import com.bibliotheque.microservicemyclient.bean.UtilisateurBean;
-import com.bibliotheque.microservicemyclient.exeptions.CannotExtendBorrowingException;
+import com.bibliotheque.microservicemyclient.bean.*;
+import com.bibliotheque.microservicemyclient.dto.CopieBeanDTO;
+import com.bibliotheque.microservicemyclient.dto.EmpruntBeanDTO;
+import com.bibliotheque.microservicemyclient.dto.ReservationBeanDTO;
+import com.bibliotheque.microservicemyclient.exeptions.CannotAddBookingException;
+import com.bibliotheque.microservicemyclient.exeptions.CannotAddBorrowingException;
 import com.bibliotheque.microservicemyclient.service.myLibrary.IMicroserviceMyLibraryProxyService;
 import com.bibliotheque.microservicemyclient.service.myUsers.IMicroserviceMyUsersProxyService;
 import org.slf4j.Logger;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -47,8 +49,11 @@ public class ClientController {
         UtilisateurBean utilisateurBean = (UtilisateurBean) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         model.addAttribute("utilisateurBean", utilisateurBean);
 
-        List<ReservationBean>reservationBeans = iMicroserviceMyLibraryProxyService.afficherLaListeDesReservationsParUtilisateur(utilisateurBean.getId());
-        model.addAttribute("reservationBeans", reservationBeans);
+        List<EmpruntBeanDTO> empruntBeans = iMicroserviceMyLibraryProxyService.afficherLaListeDesEmpruntsParUtilisateur(utilisateurBean.getId());
+        model.addAttribute("empruntList", empruntBeans);
+
+        List<ReservationBeanDTO> reservationBeans = iMicroserviceMyLibraryProxyService.afficherlesReservationsParUtilisateur(utilisateurBean.getId());
+        model.addAttribute("reservationList", reservationBeans);
 
         logger.info("L'utilisateur "+utilisateurBean+" id : "+utilisateurBean.getId()+ " consulte sa page profil");
 
@@ -79,8 +84,9 @@ public class ClientController {
         model.addAttribute("copieBeansDisponibles", copieBeansDisponibles);
         model.addAttribute("nbCopiesDisponibles", copieBeansDisponibles.size());
 
-        List<CopieBean> nbTTCopies= iMicroserviceMyLibraryProxyService.afficherLesCopiesDunLivre(id);
-        model.addAttribute("nbTTCopies", nbTTCopies.size());
+        List<CopieBeanDTO> copiesDunLivre = iMicroserviceMyLibraryProxyService.afficherLesCopiesDunLivre(id);
+        model.addAttribute("nbTTCopies", copiesDunLivre.size());
+        model.addAttribute("mCopies", copiesDunLivre);
 
         logger.info("Le livre "+livreBean.getTitre()+" est en consultation");
 
@@ -110,48 +116,96 @@ public class ClientController {
         return "/Livres";
     }
 
-    /*============== #Reservation ======================*/
-    //faire une reservation
-    @PostMapping("/reservation/{id}")
-    public String demandeDeReservation(Model model, @PathVariable("id")Long id){
+    /*============== #Emprunt ======================*/
+
+    //faire un emprunt
+    @PostMapping("/emprunter/{id}")
+    public String demandeEmprunt(Model model, @PathVariable("id")Long id, RedirectAttributes redirectAttributes){
 
         UtilisateurBean utilisateurBean = (UtilisateurBean) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         utilisateurBean = iMicroserviceMyUsersProxyService.findById(utilisateurBean.getId());
         model.addAttribute("utilisateurBean", utilisateurBean);
 
-        CopieBean copieBean = iMicroserviceMyLibraryProxyService.afficherUneCopie(id);
+        CopieBeanDTO copieBean = iMicroserviceMyLibraryProxyService.afficherUneCopie(id);
         model.addAttribute("copie", copieBean);
 
-        iMicroserviceMyLibraryProxyService.demandeDeReservation(copieBean.getId(), utilisateurBean.getId());
 
-        logger.info("l'utilisateur : "+utilisateurBean.getPseudo()+ " id : " +utilisateurBean.getId()+" fait une demande de réservtion pour la copie isbn : "+copieBean.getIsbn());
+        try {
+            iMicroserviceMyLibraryProxyService.demandeEmprunt(copieBean.getId(), utilisateurBean.getId());
 
-        return "redirect:/livres";
+            String validMessage = "votre demande d'emprunt a été réalisé avec succès.";
+            redirectAttributes.addFlashAttribute("validMessage", validMessage);
+            model.addAttribute("validMessage", validMessage);
+
+            logger.info("l'utilisateur : "+utilisateurBean.getPseudo()+ " id : " +utilisateurBean.getId()+" fait une demande d'emprunt pour la copie isbn : "+copieBean.getIsbn());
+            return "redirect:/profil";
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            if (e instanceof CannotAddBorrowingException) {
+                String message = e.getMessage();
+                redirectAttributes.addFlashAttribute("messageErreur", message);
+            }
+        }
+
+        return "redirect:/livre/"+copieBean.getLivre().getId();
     }
 
     //prolonger un pret
     @PostMapping("/prolonger/{id}")
     public String prolongerLePret(Model model, @PathVariable("id")Long id){
 
-        try {
-            UtilisateurBean utilisateurBean = (UtilisateurBean) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            model.addAttribute("utilisateurBean", utilisateurBean);
+        UtilisateurBean utilisateurBean = (UtilisateurBean) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        model.addAttribute("utilisateurBean", utilisateurBean);
 
-            ReservationBean reservationBean = iMicroserviceMyLibraryProxyService.afficherUneReservation(id);
-            iMicroserviceMyLibraryProxyService.prolongerPret(reservationBean.getId(), utilisateurBean.getId());
+        EmpruntBean empruntBean = iMicroserviceMyLibraryProxyService.afficherUnEmprunt(id);
+        iMicroserviceMyLibraryProxyService.prolongerEmprunt(empruntBean.getId(), utilisateurBean.getId());
 
-            logger.info("l'utilisateur : "+utilisateurBean.getPseudo()+" a prolonger la réservation dont l' id est : "+reservationBean.getId());
-
-            }catch (Exception e){
-                    e.printStackTrace();
-                    if (e instanceof CannotExtendBorrowingException){
-                        String message = e.getMessage();
-                        model.addAttribute("errorMessage", message);
-                    }
-            }
+        logger.info("l'utilisateur : "+utilisateurBean.getPseudo()+" a prolonger le prêt dont l' id est : "+ empruntBean.getId());
 
         return "redirect:/profil";
+    }
 
+    /*============== #Reservation ======================*/
+    @PostMapping("/reserver/{id}")
+    public String demandeDeReservation(Model model, @PathVariable("id") Long id, RedirectAttributes redirectAttributes){
+
+        UtilisateurBean utilisateurBean = (UtilisateurBean) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        utilisateurBean = iMicroserviceMyUsersProxyService.findById(utilisateurBean.getId());
+        model.addAttribute("utilisateurBean", utilisateurBean);
+
+        LivreBean livreBean = iMicroserviceMyLibraryProxyService.afficherUnLivre(id);
+        model.addAttribute("livre", livreBean);
+
+        try {
+            iMicroserviceMyLibraryProxyService.demandeDeReservation(livreBean.getId(), utilisateurBean.getId());
+
+            String validMessage = "votre demande de réservation a été réalisé avec succès.";
+            redirectAttributes.addFlashAttribute("validMessage", validMessage);
+
+            logger.info("l'utilisateur : "+utilisateurBean.getPseudo()+ " id : " +utilisateurBean.getId()+" fait une demande de réservtion pour le livre : "+livreBean.getTitre());
+
+            return "redirect:/profil";
+        }catch (Exception e){
+            e.printStackTrace();
+            if (e instanceof CannotAddBookingException){
+                String message = e.getMessage();
+                redirectAttributes.addFlashAttribute("messageErreur", message);
+            }
+        }
+
+        return "redirect:/livre/"+id;
+    }
+    @PostMapping("/annuler/reserver/{id}")
+    public String annulerReservation(Model model, @PathVariable("id") Long id, RedirectAttributes redirectAttributes){
+
+        UtilisateurBean utilisateurBean = (UtilisateurBean) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        utilisateurBean = iMicroserviceMyUsersProxyService.findById(utilisateurBean.getId());
+        model.addAttribute("utilisateurBean", utilisateurBean);
+
+        iMicroserviceMyLibraryProxyService.annulerReservation(id, utilisateurBean.getId());
+
+        return "redirect:/livres";
     }
 
 

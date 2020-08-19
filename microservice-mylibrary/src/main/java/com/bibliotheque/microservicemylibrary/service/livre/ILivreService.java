@@ -3,8 +3,7 @@ package com.bibliotheque.microservicemylibrary.service.livre;
 import com.bibliotheque.microservicemylibrary.model.Livre;
 import org.springframework.data.repository.query.Param;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public interface ILivreService {
 
@@ -19,4 +18,7 @@ public interface ILivreService {
 
     //trouve un livre par son titre lors d'une recherche
     List<Livre> chercherParTitre(@Param("x") String motCle);
+
+    Optional<Livre> findByCopiesId(Long id);
+
 }

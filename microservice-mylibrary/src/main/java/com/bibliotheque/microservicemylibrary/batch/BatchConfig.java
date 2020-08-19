@@ -2,6 +2,7 @@ package com.bibliotheque.microservicemylibrary.batch;
 
 import com.bibliotheque.microservicemylibrary.dao.IEmailDao;
 import com.bibliotheque.microservicemylibrary.dao.IEmpruntDao;
+import com.bibliotheque.microservicemylibrary.dao.IReservationDao;
 import com.bibliotheque.microservicemylibrary.proxies.IMicroserviceMyUsersProxy;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -31,6 +32,9 @@ public class BatchConfig {
     private IEmailDao iEmailDao;
 
     @Autowired
+    private IReservationDao iReservationDao;
+
+    @Autowired
     private JavaMailSenderImpl sender;
 
     @Autowired
@@ -44,12 +48,22 @@ public class BatchConfig {
     }
 
     @Bean
+    public Step stepTwo(){
+        return steps.get("stepTwo")
+                .tasklet(new MyTaskTwo(iReservationDao, iEmailDao, iMicroserviceMyUsersProxy, sender))
+                .build();
+    }
+
+    @Bean
     public Job demoJob(){
         return jobs.get("demoJob")
                 .incrementer(new RunIdIncrementer())
                 .start(stepOne())
+                .next(stepTwo())
                 .build();
     }
+
+
 
 
 }

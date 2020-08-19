@@ -2,7 +2,10 @@ package com.bibliotheque.microservicemylibrary.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -11,7 +14,9 @@ import java.util.List;
 
 @Entity
 @NoArgsConstructor
-public @Data
+@Getter
+@Setter
+public
 class Livre {
 
     @Id
@@ -32,9 +37,36 @@ class Livre {
 
     private String editeur;
 
-    @JsonBackReference
+    @Transient
+    private Date dateRetourLaPlusProche = getDateRetourLaPlusProche();
+
+    @JsonManagedReference
     @OneToMany(mappedBy = "livre", fetch = FetchType.EAGER)
     private List<Copie> copies;
+
+    @JsonBackReference
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @OneToMany(mappedBy = "livre")
+    private List<Reservation> reservations;
+
+
+    @Transient
+    public Integer getNbReservationsMax(){
+        Integer Rmax = (copies.size())*2;
+        return Rmax;
+    }
+
+    @Transient
+    public Integer getNbReservations(){
+        Integer nB = 0;
+        for (Reservation r : reservations) {
+                nB++;
+                if (r.getPosition()==null){
+                    nB = nB-1;
+                }
+            }return nB;
+        }
+
 
     @Transient
     public Integer getNbrCopiesDisponibles(){
@@ -51,5 +83,6 @@ class Livre {
     public Integer getNbCopies(){
         return copies.size();
     }
+
 
 }

@@ -22,7 +22,7 @@ public class BatchJob {
      * @throws Exception
      */
     @Scheduled(cron = "${microservice.config.cron.job}")
-    public void lendingRevival() throws Exception
+    public void revival() throws Exception
     {
         JobParameters params = new JobParametersBuilder()
                 .addString("JobID", String.valueOf(System.currentTimeMillis()))

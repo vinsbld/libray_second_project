@@ -18,4 +18,7 @@ public interface ICopieService {
 
     //trouve les copies disponibles d'un livre
     List<Copie> getCopieLivresDisponibles(Long idLivre);
+
+    //trouve les copies inDisponibles d'un livre
+    List<Copie> getCopieLivresIndisponibles(Long id);
 }

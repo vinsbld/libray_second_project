@@ -1,15 +1,19 @@
 package com.bibliotheque.microservicemylibrary.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
-public @Data
+@Getter
+@Setter
+public
 class Emprunt {
 
     @Id
@@ -37,5 +41,7 @@ class Emprunt {
     @JsonManagedReference
     @ManyToOne
     private Copie copie;
+
+
 
 }

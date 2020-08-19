@@ -54,7 +54,18 @@
                     </tr>
                 </table>
             </div>
-            <h1>Mes Réservations en cours</h1>
+
+            <p></p>
+            <div th:if="${validMessage != null}" class="alert-success" role="alert">
+                <p th:text="${validMessage}"></p>
+            </div>
+            <div th:if="${messageErreur != null}" class="alert-warning" role="alert">
+                <p th:text="${messageErreur}"></p>
+            </div>
+            <p></p>
+
+            <h1>Mes Emprunts en cours</h1>
+
             <div class="cstyle">
                 <table class="table listTableDeco">
                     <thead>
@@ -65,22 +76,49 @@
                         <th></th>
                     </tr>
                     </thead>
-
                     <tbody>
-                    <tr th:each="mlistReservations:${reservationBeans}">
-                        <td th:text="${#dates.format(mlistReservations.dateDeDebutPret, 'dd/MM/yyyy')}"></td>
-                        <td th:text="${#dates.format(mlistReservations.dateDeFinDuPret, 'dd/MM/yyyy')}"></td>
-                        <td th:text="${mlistReservations.copieBean.livreBean.titre}"></td>
-                        <td th:if="${(mlistReservations.isProlongerPret()==false) and (mlistReservations.dateDeFinDuPret>mlistReservations.getDateDuJour())}">
-                            <form th:action="@{/prolonger/{id}(id=${mlistReservations.id})}" method="post">
-                                <div th:if="${errorMessage != null}">
-                                    <span th:text="${errorMessage}"></span>
-                                </div>
-                                <button type="submit" class="btn-get-create btn-xs ">Prolonger</button>
+                    <tr th:each="mEmprunt:${empruntList}">
+                            <td th:text="${#dates.format(mEmprunt.emprunt.dateDeDebutEmprunt, 'dd/MM/yyyy')}"></td>
+                            <td th:text="${#dates.format(mEmprunt.emprunt.dateDeFinEmprunt, 'dd/MM/yyyy')}"></td>
+                            <td th:text="${mEmprunt.livre.titre}"></td>
+                            <td th:if="${(mEmprunt.emprunt.isProlongerEmprunt() == false) and (mEmprunt.emprunt.dateDeFinEmprunt>mEmprunt.emprunt.getDateDuJour())}">
+                                <form th:action="@{/prolonger/{id}(id=${mEmprunt.copie.id})}" method="post">
+                                    <button type="submit" class="btn-get-create btn-xs ">Prolonger</button>
+                                </form>
+                            </td>
+                            <td th:if="${mEmprunt.emprunt.isProlongerEmprunt()==true}">
+                                <span style="color:gray">Prolongation en cours</span>
+                            </td>
+                            <td th:if="${mEmprunt.emprunt.dateDeFinEmprunt<mEmprunt.emprunt.getDateDuJour()}">
+                                <span style="color:red">Délais dépassé !</span>
+                            </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <h1>Mes Réservations en cours</h1>
+            <div class="cstyle">
+                <table class="table listTableDeco">
+                    <thead>
+                    <tr>
+                        <th>Date de la demande</th>
+                        <th>Ouvrage reservé</th>
+                        <th>Date de retour prévue de l'ouvrage</th>
+                        <th>Position dans la liste d'attente</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="mRs:${reservationList}">
+                        <td th:text="${#dates.format(mRs.reservation.dateDeReservation, 'dd/MM/yyyy')}"></td>
+                        <td th:text="${mRs.reservation.livreBean.titre}"></td>
+                        <td th:text="${#dates.format(mRs.livre.get().getDateRetourLaPlusProche(), 'dd/MM/yyyy')}"></td>
+                        <td th:text="${mRs.reservation.position}"></td>
+                        <td>
+                            <form th:action="@{/annuler/reserver/{id}(id=${mRs.reservation.id})}" method="post">
+                                <button type="submit" onclick="return confirm('Confirmer annulation')" class="btn-get-create">annuler</button>
                             </form>
                         </td>
-                        <td th:if="${mlistReservations.isProlongerPret()==true}"><span style="color:gray">Prolongation en cours</span></td>
-                        <td th:if="${mlistReservations.dateDeFinDuPret<mlistReservations.getDateDuJour()}"><span style="color:red">Délais dépassé !</span></td>
                     </tr>
                     </tbody>
                 </table>

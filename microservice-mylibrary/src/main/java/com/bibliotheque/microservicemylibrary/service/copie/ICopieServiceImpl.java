@@ -53,4 +53,9 @@ public class ICopieServiceImpl implements ICopieService {
     public List<Copie> getCopieLivresDisponibles(Long idLivre){
         return iCopieDao.getCopieLivresDisponibles(idLivre);
     }
+
+    @Override
+    public List<Copie> getCopieLivresIndisponibles(Long id) {
+        return iCopieDao.getCopieLivresIndisponibles(id);
+    }
 }

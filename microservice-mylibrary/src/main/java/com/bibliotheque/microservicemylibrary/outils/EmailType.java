@@ -6,15 +6,16 @@ import java.util.Date;
 
 
 @NoArgsConstructor
-public @Data  class EmailType {
+@Data
+public class EmailType {
 
     @NonNull String email;
     @NonNull String titre;
-    @NonNull String dateDeFinDuPret;
+    @NonNull String dateDeFinEmprunt;
 
-    public EmailType(@NonNull String email, @NonNull String titre, @NonNull String dateDeFinDuPret) {
+    public EmailType(@NonNull String email, @NonNull String titre, @NonNull String dateDeFinEmprunt) {
         this.email = email;
         this.titre = titre;
-        this.dateDeFinDuPret = dateDeFinDuPret;
+        this.dateDeFinEmprunt = dateDeFinEmprunt;
     }
 }

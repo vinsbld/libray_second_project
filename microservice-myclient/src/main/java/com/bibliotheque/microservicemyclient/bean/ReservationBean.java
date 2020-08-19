@@ -1,43 +1,38 @@
 package com.bibliotheque.microservicemyclient.bean;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.*;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.Date;
-
 @NoArgsConstructor
 @Getter
 @Setter
-public @Data
-class ReservationBean implements Serializable {
+public class ReservationBean implements Serializable {
 
     private Long id;
 
     private Long idUtilisateur;
 
-    private Date dateDeDebutPret;
+    private Date dateDeReservation;
 
-    private Date dateDeFinDuPret;
+    private Integer position;
 
-    private Date dateRetour;
+    private String stateEnum;
 
-    private boolean rendu;
+    @JsonProperty("livre")
+    private LivreBean livreBean;
 
-    private Date dateDuJour = new Date();
-
-    private boolean prolongerPret;
-
-    @JsonProperty("copie")
-    private CopieBean copieBean;
-
-    public ReservationBean(Long id, Long idUtilisateur, Date dateDeDebutPret, Date dateDeFinDuPret, boolean prolongerPret, CopieBean copieBean) {
+    public ReservationBean(Long id, Long idUtilisateur, Date dateDeReservation, Integer position, String stateEnum, LivreBean livreBean) {
         this.id = id;
         this.idUtilisateur = idUtilisateur;
-        this.dateDeDebutPret = dateDeDebutPret;
-        this.dateDeFinDuPret = dateDeFinDuPret;
-        this.prolongerPret = prolongerPret;
-        this.copieBean = copieBean;
+        this.dateDeReservation = dateDeReservation;
+        this.position = position;
+        this.stateEnum = stateEnum;
+        this.livreBean = livreBean;
     }
 
     @Override
@@ -45,10 +40,10 @@ class ReservationBean implements Serializable {
         return "ReservationBean{" +
                 "id=" + id +
                 ", idUtilisateur=" + idUtilisateur +
-                ", dateDeDebutPret=" + dateDeDebutPret +
-                ", dateDeFinDuPret=" + dateDeFinDuPret +
-                ", prolongerPret=" + prolongerPret +
-                ", copieBean=" + copieBean +
+                ", dateDeReservation=" + dateDeReservation +
+                ", position=" + position +
+                ", stateEnum='" + stateEnum + '\'' +
+                ", livreBean=" + livreBean +
                 '}';
     }
 }

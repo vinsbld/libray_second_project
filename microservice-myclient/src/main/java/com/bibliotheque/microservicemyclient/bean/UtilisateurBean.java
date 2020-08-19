@@ -1,7 +1,6 @@
 package com.bibliotheque.microservicemyclient.bean;
 
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,7 +12,7 @@ import java.util.Collection;
 @NoArgsConstructor
 @Getter
 @Setter
-public @Data
+public
 class UtilisateurBean implements UserDetails {
 
     private Long id;
