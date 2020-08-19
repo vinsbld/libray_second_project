@@ -6,6 +6,7 @@ import com.bibliotheque.microservicemyclient.dto.EmpruntBeanDTO;
 import com.bibliotheque.microservicemyclient.dto.ReservationBeanDTO;
 import com.bibliotheque.microservicemyclient.exeptions.CannotAddBookingException;
 import com.bibliotheque.microservicemyclient.exeptions.CannotAddBorrowingException;
+import com.bibliotheque.microservicemyclient.exeptions.CannotExtendBorrowingException;
 import com.bibliotheque.microservicemyclient.service.myLibrary.IMicroserviceMyLibraryProxyService;
 import com.bibliotheque.microservicemyclient.service.myUsers.IMicroserviceMyUsersProxyService;
 import org.slf4j.Logger;
@@ -158,10 +159,18 @@ public class ClientController {
         UtilisateurBean utilisateurBean = (UtilisateurBean) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         model.addAttribute("utilisateurBean", utilisateurBean);
 
-        EmpruntBean empruntBean = iMicroserviceMyLibraryProxyService.afficherUnEmprunt(id);
-        iMicroserviceMyLibraryProxyService.prolongerEmprunt(empruntBean.getId(), utilisateurBean.getId());
+        try{
+            EmpruntBean empruntBean = iMicroserviceMyLibraryProxyService.afficherUnEmprunt(id);
+            iMicroserviceMyLibraryProxyService.prolongerEmprunt(empruntBean.getId(), utilisateurBean.getId());
 
-        logger.info("l'utilisateur : "+utilisateurBean.getPseudo()+" a prolonger le prêt dont l' id est : "+ empruntBean.getId());
+            logger.info("l'utilisateur : "+utilisateurBean.getPseudo()+" a prolonger le prêt dont l' id est : "+ empruntBean.getId());
+        }catch (Exception e){
+            e.printStackTrace();
+            if (e instanceof CannotExtendBorrowingException){
+                String message = e.getMessage();
+                model.addAttribute("errorMessage", message);
+            }
+        }
 
         return "redirect:/profil";
 

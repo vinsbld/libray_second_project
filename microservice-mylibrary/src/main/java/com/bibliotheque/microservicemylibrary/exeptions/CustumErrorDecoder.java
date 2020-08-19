@@ -33,6 +33,12 @@ public class CustumErrorDecoder implements ErrorDecoder {
                 case"cannotBookingException03":
                     return new CannotAddBookingException("réservation impossible, la liste des réservations pour cet ouvrage est compléte");
 
+                case"CannotExtendBorrowingException01":
+                    return new CannotExtendBorrowingException("impossible de prolonger le prêt, délais dépassé");
+
+                case"CannotExtendBorrowingException02":
+                    return new CannotExtendBorrowingException("impossible de prolonger le prêt, le prêt a déjà été prolongé");
+
                 default: return defaultErrorDecoder.decode(methodKey, response);
 
             }

@@ -3,6 +3,7 @@ package com.bibliotheque.microservicemylibrary.controller;
 import com.bibliotheque.microservicemylibrary.beans.UtilisateurBean;
 import com.bibliotheque.microservicemylibrary.dto.EmpruntDTO;
 import com.bibliotheque.microservicemylibrary.exeptions.CannotAddBorrowingException;
+import com.bibliotheque.microservicemylibrary.exeptions.CannotExtendBorrowingException;
 import com.bibliotheque.microservicemylibrary.model.*;
 import com.bibliotheque.microservicemylibrary.service.copie.ICopieService;
 import com.bibliotheque.microservicemylibrary.service.emprunt.IEmpruntService;
@@ -123,6 +124,18 @@ public class EmpruntController {
 
         Date date = new Date(Calendar.getInstance().getTime().getTime());
         Emprunt emprunt = iEmpruntService.findById(id).get();
+
+        //verifier si la date butoir n'est pas passer
+        if (emprunt.getDateDeFinEmprunt().after(date)){
+            throw  new CannotExtendBorrowingException("CannotExtendBorrowingException01");
+        }
+
+        //verifier si l'usager n'a pas déjà prolonger l'emprunt
+        if (emprunt.isProlongerEmprunt()==true){
+            throw  new CannotExtendBorrowingException("CannotExtendBorrowingException02");
+        }
+
+
         emprunt.setIdUtilisateur(idUtilisateur);
         emprunt.setProlongerEmprunt(true);
         emprunt.setDateDeFinEmprunt(iEmpruntService.add4Weeks(emprunt.getDateDeFinEmprunt()));
