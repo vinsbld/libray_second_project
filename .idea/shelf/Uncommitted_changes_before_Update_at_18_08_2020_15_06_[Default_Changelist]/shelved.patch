@@ -1,0 +1,2988 @@
+Index: microservice-myclient/src/main/resources/templates/Livres.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><!DOCTYPE html>\r\n<html xmlns:th=\"http://www.thymeleaf.org\"\r\n      xmlns:layout=\"http://www.ultraq.net.nz/thymeleaf/layout\"\r\n      layout:decorate=\"~{Header}\">\r\n\r\n\r\n<head>\r\n    <meta charset=\"utf-8\" />\r\n\r\n    <meta content=\"width=device-width, initial-scale=1.0\" name=\"viewport\">\r\n    <meta content=\"\" name=\"keywords\">\r\n    <meta content=\"\" name=\"description\">\r\n\r\n\r\n    <!-- Google Fonts -->\r\n    <link\r\n            href=\"https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,700,700i|Poppins:300,400,500,700\"\r\n            rel=\"stylesheet\">\r\n\r\n    <!-- Bootstrap CSS File -->\r\n    <link href=\"/lib/bootstrap/css/bootstrap.min.css\" rel=\"stylesheet\">\r\n\r\n    <!-- Libraries CSS Files -->\r\n    <link href=\"/lib/font-awesome/css/font-awesome.min.css\" rel=\"stylesheet\">\r\n    <link href=\"/lib/animate/animate.min.css\" rel=\"stylesheet\">\r\n\r\n\r\n    <!-- Main Stylesheet File -->\r\n    <link href=\"/css/style.css\" rel=\"stylesheet\" th:href=\"@{/css/style.css}\">\r\n\r\n</head>\r\n\r\n\r\n<!--==========================\r\n    Livres section\r\n  ============================-->\r\n\r\n<body>\r\n\r\n<main id=\"main\">\r\n    <section th:id=\"page\">\r\n        <div class=\"page-container\">\r\n\r\n            <h1>Liste des livres</h1>\r\n\r\n            <form th:action=\"@{/recherche}\" methode=\"get\">\r\n                <label>Mot clé :</label>\r\n                <input type=\"text\" name=\"mc\" th:value=\"${mc}\"/>\r\n                <button class=\"btn btn-primary\">Chercher</button>\r\n            </form>\r\n\r\n\r\n            <div class=\"cstyle\">\r\n                <table class=\"table listTableDeco\">\r\n                    <thead>\r\n                        <tr>\r\n                            <th>Titre : </th>\r\n                            <th>Nom de l'Auteur</th>\r\n                            <th>Prénom de l'Auteur</th>\r\n                            <th>Nombre d'exemplaires disponibles : </th>\r\n                        </tr>\r\n                    </thead>\r\n                    <tbody>\r\n                    <tr th:each=\"mlivre:${livreBeanList}\">\r\n                        <td><a th:href=\"@{/livre/{id}(id=${mlivre.id})}\" th:text=\"${mlivre.titre}\"></a></td>\r\n                        <td th:text=\"${mlivre.nomAuteur}\"></td>\r\n                        <td th:text=\"${mlivre.prenomAuteur}\"></td>\r\n                        <td><span th:text=\"${mlivre.nbrCopiesDisponibles}\" style=\"color:#00FF00;\"></span> / <span th:text=\"${mlivre.nbCopies}\"></span></td>\r\n                    </tr>\r\n                    </tbody>\r\n                </table>\r\n            </div>\r\n            <div th:if=\"${livreBeanList.isEmpty()}\">\r\n                <p>Aucun livres ne correspond à vos critères</p>\r\n            </div>\r\n        </div>\r\n    </section>\r\n</main>\r\n\r\n\r\n</body>\r\n</html>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- microservice-myclient/src/main/resources/templates/Livres.html	(revision 6a2320f00477d9ee07a2747f7b10127f4c0d1f98)
++++ microservice-myclient/src/main/resources/templates/Livres.html	(date 1597755557336)
+@@ -49,7 +49,6 @@
+                 <button class="btn btn-primary">Chercher</button>
+             </form>
+ 
+-
+             <div class="cstyle">
+                 <table class="table listTableDeco">
+                     <thead>
+@@ -58,6 +57,7 @@
+                             <th>Nom de l'Auteur</th>
+                             <th>Prénom de l'Auteur</th>
+                             <th>Nombre d'exemplaires disponibles : </th>
++                            <th></th>
+                         </tr>
+                     </thead>
+                     <tbody>
+@@ -65,7 +65,11 @@
+                         <td><a th:href="@{/livre/{id}(id=${mlivre.id})}" th:text="${mlivre.titre}"></a></td>
+                         <td th:text="${mlivre.nomAuteur}"></td>
+                         <td th:text="${mlivre.prenomAuteur}"></td>
+-                        <td><span th:text="${mlivre.nbrCopiesDisponibles}" style="color:#00FF00;"></span> / <span th:text="${mlivre.nbCopies}"></span></td>
++                        <td th:if="${mlivre.nbrCopiesDisponibles > 0}"><span th:text="${mlivre.nbrCopiesDisponibles}" style="color:#00FF00;"></span> / <span th:text="${mlivre.nbCopies}"></span></td>
++                        <td th:if="${mlivre.nbrCopiesDisponibles <= 0}"><span th:text="${mlivre.nbrCopiesDisponibles}" style="color: #b21f2d"></span> / <span th:text="${mlivre.nbCopies}"></span></td>
++                        <td th:if="${mlivre.nbrCopiesDisponibles <= 0}"><form th:action="@{/livre/{id}(id=${mlivre.id})}" method="get"><button class="btn-get-create">reserver</button></form>
++                        <td th:if="${mlivre.nbrCopiesDisponibles > 0}"><form th:action="@{/livre/{id}(id=${mlivre.id})}" method="get"><button class="btn-get-create">detail</button></form>
++                        </td>
+                     </tr>
+                     </tbody>
+                 </table>
+Index: microservice-myclient/src/main/java/com/bibliotheque/microservicemyclient/controller/ClientController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.bibliotheque.microservicemyclient.controller;\r\n\r\nimport com.bibliotheque.microservicemyclient.bean.CopieBean;\r\nimport com.bibliotheque.microservicemyclient.bean.LivreBean;\r\nimport com.bibliotheque.microservicemyclient.bean.ReservationBean;\r\nimport com.bibliotheque.microservicemyclient.bean.UtilisateurBean;\r\nimport com.bibliotheque.microservicemyclient.service.myLibrary.IMicroserviceMyLibraryProxyService;\r\nimport com.bibliotheque.microservicemyclient.service.myUsers.IMicroserviceMyUsersProxyService;\r\nimport org.slf4j.Logger;\r\nimport org.slf4j.LoggerFactory;\r\nimport org.springframework.beans.factory.annotation.Autowired;\r\nimport org.springframework.security.core.context.SecurityContextHolder;\r\nimport org.springframework.stereotype.Controller;\r\nimport org.springframework.ui.Model;\r\nimport org.springframework.web.bind.annotation.GetMapping;\r\nimport org.springframework.web.bind.annotation.PathVariable;\r\nimport org.springframework.web.bind.annotation.PostMapping;\r\nimport org.springframework.web.bind.annotation.RequestParam;\r\n\r\nimport java.util.List;\r\n\r\n@Controller\r\npublic class ClientController {\r\n\r\n    Logger logger = LoggerFactory.getLogger(this.getClass());\r\n\r\n    @Autowired\r\n    IMicroserviceMyUsersProxyService iMicroserviceMyUsersProxyService;\r\n\r\n    @Autowired\r\n    IMicroserviceMyLibraryProxyService iMicroserviceMyLibraryProxyService;\r\n\r\n    @GetMapping(\"/acceuil\")\r\n    public String acceuil(Model model){\r\n\r\n        logger.info(\"Page d'acceuil demandée\");\r\n\r\n        return \"acceuil\";\r\n\r\n    }\r\n\r\n    /*============== #Profil ======================*/\r\n    @GetMapping(\"/profil\")\r\n    public String afficherUnProfilUtilisateur(Model model){\r\n\r\n        UtilisateurBean utilisateurBean = (UtilisateurBean) SecurityContextHolder.getContext().getAuthentication().getPrincipal();\r\n        model.addAttribute(\"utilisateurBean\", utilisateurBean);\r\n\r\n        List<ReservationBean>reservationBeans = iMicroserviceMyLibraryProxyService.afficherLaListeDesReservationsParUtilisateur(utilisateurBean.getId());\r\n        model.addAttribute(\"reservationBeans\", reservationBeans);\r\n\r\n        logger.info(\"L'utilisateur \"+utilisateurBean+\" id : \"+utilisateurBean.getId()+ \" consulte sa page profil\");\r\n\r\n        return \"Profil\";\r\n    }\r\n\r\n    /*============== #Livres ======================*/\r\n    //afficher une liste de tous les livres\r\n    @GetMapping(\"/livres\")\r\n    public String afficherUneListeDeLivres(Model model){\r\n\r\n       List<LivreBean> livreBeanList = iMicroserviceMyLibraryProxyService.ListeDeLivres();\r\n       model.addAttribute(\"livreBeanList\", livreBeanList);\r\n\r\n       logger.info(\"Liste de livre demandée\");\r\n\r\n       return \"Livres\";\r\n    }\r\n\r\n    //afficher un livre\r\n    @GetMapping(\"/livre/{id}\")\r\n    public String afficherUnLivre(Model model, @PathVariable(\"id\") Long id){\r\n\r\n        LivreBean livreBean = iMicroserviceMyLibraryProxyService.afficherUnLivre(id);\r\n        model.addAttribute(\"livreBean\", livreBean);\r\n\r\n        List<CopieBean> copieBeansDisponibles = iMicroserviceMyLibraryProxyService.afficherLesCopiesDisponibles(livreBean.getId());\r\n        model.addAttribute(\"copieBeansDisponibles\", copieBeansDisponibles);\r\n        model.addAttribute(\"nbCopiesDisponibles\", copieBeansDisponibles.size());\r\n\r\n        List<CopieBean> nbTTCopies= iMicroserviceMyLibraryProxyService.afficherLesCopiesDunLivre(id);\r\n        model.addAttribute(\"nbTTCopies\", nbTTCopies.size());\r\n\r\n        logger.info(\"Le livre \"+livreBean.getTitre()+\" est en consultation\");\r\n\r\n        return \"Livre\";\r\n    }\r\n\r\n    //faire une recherche de livre\r\n    @GetMapping(\"/recherche\")\r\n    public String rechercherUnLivre(Model model, @RequestParam(name = \"mc\", defaultValue = \"\") String mc){\r\n\r\n        logger.info(\"un utilisateur effectue une recherche de livre avec le mot clé : \"+ mc );\r\n\r\n        if (mc.isEmpty()){\r\n            List<LivreBean> livreBeanList = iMicroserviceMyLibraryProxyService.ListeDeLivres();\r\n            model.addAttribute(\"livreBeanList\", livreBeanList);\r\n        }\r\n        try {\r\n\r\n            List<LivreBean> livreBeanList = iMicroserviceMyLibraryProxyService.faireUneRechercheParTitre(\"%\" + mc + \"%\");\r\n            model.addAttribute(\"livreBeanList\", livreBeanList);\r\n            model.addAttribute(\"mc\", mc);\r\n        }catch (Exception e){\r\n            model.addAttribute(\"exception\",e);\r\n            throw new RuntimeException(\"Livre Introuvable\");\r\n        }\r\n\r\n        return \"/Livres\";\r\n    }\r\n\r\n    /*============== #Reservation ======================*/\r\n    //faire une reservation\r\n    @PostMapping(\"/reservation/{id}\")\r\n    public String demandeDeReservation(Model model, @PathVariable(\"id\")Long id){\r\n\r\n        UtilisateurBean utilisateurBean = (UtilisateurBean) SecurityContextHolder.getContext().getAuthentication().getPrincipal();\r\n        utilisateurBean = iMicroserviceMyUsersProxyService.findById(utilisateurBean.getId());\r\n        model.addAttribute(\"utilisateurBean\", utilisateurBean);\r\n\r\n        CopieBean copieBean = iMicroserviceMyLibraryProxyService.afficherUneCopie(id);\r\n        model.addAttribute(\"copie\", copieBean);\r\n\r\n        iMicroserviceMyLibraryProxyService.demandeDeReservation(copieBean.getId(), utilisateurBean.getId());\r\n\r\n        logger.info(\"l'utilisateur : \"+utilisateurBean.getPseudo()+ \" id : \" +utilisateurBean.getId()+\" fait une demande de réservtion pour la copie isbn : \"+copieBean.getIsbn());\r\n\r\n        return \"redirect:/livres\";\r\n    }\r\n\r\n    //prolonger un pret\r\n    @PostMapping(\"/prolonger/{id}\")\r\n    public String prolongerLePret(Model model, @PathVariable(\"id\")Long id){\r\n\r\n        UtilisateurBean utilisateurBean = (UtilisateurBean) SecurityContextHolder.getContext().getAuthentication().getPrincipal();\r\n        model.addAttribute(\"utilisateurBean\", utilisateurBean);\r\n\r\n        ReservationBean reservationBean = iMicroserviceMyLibraryProxyService.afficherUneReservation(id);\r\n        iMicroserviceMyLibraryProxyService.prolongerPret(reservationBean.getId(), utilisateurBean.getId());\r\n\r\n        logger.info(\"l'utilisateur : \"+utilisateurBean.getPseudo()+\" a prolonger la réservation dont l' id est : \"+reservationBean.getId());\r\n\r\n        return \"redirect:/profil\";\r\n\r\n    }\r\n\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- microservice-myclient/src/main/java/com/bibliotheque/microservicemyclient/controller/ClientController.java	(revision 6a2320f00477d9ee07a2747f7b10127f4c0d1f98)
++++ microservice-myclient/src/main/java/com/bibliotheque/microservicemyclient/controller/ClientController.java	(date 1597755557307)
+@@ -1,9 +1,11 @@
+ package com.bibliotheque.microservicemyclient.controller;
+ 
+-import com.bibliotheque.microservicemyclient.bean.CopieBean;
+-import com.bibliotheque.microservicemyclient.bean.LivreBean;
+-import com.bibliotheque.microservicemyclient.bean.ReservationBean;
+-import com.bibliotheque.microservicemyclient.bean.UtilisateurBean;
++import com.bibliotheque.microservicemyclient.bean.*;
++import com.bibliotheque.microservicemyclient.dto.CopieBeanDTO;
++import com.bibliotheque.microservicemyclient.dto.EmpruntBeanDTO;
++import com.bibliotheque.microservicemyclient.dto.ReservationBeanDTO;
++import com.bibliotheque.microservicemyclient.exeptions.CannotAddBookingException;
++import com.bibliotheque.microservicemyclient.exeptions.CannotAddBorrowingException;
+ import com.bibliotheque.microservicemyclient.service.myLibrary.IMicroserviceMyLibraryProxyService;
+ import com.bibliotheque.microservicemyclient.service.myUsers.IMicroserviceMyUsersProxyService;
+ import org.slf4j.Logger;
+@@ -16,6 +18,7 @@
+ import org.springframework.web.bind.annotation.PathVariable;
+ import org.springframework.web.bind.annotation.PostMapping;
+ import org.springframework.web.bind.annotation.RequestParam;
++import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+ 
+ import java.util.List;
+ 
+@@ -46,8 +49,11 @@
+         UtilisateurBean utilisateurBean = (UtilisateurBean) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+         model.addAttribute("utilisateurBean", utilisateurBean);
+ 
+-        List<ReservationBean>reservationBeans = iMicroserviceMyLibraryProxyService.afficherLaListeDesReservationsParUtilisateur(utilisateurBean.getId());
+-        model.addAttribute("reservationBeans", reservationBeans);
++        List<EmpruntBeanDTO> empruntBeans = iMicroserviceMyLibraryProxyService.afficherLaListeDesEmpruntsParUtilisateur(utilisateurBean.getId());
++        model.addAttribute("empruntList", empruntBeans);
++
++        List<ReservationBeanDTO> reservationBeans = iMicroserviceMyLibraryProxyService.afficherlesReservationsParUtilisateur(utilisateurBean.getId());
++        model.addAttribute("reservationList", reservationBeans);
+ 
+         logger.info("L'utilisateur "+utilisateurBean+" id : "+utilisateurBean.getId()+ " consulte sa page profil");
+ 
+@@ -78,8 +84,9 @@
+         model.addAttribute("copieBeansDisponibles", copieBeansDisponibles);
+         model.addAttribute("nbCopiesDisponibles", copieBeansDisponibles.size());
+ 
+-        List<CopieBean> nbTTCopies= iMicroserviceMyLibraryProxyService.afficherLesCopiesDunLivre(id);
+-        model.addAttribute("nbTTCopies", nbTTCopies.size());
++        List<CopieBeanDTO> copiesDunLivre = iMicroserviceMyLibraryProxyService.afficherLesCopiesDunLivre(id);
++        model.addAttribute("nbTTCopies", copiesDunLivre.size());
++        model.addAttribute("mCopies", copiesDunLivre);
+ 
+         logger.info("Le livre "+livreBean.getTitre()+" est en consultation");
+ 
+@@ -109,23 +116,39 @@
+         return "/Livres";
+     }
+ 
+-    /*============== #Reservation ======================*/
+-    //faire une reservation
+-    @PostMapping("/reservation/{id}")
+-    public String demandeDeReservation(Model model, @PathVariable("id")Long id){
++    /*============== #Emprunt ======================*/
++
++    //faire un emprunt
++    @PostMapping("/emprunter/{id}")
++    public String demandeEmprunt(Model model, @PathVariable("id")Long id, RedirectAttributes redirectAttributes){
+ 
+         UtilisateurBean utilisateurBean = (UtilisateurBean) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+         utilisateurBean = iMicroserviceMyUsersProxyService.findById(utilisateurBean.getId());
+         model.addAttribute("utilisateurBean", utilisateurBean);
+ 
+-        CopieBean copieBean = iMicroserviceMyLibraryProxyService.afficherUneCopie(id);
++        CopieBeanDTO copieBean = iMicroserviceMyLibraryProxyService.afficherUneCopie(id);
+         model.addAttribute("copie", copieBean);
+ 
+-        iMicroserviceMyLibraryProxyService.demandeDeReservation(copieBean.getId(), utilisateurBean.getId());
++
++        try {
++            iMicroserviceMyLibraryProxyService.demandeEmprunt(copieBean.getId(), utilisateurBean.getId());
+ 
+-        logger.info("l'utilisateur : "+utilisateurBean.getPseudo()+ " id : " +utilisateurBean.getId()+" fait une demande de réservtion pour la copie isbn : "+copieBean.getIsbn());
++            String validMessage = "votre demande d'emprunt a été réalisé avec succès.";
++            redirectAttributes.addFlashAttribute("validMessage", validMessage);
++            model.addAttribute("validMessage", validMessage);
+ 
+-        return "redirect:/livres";
++            logger.info("l'utilisateur : "+utilisateurBean.getPseudo()+ " id : " +utilisateurBean.getId()+" fait une demande d'emprunt pour la copie isbn : "+copieBean.getIsbn());
++            return "redirect:/profil";
++        }
++        catch (Exception e) {
++            e.printStackTrace();
++            if (e instanceof CannotAddBorrowingException) {
++                String message = e.getMessage();
++                redirectAttributes.addFlashAttribute("messageErreur", message);
++            }
++        }
++
++        return "redirect:/livre/"+copieBean.getLivre().getId();
+     }
+ 
+     //prolonger un pret
+@@ -135,13 +158,55 @@
+         UtilisateurBean utilisateurBean = (UtilisateurBean) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+         model.addAttribute("utilisateurBean", utilisateurBean);
+ 
+-        ReservationBean reservationBean = iMicroserviceMyLibraryProxyService.afficherUneReservation(id);
+-        iMicroserviceMyLibraryProxyService.prolongerPret(reservationBean.getId(), utilisateurBean.getId());
++        EmpruntBean empruntBean = iMicroserviceMyLibraryProxyService.afficherUnEmprunt(id);
++        iMicroserviceMyLibraryProxyService.prolongerEmprunt(empruntBean.getId(), utilisateurBean.getId());
++
++        logger.info("l'utilisateur : "+utilisateurBean.getPseudo()+" a prolonger le prêt dont l' id est : "+ empruntBean.getId());
++
++        return "redirect:/profil";
++
++    }
++
++    /*============== #Reservation ======================*/
++    @PostMapping("/reserver/{id}")
++    public String demandeDeReservation(Model model, @PathVariable("id") Long id, RedirectAttributes redirectAttributes){
++
++        UtilisateurBean utilisateurBean = (UtilisateurBean) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
++        utilisateurBean = iMicroserviceMyUsersProxyService.findById(utilisateurBean.getId());
++        model.addAttribute("utilisateurBean", utilisateurBean);
++
++        LivreBean livreBean = iMicroserviceMyLibraryProxyService.afficherUnLivre(id);
++        model.addAttribute("livre", livreBean);
++
++        try {
++            iMicroserviceMyLibraryProxyService.demandeDeReservation(livreBean.getId(), utilisateurBean.getId());
+ 
+-        logger.info("l'utilisateur : "+utilisateurBean.getPseudo()+" a prolonger la réservation dont l' id est : "+reservationBean.getId());
++            String validMessage = "votre demande de réservation a été réalisé avec succès.";
++            redirectAttributes.addFlashAttribute("validMessage", validMessage);
++
++            logger.info("l'utilisateur : "+utilisateurBean.getPseudo()+ " id : " +utilisateurBean.getId()+" fait une demande de réservtion pour le livre : "+livreBean.getTitre());
+ 
+-        return "redirect:/profil";
++            return "redirect:/profil";
++        }catch (Exception e){
++            e.printStackTrace();
++            if (e instanceof CannotAddBookingException){
++                String message = e.getMessage();
++                redirectAttributes.addFlashAttribute("messageErreur", message);
++            }
++        }
++
++        return "redirect:/livre/"+id;
++    }
++    @PostMapping("/annuler/reserver/{id}")
++    public String annulerReservation(Model model, @PathVariable("id") Long id, RedirectAttributes redirectAttributes){
+ 
++        UtilisateurBean utilisateurBean = (UtilisateurBean) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
++        utilisateurBean = iMicroserviceMyUsersProxyService.findById(utilisateurBean.getId());
++        model.addAttribute("utilisateurBean", utilisateurBean);
++
++        iMicroserviceMyLibraryProxyService.annulerReservation(id, utilisateurBean.getId());
++
++        return "redirect:/livres";
+     }
+ 
+ 
+Index: microservice-myclient/src/main/resources/templates/Profil.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><!DOCTYPE html>\r\n<html xmlns:th=\"http://www.thymeleaf.org\"\r\n      xmlns:layout=\"http://www.ultraq.net.nz/thymeleaf/layout\"\r\n      layout:decorate=\"~{Header}\">\r\n\r\n\r\n<head>\r\n    <meta charset=\"utf-8\" />\r\n\r\n    <meta content=\"width=device-width, initial-scale=1.0\" name=\"viewport\">\r\n    <meta content=\"\" name=\"keywords\">\r\n    <meta content=\"\" name=\"description\">\r\n\r\n\r\n    <!-- Google Fonts -->\r\n    <link\r\n            href=\"https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,700,700i|Poppins:300,400,500,700\"\r\n            rel=\"stylesheet\">\r\n\r\n    <!-- Bootstrap CSS File -->\r\n    <link href=\"/lib/bootstrap/css/bootstrap.min.css\" rel=\"stylesheet\">\r\n\r\n    <!-- Libraries CSS Files -->\r\n    <link href=\"/lib/font-awesome/css/font-awesome.min.css\" rel=\"stylesheet\">\r\n    <link href=\"/lib/animate/animate.min.css\" rel=\"stylesheet\">\r\n\r\n\r\n    <!-- Main Stylesheet File -->\r\n    <link href=\"/css/style.css\" rel=\"stylesheet\" th:href=\"@{/css/style.css}\">\r\n\r\n</head>\r\n\r\n\r\n<!--==========================\r\n    Index section\r\n  ============================-->\r\n\r\n<body>\r\n\r\n<main id=\"main\">\r\n    <section th:id=\"page\">\r\n        <div class=\"page-container\">\r\n            <!--#Profil-->\r\n            <h1>Mon Profil</h1>\r\n            <div class=\"cstyle\">\r\n                <table class=\"table listTableDeco\">\r\n                    <tr>\r\n                        <td>Pseudo : </td>\r\n                        <td th:text=\"${utilisateurBean.pseudo}\"></td>\r\n                    </tr>\r\n                    <tr>\r\n                        <td>Email : </td>\r\n                        <td th:text=\"${utilisateurBean.email}\"></td>\r\n                    </tr>\r\n                </table>\r\n            </div>\r\n            <h1>Mes Réservations en cours</h1>\r\n            <div class=\"cstyle\">\r\n                <table class=\"table listTableDeco\">\r\n                    <thead>\r\n                    <tr>\r\n                        <th>Date du prêt</th>\r\n                        <th>Date de fin du prêt</th>\r\n                        <th>Ouvrage emprunté</th>\r\n                        <th></th>\r\n                    </tr>\r\n                    </thead>\r\n\r\n                    <tbody>\r\n                    <tr th:each=\"mlistReservations:${reservationBeans}\">\r\n                        <td th:text=\"${#dates.format(mlistReservations.dateDeDebutPret, 'dd/MM/yyyy')}\"></td>\r\n                        <td th:text=\"${#dates.format(mlistReservations.dateDeFinDuPret, 'dd/MM/yyyy')}\"></td>\r\n                        <td th:text=\"${mlistReservations.copieBean.livreBean.titre}\"></td>\r\n                        <td th:if=\"${(mlistReservations.isProlongerPret()==false) and (mlistReservations.dateDeFinDuPret>mlistReservations.getDateDuJour())}\"><form th:action=\"@{/prolonger/{id}(id=${mlistReservations.id})}\" method=\"post\"><button type=\"submit\" class=\"btn-get-create btn-xs \">Prolonger</button></form></td>\r\n                        <td th:if=\"${mlistReservations.isProlongerPret()==true}\"><span style=\"color:gray\">Prolongation en cours</span></td>\r\n                        <td th:if=\"${mlistReservations.dateDeFinDuPret<mlistReservations.getDateDuJour()}\"><span style=\"color:red\">Délais dépassé !</span></td>\r\n                    </tr>\r\n                    </tbody>\r\n                </table>\r\n            </div>\r\n        </div>\r\n    </section>\r\n</main>\r\n<!-- #index -->\r\n\r\n</body>\r\n</html>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- microservice-myclient/src/main/resources/templates/Profil.html	(revision 6a2320f00477d9ee07a2747f7b10127f4c0d1f98)
++++ microservice-myclient/src/main/resources/templates/Profil.html	(date 1597755557339)
+@@ -54,7 +54,18 @@
+                     </tr>
+                 </table>
+             </div>
+-            <h1>Mes Réservations en cours</h1>
++
++            <p></p>
++            <div th:if="${validMessage != null}" class="alert-success" role="alert">
++                <p th:text="${validMessage}"></p>
++            </div>
++            <div th:if="${messageErreur != null}" class="alert-warning" role="alert">
++                <p th:text="${messageErreur}"></p>
++            </div>
++            <p></p>
++
++            <h1>Mes Emprunts en cours</h1>
++
+             <div class="cstyle">
+                 <table class="table listTableDeco">
+                     <thead>
+@@ -65,15 +76,49 @@
+                         <th></th>
+                     </tr>
+                     </thead>
+-
+                     <tbody>
+-                    <tr th:each="mlistReservations:${reservationBeans}">
+-                        <td th:text="${#dates.format(mlistReservations.dateDeDebutPret, 'dd/MM/yyyy')}"></td>
+-                        <td th:text="${#dates.format(mlistReservations.dateDeFinDuPret, 'dd/MM/yyyy')}"></td>
+-                        <td th:text="${mlistReservations.copieBean.livreBean.titre}"></td>
+-                        <td th:if="${(mlistReservations.isProlongerPret()==false) and (mlistReservations.dateDeFinDuPret>mlistReservations.getDateDuJour())}"><form th:action="@{/prolonger/{id}(id=${mlistReservations.id})}" method="post"><button type="submit" class="btn-get-create btn-xs ">Prolonger</button></form></td>
+-                        <td th:if="${mlistReservations.isProlongerPret()==true}"><span style="color:gray">Prolongation en cours</span></td>
+-                        <td th:if="${mlistReservations.dateDeFinDuPret<mlistReservations.getDateDuJour()}"><span style="color:red">Délais dépassé !</span></td>
++                    <tr th:each="mEmprunt:${empruntList}">
++                            <td th:text="${#dates.format(mEmprunt.emprunt.dateDeDebutEmprunt, 'dd/MM/yyyy')}"></td>
++                            <td th:text="${#dates.format(mEmprunt.emprunt.dateDeFinEmprunt, 'dd/MM/yyyy')}"></td>
++                            <td th:text="${mEmprunt.livre.titre}"></td>
++                            <td th:if="${(mEmprunt.emprunt.isProlongerEmprunt() == false) and (mEmprunt.emprunt.dateDeFinEmprunt>mEmprunt.emprunt.getDateDuJour())}">
++                                <form th:action="@{/prolonger/{id}(id=${mEmprunt.copie.id})}" method="post">
++                                    <button type="submit" class="btn-get-create btn-xs ">Prolonger</button>
++                                </form>
++                            </td>
++                            <td th:if="${mEmprunt.emprunt.isProlongerEmprunt()==true}">
++                                <span style="color:gray">Prolongation en cours</span>
++                            </td>
++                            <td th:if="${mEmprunt.emprunt.dateDeFinEmprunt<mEmprunt.emprunt.getDateDuJour()}">
++                                <span style="color:red">Délais dépassé !</span>
++                            </td>
++                    </tr>
++                    </tbody>
++                </table>
++            </div>
++            <h1>Mes Réservations en cours</h1>
++            <div class="cstyle">
++                <table class="table listTableDeco">
++                    <thead>
++                    <tr>
++                        <th>Date de la demande</th>
++                        <th>Ouvrage reservé</th>
++                        <th>Date de retour prévue de l'ouvrage</th>
++                        <th>Position dans la liste d'attente</th>
++                        <th></th>
++                    </tr>
++                    </thead>
++                    <tbody>
++                    <tr th:each="mRs:${reservationList}">
++                        <td th:text="${#dates.format(mRs.reservation.dateDeReservation, 'dd/MM/yyyy')}"></td>
++                        <td th:text="${mRs.reservation.livreBean.titre}"></td>
++                        <td th:text="${#dates.format(mRs.livre.get().getDateRetourLaPlusProche(), 'dd/MM/yyyy')}"></td>
++                        <td th:text="${mRs.reservation.position}"></td>
++                        <td>
++                            <form th:action="@{/annuler/reserver/{id}(id=${mRs.reservation.id})}" method="post">
++                                <button type="submit" onclick="return confirm('Confirmer annulation')" class="btn-get-create">annuler</button>
++                            </form>
++                        </td>
+                     </tr>
+                     </tbody>
+                 </table>
+Index: microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/controller/CopieController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.bibliotheque.microservicemylibrary.controller;\r\n\r\nimport com.bibliotheque.microservicemylibrary.model.Copie;\r\nimport com.bibliotheque.microservicemylibrary.service.copie.ICopieService;\r\nimport org.slf4j.Logger;\r\nimport org.slf4j.LoggerFactory;\r\nimport org.springframework.beans.factory.annotation.Autowired;\r\nimport org.springframework.web.bind.annotation.PathVariable;\r\nimport org.springframework.web.bind.annotation.RequestMapping;\r\nimport org.springframework.web.bind.annotation.RestController;\r\n\r\nimport java.util.List;\r\nimport java.util.Optional;\r\n\r\n\r\n@RestController\r\npublic class CopieController {\r\n\r\n    Logger logger = LoggerFactory.getLogger(this.getClass());\r\n\r\n    @Autowired\r\n    private ICopieService iCopieService;\r\n\r\n    @RequestMapping(value = \"/copies/{id}\")\r\n    public List<Copie> afficherLesCopiesDunLivre(@PathVariable(\"id\")Long id){\r\n        List<Copie>copieList = iCopieService.findAllByLivreId(id);\r\n        logger.info(\"demande d'une liste de copies d'un livre\");\r\n        return copieList;\r\n    }\r\n\r\n    @RequestMapping(value = \"/copie/{id}\")\r\n    public Optional<Copie> afficherUneCopie(@PathVariable(\"id\")Long id){\r\n        Optional<Copie> copie = iCopieService.findById(id);\r\n        logger.info(\"demande d'une copie d'un livre\");\r\n        return copie;\r\n    }\r\n\r\n    @RequestMapping(value = \"/copies/dispos/{id}\")\r\n    public List<Copie> afficherLesCopiesDisponibles(@PathVariable(\"id\") Long id){\r\n        List<Copie> copiesDisponibles = iCopieService.getCopieLivresDisponibles(id);\r\n        logger.info(\"demande des copies disponibles pour un livre\");\r\n        return copiesDisponibles;\r\n    }\r\n\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/controller/CopieController.java	(revision 6a2320f00477d9ee07a2747f7b10127f4c0d1f98)
++++ microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/controller/CopieController.java	(date 1597755557349)
+@@ -1,7 +1,12 @@
+ package com.bibliotheque.microservicemylibrary.controller;
+ 
++import com.bibliotheque.microservicemylibrary.dto.CopieDTO;
+ import com.bibliotheque.microservicemylibrary.model.Copie;
++import com.bibliotheque.microservicemylibrary.model.Emprunt;
++import com.bibliotheque.microservicemylibrary.model.Livre;
+ import com.bibliotheque.microservicemylibrary.service.copie.ICopieService;
++import com.bibliotheque.microservicemylibrary.service.emprunt.IEmpruntService;
++import com.bibliotheque.microservicemylibrary.service.livre.ILivreService;
+ import org.slf4j.Logger;
+ import org.slf4j.LoggerFactory;
+ import org.springframework.beans.factory.annotation.Autowired;
+@@ -9,6 +14,7 @@
+ import org.springframework.web.bind.annotation.RequestMapping;
+ import org.springframework.web.bind.annotation.RestController;
+ 
++import java.util.ArrayList;
+ import java.util.List;
+ import java.util.Optional;
+ 
+@@ -21,18 +27,41 @@
+     @Autowired
+     private ICopieService iCopieService;
+ 
++    @Autowired
++    private IEmpruntService iEmpruntService;
++
++    @Autowired
++    private ILivreService iLivreService;
++
+     @RequestMapping(value = "/copies/{id}")
+-    public List<Copie> afficherLesCopiesDunLivre(@PathVariable("id")Long id){
++    public List<CopieDTO> afficherLesCopiesDunLivre(@PathVariable("id")Long id){
+         List<Copie>copieList = iCopieService.findAllByLivreId(id);
++        List<CopieDTO> copieDTOs = new ArrayList<>();
++        for (Copie c : copieList) {
++            CopieDTO cp = new CopieDTO();
++            cp.setCopie(c);
++            Emprunt r = iEmpruntService.findByCopie_Id(c.getId());
++            cp.setEmprunt(r);
++            copieDTOs.add(cp);
++        }
+         logger.info("demande d'une liste de copies d'un livre");
+-        return copieList;
++        return copieDTOs;
+     }
++
+ 
+     @RequestMapping(value = "/copie/{id}")
+-    public Optional<Copie> afficherUneCopie(@PathVariable("id")Long id){
++    public CopieDTO afficherUneCopie(@PathVariable("id")Long id){
+         Optional<Copie> copie = iCopieService.findById(id);
++        Optional<Livre> livre = iLivreService.findByCopiesId(copie.get().getId());
++        CopieDTO copieDTO = new CopieDTO();
++        copieDTO.setLivre(livre.get());
++        copieDTO.setCopie(copie.get());
++        copieDTO.setId(copie.get().getId());
++        copieDTO.setIsbn(copie.get().getIsbn());
++        Emprunt r = iEmpruntService.findByCopie_Id(copie.get().getId());
++        copieDTO.setEmprunt(r);
+         logger.info("demande d'une copie d'un livre");
+-        return copie;
++        return copieDTO;
+     }
+ 
+     @RequestMapping(value = "/copies/dispos/{id}")
+@@ -42,5 +71,10 @@
+         return copiesDisponibles;
+     }
+ 
++    @RequestMapping(value = "copies/nonDispos/{id}")
++    public List<Copie> afficherLesCopiesNonDisponibles(@PathVariable("id")Long id){
++        List<Copie> copiesNonDispos = iCopieService.getCopieLivresIndisponibles(id);
++        return copiesNonDispos;
++    }
+ 
+ }
+Index: microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/dao/ICopieDao.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.bibliotheque.microservicemylibrary.dao;\r\n\r\nimport com.bibliotheque.microservicemylibrary.model.Copie;\r\nimport org.springframework.data.jpa.repository.JpaRepository;\r\nimport org.springframework.data.jpa.repository.Query;\r\nimport org.springframework.data.repository.query.Param;\r\nimport org.springframework.stereotype.Repository;\r\n\r\nimport java.util.List;\r\nimport java.util.Optional;\r\n\r\n\r\n@Repository\r\npublic interface\r\nICopieDao extends JpaRepository<Copie, Long> {\r\n\r\n    //Récupere la liste des copies d'un livre par son id\r\n    List<Copie> findAllByLivreId(Long id);\r\n\r\n    //Récupere une copie par son id\r\n    Optional<Copie> findById(Long id);\r\n\r\n    //sauvegarder une copie\r\n    Copie save(Copie copie);\r\n\r\n    //trouve les copies d'un livre qui sont disponibles\r\n    @Query(\"SELECT c FROM Copie c WHERE  c.disponible = true and c.livre.id = :id \")\r\n    List<Copie> getCopieLivresDisponibles(Long id);\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/dao/ICopieDao.java	(revision 6a2320f00477d9ee07a2747f7b10127f4c0d1f98)
++++ microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/dao/ICopieDao.java	(date 1597755557354)
+@@ -27,4 +27,9 @@
+     @Query("SELECT c FROM Copie c WHERE  c.disponible = true and c.livre.id = :id ")
+     List<Copie> getCopieLivresDisponibles(Long id);
+ 
++    //trouve les copies d'un livre non disponibles
++    @Query("SELECT c FROM Copie c WHERE c.disponible = false and c.livre.id = :id")
++    List<Copie> getCopieLivresIndisponibles(Long id);
++
++
+ }
+Index: .idea/libraries/Maven__com_netflix_eureka_eureka_client_1_9_17.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><component name=\"libraryTable\">\r\n  <library name=\"Maven: com.netflix.eureka:eureka-client:1.9.17\">\r\n    <CLASSES>\r\n      <root url=\"jar://$MAVEN_REPOSITORY$/com/netflix/eureka/eureka-client/1.9.17/eureka-client-1.9.17.jar!/\" />\r\n    </CLASSES>\r\n    <JAVADOC>\r\n      <root url=\"jar://$MAVEN_REPOSITORY$/com/netflix/eureka/eureka-client/1.9.17/eureka-client-1.9.17-javadoc.jar!/\" />\r\n    </JAVADOC>\r\n    <SOURCES>\r\n      <root url=\"jar://$MAVEN_REPOSITORY$/com/netflix/eureka/eureka-client/1.9.17/eureka-client-1.9.17-sources.jar!/\" />\r\n    </SOURCES>\r\n  </library>\r\n</component>
+===================================================================
+--- .idea/libraries/Maven__com_netflix_eureka_eureka_client_1_9_17.xml	(revision 6a2320f00477d9ee07a2747f7b10127f4c0d1f98)
++++ .idea/libraries/Maven__com_netflix_eureka_eureka_client_1_9_21.xml	(date 1597755557597)
+@@ -1,13 +1,13 @@
+ <component name="libraryTable">
+-  <library name="Maven: com.netflix.eureka:eureka-client:1.9.17">
++  <library name="Maven: com.netflix.eureka:eureka-client:1.9.21">
+     <CLASSES>
+-      <root url="jar://$MAVEN_REPOSITORY$/com/netflix/eureka/eureka-client/1.9.17/eureka-client-1.9.17.jar!/" />
++      <root url="jar://$MAVEN_REPOSITORY$/com/netflix/eureka/eureka-client/1.9.21/eureka-client-1.9.21.jar!/" />
+     </CLASSES>
+     <JAVADOC>
+-      <root url="jar://$MAVEN_REPOSITORY$/com/netflix/eureka/eureka-client/1.9.17/eureka-client-1.9.17-javadoc.jar!/" />
++      <root url="jar://$MAVEN_REPOSITORY$/com/netflix/eureka/eureka-client/1.9.21/eureka-client-1.9.21-javadoc.jar!/" />
+     </JAVADOC>
+     <SOURCES>
+-      <root url="jar://$MAVEN_REPOSITORY$/com/netflix/eureka/eureka-client/1.9.17/eureka-client-1.9.17-sources.jar!/" />
++      <root url="jar://$MAVEN_REPOSITORY$/com/netflix/eureka/eureka-client/1.9.21/eureka-client-1.9.21-sources.jar!/" />
+     </SOURCES>
+   </library>
+ </component>
+\ No newline at end of file
+Index: microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/model/Livre.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.bibliotheque.microservicemylibrary.model;\r\n\r\nimport com.fasterxml.jackson.annotation.JsonBackReference;\r\nimport com.fasterxml.jackson.annotation.JsonIgnore;\r\nimport lombok.*;\r\nimport org.springframework.format.annotation.DateTimeFormat;\r\n\r\nimport javax.persistence.*;\r\nimport java.util.Date;\r\nimport java.util.List;\r\n\r\n@Entity\r\n@NoArgsConstructor\r\npublic @Data\r\nclass Livre {\r\n\r\n    @Id\r\n    @GeneratedValue\r\n    private Long id;\r\n\r\n\r\n    private String titre;\r\n\r\n\r\n    private String nomAuteur;\r\n\r\n\r\n    private String prenomAuteur;\r\n\r\n    @DateTimeFormat(pattern=\"yyyy-MM-dd\")\r\n    private Date dateEdition;\r\n\r\n    private String editeur;\r\n\r\n    @JsonBackReference\r\n    @OneToMany(mappedBy = \"livre\", fetch = FetchType.EAGER)\r\n    private List<Copie> copies;\r\n\r\n    @Transient\r\n    public Integer getNbrCopiesDisponibles(){\r\n       Integer nbDispo = 0;\r\n        for (Copie c : copies) {\r\n            if (c.isDisponible()){\r\n                nbDispo++;\r\n            }\r\n        }\r\n        return nbDispo;\r\n    }\r\n\r\n    @Transient\r\n    public Integer getNbCopies(){\r\n        return copies.size();\r\n    }\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/model/Livre.java	(revision 6a2320f00477d9ee07a2747f7b10127f4c0d1f98)
++++ microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/model/Livre.java	(date 1597755557370)
+@@ -2,7 +2,10 @@
+ 
+ import com.fasterxml.jackson.annotation.JsonBackReference;
+ import com.fasterxml.jackson.annotation.JsonIgnore;
++import com.fasterxml.jackson.annotation.JsonManagedReference;
+ import lombok.*;
++import org.hibernate.annotations.LazyCollection;
++import org.hibernate.annotations.LazyCollectionOption;
+ import org.springframework.format.annotation.DateTimeFormat;
+ 
+ import javax.persistence.*;
+@@ -11,7 +14,9 @@
+ 
+ @Entity
+ @NoArgsConstructor
+-public @Data
++@Getter
++@Setter
++public
+ class Livre {
+ 
+     @Id
+@@ -32,10 +37,37 @@
+ 
+     private String editeur;
+ 
+-    @JsonBackReference
++    @Transient
++    private Date dateRetourLaPlusProche = getDateRetourLaPlusProche();
++
++    @JsonManagedReference
+     @OneToMany(mappedBy = "livre", fetch = FetchType.EAGER)
+     private List<Copie> copies;
+ 
++    @JsonBackReference
++    @LazyCollection(LazyCollectionOption.FALSE)
++    @OneToMany(mappedBy = "livre")
++    private List<Reservation> reservations;
++
++
++    @Transient
++    public Integer getNbReservationsMax(){
++        Integer Rmax = (copies.size())*2;
++        return Rmax;
++    }
++
++    @Transient
++    public Integer getNbReservations(){
++        Integer nB = 0;
++        for (Reservation r : reservations) {
++                nB++;
++                if (r.getPosition()==null){
++                    nB = nB-1;
++                }
++            }return nB;
++        }
++
++
+     @Transient
+     public Integer getNbrCopiesDisponibles(){
+        Integer nbDispo = 0;
+@@ -52,4 +84,5 @@
+         return copies.size();
+     }
+ 
++
+ }
+Index: microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/model/StateEnum.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/model/StateEnum.java	(date 1597755557371)
++++ microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/model/StateEnum.java	(date 1597755557371)
+@@ -0,0 +1,9 @@
++package com.bibliotheque.microservicemylibrary.model;
++
++public enum StateEnum {
++
++    enCours,
++    annuler,
++    terminer
++
++}
+Index: .idea/libraries/Maven__org_checkerframework_checker_compat_qual_2_5_5.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><component name=\"libraryTable\">\r\n  <library name=\"Maven: org.checkerframework:checker-compat-qual:2.5.5\">\r\n    <CLASSES>\r\n      <root url=\"jar://$MAVEN_REPOSITORY$/org/checkerframework/checker-compat-qual/2.5.5/checker-compat-qual-2.5.5.jar!/\" />\r\n    </CLASSES>\r\n    <JAVADOC>\r\n      <root url=\"jar://$MAVEN_REPOSITORY$/org/checkerframework/checker-compat-qual/2.5.5/checker-compat-qual-2.5.5-javadoc.jar!/\" />\r\n    </JAVADOC>\r\n    <SOURCES>\r\n      <root url=\"jar://$MAVEN_REPOSITORY$/org/checkerframework/checker-compat-qual/2.5.5/checker-compat-qual-2.5.5-sources.jar!/\" />\r\n    </SOURCES>\r\n  </library>\r\n</component>
+===================================================================
+--- .idea/libraries/Maven__org_checkerframework_checker_compat_qual_2_5_5.xml	(revision 6a2320f00477d9ee07a2747f7b10127f4c0d1f98)
++++ .idea/libraries/Maven__org_checkerframework_checker_qual_2_11_1.xml	(date 1597755557595)
+@@ -1,13 +1,13 @@
+ <component name="libraryTable">
+-  <library name="Maven: org.checkerframework:checker-compat-qual:2.5.5">
++  <library name="Maven: org.checkerframework:checker-qual:2.11.1">
+     <CLASSES>
+-      <root url="jar://$MAVEN_REPOSITORY$/org/checkerframework/checker-compat-qual/2.5.5/checker-compat-qual-2.5.5.jar!/" />
++      <root url="jar://$MAVEN_REPOSITORY$/org/checkerframework/checker-qual/2.11.1/checker-qual-2.11.1.jar!/" />
+     </CLASSES>
+     <JAVADOC>
+-      <root url="jar://$MAVEN_REPOSITORY$/org/checkerframework/checker-compat-qual/2.5.5/checker-compat-qual-2.5.5-javadoc.jar!/" />
++      <root url="jar://$MAVEN_REPOSITORY$/org/checkerframework/checker-qual/2.11.1/checker-qual-2.11.1-javadoc.jar!/" />
+     </JAVADOC>
+     <SOURCES>
+-      <root url="jar://$MAVEN_REPOSITORY$/org/checkerframework/checker-compat-qual/2.5.5/checker-compat-qual-2.5.5-sources.jar!/" />
++      <root url="jar://$MAVEN_REPOSITORY$/org/checkerframework/checker-qual/2.11.1/checker-qual-2.11.1-sources.jar!/" />
+     </SOURCES>
+   </library>
+ </component>
+\ No newline at end of file
+Index: microservice-myclient/src/main/java/com/bibliotheque/microservicemyclient/bean/UtilisateurBean.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.bibliotheque.microservicemyclient.bean;\r\n\r\n\r\nimport lombok.Data;\r\nimport lombok.Getter;\r\nimport lombok.NoArgsConstructor;\r\nimport lombok.Setter;\r\nimport org.springframework.security.core.GrantedAuthority;\r\nimport org.springframework.security.core.userdetails.UserDetails;\r\n\r\nimport java.util.Collection;\r\n\r\n@NoArgsConstructor\r\n@Getter\r\n@Setter\r\npublic @Data\r\nclass UtilisateurBean implements UserDetails {\r\n\r\n    private Long id;\r\n\r\n    private String pseudo;\r\n\r\n    private String motDePasse;\r\n\r\n    private String email;\r\n\r\n    @Override\r\n    public Collection<? extends GrantedAuthority> getAuthorities() {\r\n        return null;\r\n    }\r\n\r\n    @Override\r\n    public String getPassword() {\r\n        return motDePasse;\r\n    }\r\n\r\n    @Override\r\n    public String getUsername() {\r\n        return pseudo;\r\n    }\r\n\r\n    @Override\r\n    public boolean isAccountNonExpired() {\r\n        return true;\r\n    }\r\n\r\n    @Override\r\n    public boolean isAccountNonLocked() {\r\n        return true;\r\n    }\r\n\r\n    @Override\r\n    public boolean isCredentialsNonExpired() {\r\n        return true;\r\n    }\r\n\r\n    @Override\r\n    public boolean isEnabled() {\r\n        return true;\r\n    }\r\n\r\n    @Override\r\n    public String toString() {\r\n        return \"UtilisateurBean{\" +\r\n                \"id=\" + id +\r\n                \", pseudo='\" + pseudo + '\\'' +\r\n                \", motDePasse='\" + motDePasse + '\\'' +\r\n                \", email='\" + email + '\\'' +\r\n                '}';\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- microservice-myclient/src/main/java/com/bibliotheque/microservicemyclient/bean/UtilisateurBean.java	(revision 6a2320f00477d9ee07a2747f7b10127f4c0d1f98)
++++ microservice-myclient/src/main/java/com/bibliotheque/microservicemyclient/bean/UtilisateurBean.java	(date 1597755557304)
+@@ -1,7 +1,6 @@
+ package com.bibliotheque.microservicemyclient.bean;
+ 
+ 
+-import lombok.Data;
+ import lombok.Getter;
+ import lombok.NoArgsConstructor;
+ import lombok.Setter;
+@@ -13,7 +12,7 @@
+ @NoArgsConstructor
+ @Getter
+ @Setter
+-public @Data
++public
+ class UtilisateurBean implements UserDetails {
+ 
+     private Long id;
+Index: microservice-myusers/src/main/java/com/bibliotheque/microservicemyusers/MicroserviceMyusersApplication.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.bibliotheque.microservicemyusers;\r\n\r\nimport com.bibliotheque.microservicemyusers.dao.IUtilisateurDao;\r\nimport com.bibliotheque.microservicemyusers.model.RoleEnum;\r\nimport com.bibliotheque.microservicemyusers.model.Utilisateur;\r\nimport org.springframework.beans.factory.annotation.Autowired;\r\nimport org.springframework.boot.SpringApplication;\r\nimport org.springframework.boot.autoconfigure.SpringBootApplication;\r\nimport org.springframework.cloud.client.discovery.EnableDiscoveryClient;\r\nimport org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;\r\nimport org.springframework.security.crypto.password.PasswordEncoder;\r\n\r\nimport javax.annotation.PostConstruct;\r\nimport java.util.Collections;\r\n\r\n@SpringBootApplication\r\n@EnableDiscoveryClient\r\npublic class MicroserviceMyusersApplication {\r\n\r\n\tpublic static void main(String[] args) {\r\n\t\tSpringApplication.run(MicroserviceMyusersApplication.class, args);\r\n\t}\r\n\r\n\t@Autowired\r\n\tIUtilisateurDao iUtilisateurDao;\r\n\r\n\tPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();\r\n\r\n\t@PostConstruct\r\n\tprivate void postConstruct(){\r\n\t\tUtilisateur utilisateur = new Utilisateur();\r\n\t\tutilisateur.setPseudo(\"martin\");\r\n\t\tutilisateur.setMotDePasse(passwordEncoder.encode(\"martin\"));\r\n\t\tutilisateur.setRoleEnums(Collections.singletonList(RoleEnum.USER));\r\n\t\tutilisateur.setEmail(\"oc.projet07@gmail.com\");\r\n\t\tiUtilisateurDao.save(utilisateur);\r\n\r\n\t}\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- microservice-myusers/src/main/java/com/bibliotheque/microservicemyusers/MicroserviceMyusersApplication.java	(revision 6a2320f00477d9ee07a2747f7b10127f4c0d1f98)
++++ microservice-myusers/src/main/java/com/bibliotheque/microservicemyusers/MicroserviceMyusersApplication.java	(date 1597755557389)
+@@ -35,6 +35,47 @@
+ 		utilisateur.setEmail("oc.projet07@gmail.com");
+ 		iUtilisateurDao.save(utilisateur);
+ 
++		Utilisateur utilisateur1 =new Utilisateur();
++		utilisateur1.setPseudo("pierre");
++		utilisateur1.setMotDePasse(passwordEncoder.encode("pierre"));
++		utilisateur1.setRoleEnums(Collections.singletonList(RoleEnum.USER));
++		utilisateur1.setEmail("oc.projet07@gmail.com");
++		iUtilisateurDao.save(utilisateur1);
++
++		Utilisateur utilisateur2 =new Utilisateur();
++		utilisateur2.setPseudo("marc");
++		utilisateur2.setMotDePasse(passwordEncoder.encode("marc"));
++		utilisateur2.setRoleEnums(Collections.singletonList(RoleEnum.USER));
++		utilisateur2.setEmail("oc.projet07@gmail.com");
++		iUtilisateurDao.save(utilisateur2);
++
++		Utilisateur utilisateur3 =new Utilisateur();
++		utilisateur3.setPseudo("joel");
++		utilisateur3.setMotDePasse(passwordEncoder.encode("joel"));
++		utilisateur3.setRoleEnums(Collections.singletonList(RoleEnum.USER));
++		utilisateur3.setEmail("oc.projet07@gmail.com");
++		iUtilisateurDao.save(utilisateur3);
++
++		Utilisateur utilisateur4 =new Utilisateur();
++		utilisateur4.setPseudo("pierik");
++		utilisateur4.setMotDePasse(passwordEncoder.encode("pierik"));
++		utilisateur4.setRoleEnums(Collections.singletonList(RoleEnum.USER));
++		utilisateur4.setEmail("oc.projet07@gmail.com");
++		iUtilisateurDao.save(utilisateur4);
++
++		Utilisateur utilisateur5 =new Utilisateur();
++		utilisateur5.setPseudo("paul");
++		utilisateur5.setMotDePasse(passwordEncoder.encode("paul"));
++		utilisateur5.setRoleEnums(Collections.singletonList(RoleEnum.USER));
++		utilisateur5.setEmail("oc.projet07@gmail.com");
++		iUtilisateurDao.save(utilisateur5);
++
++		Utilisateur utilisateur6 =new Utilisateur();
++		utilisateur6.setPseudo("leo");
++		utilisateur6.setMotDePasse(passwordEncoder.encode("leo"));
++		utilisateur6.setRoleEnums(Collections.singletonList(RoleEnum.USER));
++		utilisateur6.setEmail("oc.projet07@gmail.com");
++		iUtilisateurDao.save(utilisateur6);
+ 	}
+ 
+ }
+Index: microservice-myclient/src/main/java/com/bibliotheque/microservicemyclient/bean/LivreBean.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.bibliotheque.microservicemyclient.bean;\r\n\r\nimport com.fasterxml.jackson.annotation.JsonProperty;\r\nimport lombok.Data;\r\nimport lombok.Getter;\r\nimport lombok.NoArgsConstructor;\r\nimport lombok.Setter;\r\n\r\nimport java.io.Serializable;\r\nimport java.util.Date;\r\nimport java.util.List;\r\n\r\n@NoArgsConstructor\r\n@Getter\r\n@Setter\r\npublic @Data\r\n        class LivreBean implements Serializable {\r\n\r\n            private Long id;\r\n\r\n            private String titre;\r\n\r\n            private String nomAuteur;\r\n\r\n            private String prenomAuteur;\r\n\r\n            private Date dateEdition;\r\n\r\n            private String editeur;\r\n\r\n            public Integer nbCopies;\r\n\r\n            public Integer nbrCopiesDisponibles;\r\n\r\n            @JsonProperty(\"copie\")\r\n            private List<CopieBean> copieBeans;\r\n\r\n            public LivreBean(Long id, String titre, String nomAuteur, String prenomAuteur, Date dateEdition, String editeur, Integer nbCopies, Integer nbrCopiesDisponibles, List<CopieBean> copieBeans) {\r\n                this.id = id;\r\n                this.titre = titre;\r\n                this.nomAuteur = nomAuteur;\r\n                this.prenomAuteur = prenomAuteur;\r\n                this.dateEdition = dateEdition;\r\n                this.editeur = editeur;\r\n                this.nbCopies = nbCopies;\r\n                this.nbrCopiesDisponibles = nbrCopiesDisponibles;\r\n                this.copieBeans = copieBeans;\r\n            }\r\n\r\n    @Override\r\n    public String toString() {\r\n        return \"LivreBean{\" +\r\n                \"id=\" + id +\r\n                \", titre='\" + titre + '\\'' +\r\n                \", nomAuteur='\" + nomAuteur + '\\'' +\r\n                \", prenomAuteur='\" + prenomAuteur + '\\'' +\r\n                \", dateEdition=\" + dateEdition +\r\n                \", editeur='\" + editeur + '\\'' +\r\n                \", nbCopies=\" + nbCopies +\r\n                \", nbrCopiesDisponibles=\" + nbrCopiesDisponibles +\r\n                \", copieBeans=\" + copieBeans +\r\n                '}';\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- microservice-myclient/src/main/java/com/bibliotheque/microservicemyclient/bean/LivreBean.java	(revision 6a2320f00477d9ee07a2747f7b10127f4c0d1f98)
++++ microservice-myclient/src/main/java/com/bibliotheque/microservicemyclient/bean/LivreBean.java	(date 1597755557298)
+@@ -13,7 +13,7 @@
+ @NoArgsConstructor
+ @Getter
+ @Setter
+-public @Data
++public
+         class LivreBean implements Serializable {
+ 
+             private Long id;
+@@ -32,10 +32,19 @@
+ 
+             public Integer nbrCopiesDisponibles;
+ 
+-            @JsonProperty("copie")
++            private Integer  nbReservations;
++
++            private Integer nbReservationsMax;
++
++            private Date dateRetourLaPlusProche;
++
++            @JsonProperty("copies")
+             private List<CopieBean> copieBeans;
+ 
+-            public LivreBean(Long id, String titre, String nomAuteur, String prenomAuteur, Date dateEdition, String editeur, Integer nbCopies, Integer nbrCopiesDisponibles, List<CopieBean> copieBeans) {
++            @JsonProperty("reservations")
++            private List<ReservationBean> reservationBeans;
++
++            public LivreBean(Long id, String titre, String nomAuteur, String prenomAuteur, Date dateEdition, String editeur, Integer nbCopies, Integer nbrCopiesDisponibles, Integer nbReservations, Integer nbReservationsMax, Date dateRetourLaPlusProche, List<CopieBean> copieBeans, List<ReservationBean> reservationBeans) {
+                 this.id = id;
+                 this.titre = titre;
+                 this.nomAuteur = nomAuteur;
+@@ -44,21 +53,29 @@
+                 this.editeur = editeur;
+                 this.nbCopies = nbCopies;
+                 this.nbrCopiesDisponibles = nbrCopiesDisponibles;
++                this.nbReservations = nbReservations;
++                this.nbReservationsMax = nbReservationsMax;
++                this.dateRetourLaPlusProche = dateRetourLaPlusProche;
+                 this.copieBeans = copieBeans;
++                this.reservationBeans = reservationBeans;
+             }
+ 
+-    @Override
+-    public String toString() {
+-        return "LivreBean{" +
+-                "id=" + id +
+-                ", titre='" + titre + '\'' +
+-                ", nomAuteur='" + nomAuteur + '\'' +
+-                ", prenomAuteur='" + prenomAuteur + '\'' +
+-                ", dateEdition=" + dateEdition +
+-                ", editeur='" + editeur + '\'' +
+-                ", nbCopies=" + nbCopies +
+-                ", nbrCopiesDisponibles=" + nbrCopiesDisponibles +
+-                ", copieBeans=" + copieBeans +
+-                '}';
+-    }
++            @Override
++            public String toString() {
++                return "LivreBean{" +
++                        "id=" + id +
++                        ", titre='" + titre + '\'' +
++                        ", nomAuteur='" + nomAuteur + '\'' +
++                        ", prenomAuteur='" + prenomAuteur + '\'' +
++                        ", dateEdition=" + dateEdition +
++                        ", editeur='" + editeur + '\'' +
++                        ", nbCopies=" + nbCopies +
++                        ", nbrCopiesDisponibles=" + nbrCopiesDisponibles +
++                        ", nbReservations=" + nbReservations +
++                        ", nbReservationsMax=" + nbReservationsMax +
++                        ", dateRetourLaPlusProche=" + dateRetourLaPlusProche +
++                        ", copieBeans=" + copieBeans +
++                        ", reservationBeans=" + reservationBeans +
++                        '}';
++            }
+ }
+Index: microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/service/emprunt/IEmpruntServiceImpl.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/service/emprunt/IEmpruntServiceImpl.java	(date 1597755557383)
++++ microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/service/emprunt/IEmpruntServiceImpl.java	(date 1597755557383)
+@@ -0,0 +1,104 @@
++package com.bibliotheque.microservicemylibrary.service.emprunt;
++
++import com.bibliotheque.microservicemylibrary.dao.IEmpruntDao;
++import com.bibliotheque.microservicemylibrary.model.Copie;
++import com.bibliotheque.microservicemylibrary.model.Emprunt;
++import org.springframework.beans.factory.annotation.Autowired;
++import org.springframework.stereotype.Service;
++
++import java.util.*;
++
++@Service
++public class IEmpruntServiceImpl implements IEmpruntService {
++
++    @Autowired
++    private IEmpruntDao iEmpruntDao;
++
++    /**
++     * Permet d'ajouter 4 semaines à une date
++     * @param date à laquelle on ajoute les quatres semaines
++     * @return la date incrementée
++     */
++    @Override
++    public Date add4Weeks(Date date){
++        Calendar calendar = Calendar.getInstance();
++        calendar.setTime(date);
++        calendar.add(Calendar.WEEK_OF_MONTH, 4);
++    return calendar.getTime();}
++
++    /**
++     * Permet d'afficher la liste des emprunts pour un utilisateur
++     * @param id identifiant l'utilisateur
++     * @return la liste de tous les emprunts faites par l'utilisateur
++     */
++    @Override
++    public List<Emprunt> findAllByIdUtilisateur(Long id) {
++        return iEmpruntDao.findAllByIdUtilisateur(id);
++    }
++
++    /**
++     * Permet de trouver un emprunt
++     * @param id identifiant de l'emprunt
++     * @return l'emprunt
++     */
++    @Override
++    public Optional<Emprunt> findById(Long id){
++        return iEmpruntDao.findById(id);
++    }
++
++    /**
++     * Permet de sauvegarder un emprunt
++     * @param emprunt Objet à sauvegarder
++     */
++    @Override
++    public void save(Emprunt emprunt){
++        iEmpruntDao.save(emprunt);
++    }
++
++    /**
++     * Permet de trouver les emprunts à relancer
++     * @param dateNow date du jour
++     * @return la liste des emprunts dont le retour du livre n'a pas été enregistré,
++     * et dont la date de fin du prêt est avant la date du jour
++     */
++    @Override
++    public List<Emprunt> relance(Date dateNow){
++       return iEmpruntDao.findAllByDateRetourIsNullAndAndDateDeFinEmpruntBefore(dateNow);
++    }
++
++    /**
++     * permet de trouver un Emprunt par copies de livre
++     * @param id idetifiant de la copie
++     * @return l'emprunt de la copie
++     */
++    @Override
++    public Emprunt findByCopie_Id(Long id) {
++        return iEmpruntDao.findByCopie_Id(id);
++    }
++
++
++
++    /**
++     * permet de trouver tous les emprunts par copie de livre
++     * @param id identifiant de la copie
++     * @return la liste des emprunts de la copie
++     */
++    @Override
++    public List<Emprunt> findAllByCopie_IdAndDateRetourIsNull(Long id) {
++        return iEmpruntDao.findAllByCopie_IdAndDateRetourIsNull(id);
++    }
++
++
++    /**
++     * permet de trouver la liste de tous les emprunts pour un utilisateur dont la date de retour est null
++     * @param id identifiant de l'utilisateur
++     * @return la liste de tous les emprunts pour un utilisateur dont la date de retour est null
++     */
++    @Override
++    public List<Emprunt> findAllByIdUtilisateurAndDateRetourIsNull(Long id) {
++        return iEmpruntDao.findAllByIdUtilisateurAndDateRetourIsNull(id);
++    }
++
++
++}
++
+Index: microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/service/email/IEmailServiceImpl.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.bibliotheque.microservicemylibrary.service.email;\r\n\r\nimport com.bibliotheque.microservicemylibrary.dao.IEmailDao;\r\nimport com.bibliotheque.microservicemylibrary.model.Email;\r\nimport com.bibliotheque.microservicemylibrary.outils.EmailType;\r\nimport org.slf4j.Logger;\r\nimport org.slf4j.LoggerFactory;\r\nimport org.springframework.beans.factory.annotation.Autowired;\r\nimport org.springframework.mail.javamail.JavaMailSenderImpl;\r\nimport org.springframework.mail.javamail.MimeMessageHelper;\r\nimport org.springframework.stereotype.Service;\r\n\r\nimport javax.mail.MessagingException;\r\nimport javax.mail.internet.MimeMessage;\r\nimport java.util.List;\r\n\r\n@Service\r\npublic class IEmailServiceImpl implements EmailService{\r\n\r\n    Logger logger = LoggerFactory.getLogger(this.getClass());\r\n\r\n    @Autowired\r\n    IEmailDao iEmailDao;\r\n\r\n    @Autowired\r\n    JavaMailSenderImpl sender;\r\n\r\n\r\n    /**\r\n     * Permet de rechercher un thème Email par son nom\r\n     * @param name nom de l'attribut\r\n     * @return le thème Email\r\n     */\r\n    @Override\r\n    public Email findByName(String name){\r\n        return iEmailDao.findByName( name );\r\n    }\r\n\r\n    /**\r\n     * Permet l'envoi d'un mail\r\n     * @param email adresse mail du destinataire\r\n     * @param objet objet du mail\r\n     * @param contenu message du mail\r\n     * @throws MessagingException\r\n     */\r\n    @Override\r\n    public void sendSimpleMessage(String email, String objet, String contenu) throws MessagingException {\r\n\r\n        System.out.println(sender.getHost());\r\n        System.out.println(sender.getPort());\r\n\r\n        MimeMessage message = sender.createMimeMessage();\r\n        MimeMessageHelper helper = new MimeMessageHelper(message);\r\n        helper.setTo(email);\r\n        helper.setSubject(objet);\r\n        helper.setText(contenu);\r\n\r\n        sender.send(message);\r\n\r\n        logger.info(\"{} email notification has been send to {}\", email);\r\n    }\r\n\r\n    /**\r\n     * Permet d'envoyer le mail de relance des livres non rendu\r\n     * @param emailTypeList liste des utilisateurs qui n'ont pas rendu leur livres\r\n     * @throws MessagingException\r\n     */\r\n    @Override\r\n    public void sendRevival(List<EmailType> emailTypeList) throws MessagingException {\r\n\r\n        Email email = findByName(\"relance\");\r\n\r\n        for (EmailType e: emailTypeList) {\r\n            String text = email.getContenu()\r\n                    .replace(\"[LIVRE_TITRE]\", e.getTitre())\r\n                    .replace(\"[DATE_FIN]\", e.getDateDeFinDuPret());\r\n            sendSimpleMessage(e.getEmail(),email.getContenu(),text);\r\n        }\r\n    }\r\n\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/service/email/IEmailServiceImpl.java	(revision 6a2320f00477d9ee07a2747f7b10127f4c0d1f98)
++++ microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/service/email/IEmailServiceImpl.java	(date 1597755557380)
+@@ -71,9 +71,10 @@
+         Email email = findByName("relance");
+ 
+         for (EmailType e: emailTypeList) {
++
+             String text = email.getContenu()
+                     .replace("[LIVRE_TITRE]", e.getTitre())
+-                    .replace("[DATE_FIN]", e.getDateDeFinDuPret());
++                    .replace("[DATE_FIN]", e.getDateDeFinEmprunt());
+             sendSimpleMessage(e.getEmail(),email.getContenu(),text);
+         }
+     }
+Index: microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/outils/EmailType.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.bibliotheque.microservicemylibrary.outils;\r\n\r\nimport lombok.*;\r\n\r\nimport java.util.Date;\r\n\r\n\r\n@NoArgsConstructor\r\npublic @Data  class EmailType {\r\n\r\n    @NonNull String email;\r\n    @NonNull String titre;\r\n    @NonNull String dateDeFinDuPret;\r\n\r\n    public EmailType(@NonNull String email, @NonNull String titre, @NonNull String dateDeFinDuPret) {\r\n        this.email = email;\r\n        this.titre = titre;\r\n        this.dateDeFinDuPret = dateDeFinDuPret;\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/outils/EmailType.java	(revision 6a2320f00477d9ee07a2747f7b10127f4c0d1f98)
++++ microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/outils/EmailType.java	(date 1597755557372)
+@@ -6,15 +6,16 @@
+ 
+ 
+ @NoArgsConstructor
+-public @Data  class EmailType {
++@Data
++public class EmailType {
+ 
+     @NonNull String email;
+     @NonNull String titre;
+-    @NonNull String dateDeFinDuPret;
++    @NonNull String dateDeFinEmprunt;
+ 
+-    public EmailType(@NonNull String email, @NonNull String titre, @NonNull String dateDeFinDuPret) {
++    public EmailType(@NonNull String email, @NonNull String titre, @NonNull String dateDeFinEmprunt) {
+         this.email = email;
+         this.titre = titre;
+-        this.dateDeFinDuPret = dateDeFinDuPret;
++        this.dateDeFinEmprunt = dateDeFinEmprunt;
+     }
+ }
+\ No newline at end of file
+Index: microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/service/emprunt/IEmpruntService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/service/emprunt/IEmpruntService.java	(date 1597755557382)
++++ microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/service/emprunt/IEmpruntService.java	(date 1597755557382)
+@@ -0,0 +1,35 @@
++package com.bibliotheque.microservicemylibrary.service.emprunt;
++
++import com.bibliotheque.microservicemylibrary.model.Emprunt;
++
++import java.util.Date;
++import java.util.List;
++import java.util.Optional;
++
++public interface IEmpruntService {
++
++    //ajoute 4 semaine à une date
++    Date add4Weeks(Date date);
++
++    //affiche une liste d'emprunts pour un utilisateur
++    List<Emprunt> findAllByIdUtilisateur(Long id);
++
++    //trouve un emprunt par son id
++    Optional<Emprunt> findById(Long id);
++
++    //enregistrer une emprunt
++    void save(Emprunt emprunt);
++
++    //trouve les emprunts non retournées par rapport à la date du jour
++    List<Emprunt> relance(Date dateNow);
++
++    //trouver un emprunt par copie de livre
++    Emprunt findByCopie_Id(Long id);
++
++    //trouver tous les Emprunts pour une copie
++    List<Emprunt> findAllByCopie_IdAndDateRetourIsNull(Long id);
++
++    //trouver la liste de tous les emprunts par utilisateur dont la date de retour est null
++    List<Emprunt> findAllByIdUtilisateurAndDateRetourIsNull(Long id);
++
++}
+Index: microservice-myclient/src/main/java/com/bibliotheque/microservicemyclient/exeptions/CannotAddBorrowingException.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- microservice-myclient/src/main/java/com/bibliotheque/microservicemyclient/exeptions/CannotAddBorrowingException.java	(date 1597755557322)
++++ microservice-myclient/src/main/java/com/bibliotheque/microservicemyclient/exeptions/CannotAddBorrowingException.java	(date 1597755557322)
+@@ -0,0 +1,11 @@
++package com.bibliotheque.microservicemyclient.exeptions;
++
++import org.springframework.http.HttpStatus;
++import org.springframework.web.bind.annotation.ResponseStatus;
++
++@ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
++public class CannotAddBorrowingException extends RuntimeException{
++    public CannotAddBorrowingException(String message){
++        super(message);
++    }
++}
+Index: microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/exeptions/CannotAddBorrowingException.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/exeptions/CannotAddBorrowingException.java	(date 1597755557363)
++++ microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/exeptions/CannotAddBorrowingException.java	(date 1597755557363)
+@@ -0,0 +1,11 @@
++package com.bibliotheque.microservicemylibrary.exeptions;
++
++import org.springframework.http.HttpStatus;
++import org.springframework.web.bind.annotation.ResponseStatus;
++
++@ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
++public class CannotAddBorrowingException extends RuntimeException{
++    public CannotAddBorrowingException(String message){
++        super(message);
++    }
++}
+Index: microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/service/livre/ILivreService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.bibliotheque.microservicemylibrary.service.livre;\r\n\r\nimport com.bibliotheque.microservicemylibrary.model.Livre;\r\nimport org.springframework.data.repository.query.Param;\r\n\r\nimport java.util.List;\r\nimport java.util.Optional;\r\n\r\npublic interface ILivreService {\r\n\r\n    //trouve tous les livres\r\n    List<Livre>findAll();\r\n\r\n    //trouve un livre par son id\r\n    Optional<Livre> findById(Long id);\r\n\r\n    //enregistre un livre\r\n    Livre save(Livre livre);\r\n\r\n    //trouve un livre par son titre lors d'une recherche\r\n    List<Livre> chercherParTitre(@Param(\"x\") String motCle);\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/service/livre/ILivreService.java	(revision 6a2320f00477d9ee07a2747f7b10127f4c0d1f98)
++++ microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/service/livre/ILivreService.java	(date 1597755557384)
+@@ -3,8 +3,7 @@
+ import com.bibliotheque.microservicemylibrary.model.Livre;
+ import org.springframework.data.repository.query.Param;
+ 
+-import java.util.List;
+-import java.util.Optional;
++import java.util.*;
+ 
+ public interface ILivreService {
+ 
+@@ -19,4 +18,7 @@
+ 
+     //trouve un livre par son titre lors d'une recherche
+     List<Livre> chercherParTitre(@Param("x") String motCle);
++
++    Optional<Livre> findByCopiesId(Long id);
++
+ }
+Index: microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/batch/BatchJob.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.bibliotheque.microservicemylibrary.batch;\r\n\r\nimport org.springframework.batch.core.Job;\r\nimport org.springframework.batch.core.JobParameters;\r\nimport org.springframework.batch.core.JobParametersBuilder;\r\nimport org.springframework.batch.core.launch.JobLauncher;\r\nimport org.springframework.beans.factory.annotation.Autowired;\r\nimport org.springframework.scheduling.annotation.Scheduled;\r\nimport org.springframework.stereotype.Component;\r\n\r\n@Component\r\npublic class BatchJob {\r\n\r\n    @Autowired\r\n    JobLauncher jobLauncher;\r\n\r\n    @Autowired\r\n    Job job;\r\n\r\n    /**\r\n     * Programmation de la relance par mail tous les jours, heure réglable dans le bootstap.properties du microservice\r\n     * @throws Exception\r\n     */\r\n    @Scheduled(cron = \"${microservice.config.cron.job}\")\r\n    public void lendingRevival() throws Exception\r\n    {\r\n        JobParameters params = new JobParametersBuilder()\r\n                .addString(\"JobID\", String.valueOf(System.currentTimeMillis()))\r\n                .toJobParameters();\r\n        jobLauncher.run(job, params);\r\n\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/batch/BatchJob.java	(revision 6a2320f00477d9ee07a2747f7b10127f4c0d1f98)
++++ microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/batch/BatchJob.java	(date 1597755557343)
+@@ -22,7 +22,7 @@
+      * @throws Exception
+      */
+     @Scheduled(cron = "${microservice.config.cron.job}")
+-    public void lendingRevival() throws Exception
++    public void revival() throws Exception
+     {
+         JobParameters params = new JobParametersBuilder()
+                 .addString("JobID", String.valueOf(System.currentTimeMillis()))
+Index: .idea/libraries/Maven__org_springframework_cloud_spring_cloud_netflix_ribbon_2_2_4_BUILD_SNAPSHOT.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/libraries/Maven__org_springframework_cloud_spring_cloud_netflix_ribbon_2_2_4_BUILD_SNAPSHOT.xml	(date 1597755557270)
++++ .idea/libraries/Maven__org_springframework_cloud_spring_cloud_netflix_ribbon_2_2_4_BUILD_SNAPSHOT.xml	(date 1597755557270)
+@@ -0,0 +1,13 @@
++<component name="libraryTable">
++  <library name="Maven: org.springframework.cloud:spring-cloud-netflix-ribbon:2.2.4.BUILD-SNAPSHOT">
++    <CLASSES>
++      <root url="jar://$MAVEN_REPOSITORY$/org/springframework/cloud/spring-cloud-netflix-ribbon/2.2.4.BUILD-SNAPSHOT/spring-cloud-netflix-ribbon-2.2.4.BUILD-20200720.092555-420.jar!/" />
++    </CLASSES>
++    <JAVADOC>
++      <root url="jar://$MAVEN_REPOSITORY$/org/springframework/cloud/spring-cloud-netflix-ribbon/2.2.4.BUILD-SNAPSHOT/spring-cloud-netflix-ribbon-2.2.4.BUILD-20200720.092555-420-javadoc.jar!/" />
++    </JAVADOC>
++    <SOURCES>
++      <root url="jar://$MAVEN_REPOSITORY$/org/springframework/cloud/spring-cloud-netflix-ribbon/2.2.4.BUILD-SNAPSHOT/spring-cloud-netflix-ribbon-2.2.4.BUILD-20200720.092555-420-sources.jar!/" />
++    </SOURCES>
++  </library>
++</component>
+\ No newline at end of file
+Index: .idea/dictionaries/B65473.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><component name=\"ProjectDictionaryState\">\r\n  <dictionary name=\"B65473\" />\r\n</component>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/dictionaries/B65473.xml	(revision 6a2320f00477d9ee07a2747f7b10127f4c0d1f98)
++++ .idea/dictionaries/B65473.xml	(date 1597755557230)
+@@ -1,3 +1,7 @@
+ <component name="ProjectDictionaryState">
+-  <dictionary name="B65473" />
++  <dictionary name="B65473">
++    <words>
++      <w>emprunt</w>
++    </words>
++  </dictionary>
+ </component>
+\ No newline at end of file
+Index: .idea/libraries/Maven__org_springframework_cloud_spring_cloud_netflix_eureka_client_2_2_4_BUILD_SNAPSHOT.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/libraries/Maven__org_springframework_cloud_spring_cloud_netflix_eureka_client_2_2_4_BUILD_SNAPSHOT.xml	(date 1597755557265)
++++ .idea/libraries/Maven__org_springframework_cloud_spring_cloud_netflix_eureka_client_2_2_4_BUILD_SNAPSHOT.xml	(date 1597755557265)
+@@ -0,0 +1,13 @@
++<component name="libraryTable">
++  <library name="Maven: org.springframework.cloud:spring-cloud-netflix-eureka-client:2.2.4.BUILD-SNAPSHOT">
++    <CLASSES>
++      <root url="jar://$MAVEN_REPOSITORY$/org/springframework/cloud/spring-cloud-netflix-eureka-client/2.2.4.BUILD-SNAPSHOT/spring-cloud-netflix-eureka-client-2.2.4.BUILD-20200720.092930-419.jar!/" />
++    </CLASSES>
++    <JAVADOC>
++      <root url="jar://$MAVEN_REPOSITORY$/org/springframework/cloud/spring-cloud-netflix-eureka-client/2.2.4.BUILD-SNAPSHOT/spring-cloud-netflix-eureka-client-2.2.4.BUILD-20200720.092930-419-javadoc.jar!/" />
++    </JAVADOC>
++    <SOURCES>
++      <root url="jar://$MAVEN_REPOSITORY$/org/springframework/cloud/spring-cloud-netflix-eureka-client/2.2.4.BUILD-SNAPSHOT/spring-cloud-netflix-eureka-client-2.2.4.BUILD-20200720.092930-419-sources.jar!/" />
++    </SOURCES>
++  </library>
++</component>
+\ No newline at end of file
+Index: .idea/libraries/Maven__com_fasterxml_woodstox_woodstox_core_5_3_0.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/libraries/Maven__com_fasterxml_woodstox_woodstox_core_5_3_0.xml	(date 1597755557239)
++++ .idea/libraries/Maven__com_fasterxml_woodstox_woodstox_core_5_3_0.xml	(date 1597755557239)
+@@ -0,0 +1,13 @@
++<component name="libraryTable">
++  <library name="Maven: com.fasterxml.woodstox:woodstox-core:5.3.0">
++    <CLASSES>
++      <root url="jar://$MAVEN_REPOSITORY$/com/fasterxml/woodstox/woodstox-core/5.3.0/woodstox-core-5.3.0.jar!/" />
++    </CLASSES>
++    <JAVADOC>
++      <root url="jar://$MAVEN_REPOSITORY$/com/fasterxml/woodstox/woodstox-core/5.3.0/woodstox-core-5.3.0-javadoc.jar!/" />
++    </JAVADOC>
++    <SOURCES>
++      <root url="jar://$MAVEN_REPOSITORY$/com/fasterxml/woodstox/woodstox-core/5.3.0/woodstox-core-5.3.0-sources.jar!/" />
++    </SOURCES>
++  </library>
++</component>
+\ No newline at end of file
+Index: .idea/libraries/Maven__org_springframework_cloud_spring_cloud_netflix_hystrix_2_2_4_BUILD_SNAPSHOT.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/libraries/Maven__org_springframework_cloud_spring_cloud_netflix_hystrix_2_2_4_BUILD_SNAPSHOT.xml	(date 1597755557267)
++++ .idea/libraries/Maven__org_springframework_cloud_spring_cloud_netflix_hystrix_2_2_4_BUILD_SNAPSHOT.xml	(date 1597755557267)
+@@ -0,0 +1,13 @@
++<component name="libraryTable">
++  <library name="Maven: org.springframework.cloud:spring-cloud-netflix-hystrix:2.2.4.BUILD-SNAPSHOT">
++    <CLASSES>
++      <root url="jar://$MAVEN_REPOSITORY$/org/springframework/cloud/spring-cloud-netflix-hystrix/2.2.4.BUILD-SNAPSHOT/spring-cloud-netflix-hystrix-2.2.4.BUILD-20200720.092644-420.jar!/" />
++    </CLASSES>
++    <JAVADOC>
++      <root url="jar://$MAVEN_REPOSITORY$/org/springframework/cloud/spring-cloud-netflix-hystrix/2.2.4.BUILD-SNAPSHOT/spring-cloud-netflix-hystrix-2.2.4.BUILD-20200720.092644-420-javadoc.jar!/" />
++    </JAVADOC>
++    <SOURCES>
++      <root url="jar://$MAVEN_REPOSITORY$/org/springframework/cloud/spring-cloud-netflix-hystrix/2.2.4.BUILD-SNAPSHOT/spring-cloud-netflix-hystrix-2.2.4.BUILD-20200720.092644-420-sources.jar!/" />
++    </SOURCES>
++  </library>
++</component>
+\ No newline at end of file
+Index: .idea/libraries/Maven__org_springframework_cloud_spring_cloud_commons_2_2_3_BUILD_SNAPSHOT.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><component name=\"libraryTable\">\r\n  <library name=\"Maven: org.springframework.cloud:spring-cloud-commons:2.2.3.BUILD-SNAPSHOT\">\r\n    <CLASSES>\r\n      <root url=\"jar://$MAVEN_REPOSITORY$/org/springframework/cloud/spring-cloud-commons/2.2.3.BUILD-SNAPSHOT/spring-cloud-commons-2.2.3.BUILD-20200325.094112-33.jar!/\" />\r\n    </CLASSES>\r\n    <JAVADOC>\r\n      <root url=\"jar://$MAVEN_REPOSITORY$/org/springframework/cloud/spring-cloud-commons/2.2.3.BUILD-SNAPSHOT/spring-cloud-commons-2.2.3.BUILD-20200325.094112-33-javadoc.jar!/\" />\r\n    </JAVADOC>\r\n    <SOURCES>\r\n      <root url=\"jar://$MAVEN_REPOSITORY$/org/springframework/cloud/spring-cloud-commons/2.2.3.BUILD-SNAPSHOT/spring-cloud-commons-2.2.3.BUILD-20200325.094112-33-sources.jar!/\" />\r\n    </SOURCES>\r\n  </library>\r\n</component>
+===================================================================
+--- .idea/libraries/Maven__org_springframework_cloud_spring_cloud_commons_2_2_3_BUILD_SNAPSHOT.xml	(revision 6a2320f00477d9ee07a2747f7b10127f4c0d1f98)
++++ .idea/libraries/Maven__org_springframework_cloud_spring_cloud_commons_2_2_4_BUILD_SNAPSHOT.xml	(date 1597755557593)
+@@ -1,13 +1,13 @@
+ <component name="libraryTable">
+-  <library name="Maven: org.springframework.cloud:spring-cloud-commons:2.2.3.BUILD-SNAPSHOT">
++  <library name="Maven: org.springframework.cloud:spring-cloud-commons:2.2.4.BUILD-SNAPSHOT">
+     <CLASSES>
+-      <root url="jar://$MAVEN_REPOSITORY$/org/springframework/cloud/spring-cloud-commons/2.2.3.BUILD-SNAPSHOT/spring-cloud-commons-2.2.3.BUILD-20200325.094112-33.jar!/" />
++      <root url="jar://$MAVEN_REPOSITORY$/org/springframework/cloud/spring-cloud-commons/2.2.4.BUILD-SNAPSHOT/spring-cloud-commons-2.2.4.BUILD-20200720.093934-57.jar!/" />
+     </CLASSES>
+     <JAVADOC>
+-      <root url="jar://$MAVEN_REPOSITORY$/org/springframework/cloud/spring-cloud-commons/2.2.3.BUILD-SNAPSHOT/spring-cloud-commons-2.2.3.BUILD-20200325.094112-33-javadoc.jar!/" />
++      <root url="jar://$MAVEN_REPOSITORY$/org/springframework/cloud/spring-cloud-commons/2.2.4.BUILD-SNAPSHOT/spring-cloud-commons-2.2.4.BUILD-20200720.093934-57-javadoc.jar!/" />
+     </JAVADOC>
+     <SOURCES>
+-      <root url="jar://$MAVEN_REPOSITORY$/org/springframework/cloud/spring-cloud-commons/2.2.3.BUILD-SNAPSHOT/spring-cloud-commons-2.2.3.BUILD-20200325.094112-33-sources.jar!/" />
++      <root url="jar://$MAVEN_REPOSITORY$/org/springframework/cloud/spring-cloud-commons/2.2.4.BUILD-SNAPSHOT/spring-cloud-commons-2.2.4.BUILD-20200720.093934-57-sources.jar!/" />
+     </SOURCES>
+   </library>
+ </component>
+\ No newline at end of file
+Index: .idea/libraries/Maven__org_springframework_cloud_spring_cloud_starter_netflix_archaius_2_2_4_BUILD_SNAPSHOT.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/libraries/Maven__org_springframework_cloud_spring_cloud_starter_netflix_archaius_2_2_4_BUILD_SNAPSHOT.xml	(date 1597755557279)
++++ .idea/libraries/Maven__org_springframework_cloud_spring_cloud_starter_netflix_archaius_2_2_4_BUILD_SNAPSHOT.xml	(date 1597755557279)
+@@ -0,0 +1,13 @@
++<component name="libraryTable">
++  <library name="Maven: org.springframework.cloud:spring-cloud-starter-netflix-archaius:2.2.4.BUILD-SNAPSHOT">
++    <CLASSES>
++      <root url="jar://$MAVEN_REPOSITORY$/org/springframework/cloud/spring-cloud-starter-netflix-archaius/2.2.4.BUILD-SNAPSHOT/spring-cloud-starter-netflix-archaius-2.2.4.BUILD-20200720.092940-419.jar!/" />
++    </CLASSES>
++    <JAVADOC>
++      <root url="jar://$MAVEN_REPOSITORY$/org/springframework/cloud/spring-cloud-starter-netflix-archaius/2.2.4.BUILD-SNAPSHOT/spring-cloud-starter-netflix-archaius-2.2.4.BUILD-20200720.092940-419-javadoc.jar!/" />
++    </JAVADOC>
++    <SOURCES>
++      <root url="jar://$MAVEN_REPOSITORY$/org/springframework/cloud/spring-cloud-starter-netflix-archaius/2.2.4.BUILD-SNAPSHOT/spring-cloud-starter-netflix-archaius-2.2.4.BUILD-20200720.092940-419-sources.jar!/" />
++    </SOURCES>
++  </library>
++</component>
+\ No newline at end of file
+Index: .idea/libraries/Maven__org_springframework_cloud_spring_cloud_loadbalancer_2_2_4_BUILD_SNAPSHOT.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/libraries/Maven__org_springframework_cloud_spring_cloud_loadbalancer_2_2_4_BUILD_SNAPSHOT.xml	(date 1597755557259)
++++ .idea/libraries/Maven__org_springframework_cloud_spring_cloud_loadbalancer_2_2_4_BUILD_SNAPSHOT.xml	(date 1597755557259)
+@@ -0,0 +1,13 @@
++<component name="libraryTable">
++  <library name="Maven: org.springframework.cloud:spring-cloud-loadbalancer:2.2.4.BUILD-SNAPSHOT">
++    <CLASSES>
++      <root url="jar://$MAVEN_REPOSITORY$/org/springframework/cloud/spring-cloud-loadbalancer/2.2.4.BUILD-SNAPSHOT/spring-cloud-loadbalancer-2.2.4.BUILD-20200720.093959-57.jar!/" />
++    </CLASSES>
++    <JAVADOC>
++      <root url="jar://$MAVEN_REPOSITORY$/org/springframework/cloud/spring-cloud-loadbalancer/2.2.4.BUILD-SNAPSHOT/spring-cloud-loadbalancer-2.2.4.BUILD-20200720.093959-57-javadoc.jar!/" />
++    </JAVADOC>
++    <SOURCES>
++      <root url="jar://$MAVEN_REPOSITORY$/org/springframework/cloud/spring-cloud-loadbalancer/2.2.4.BUILD-SNAPSHOT/spring-cloud-loadbalancer-2.2.4.BUILD-20200720.093959-57-sources.jar!/" />
++    </SOURCES>
++  </library>
++</component>
+\ No newline at end of file
+Index: .idea/libraries/Maven__com_google_guava_guava_28_2_android.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><component name=\"libraryTable\">\r\n  <library name=\"Maven: com.google.guava:guava:28.2-android\">\r\n    <CLASSES>\r\n      <root url=\"jar://$MAVEN_REPOSITORY$/com/google/guava/guava/28.2-android/guava-28.2-android.jar!/\" />\r\n    </CLASSES>\r\n    <JAVADOC>\r\n      <root url=\"jar://$MAVEN_REPOSITORY$/com/google/guava/guava/28.2-android/guava-28.2-android-javadoc.jar!/\" />\r\n    </JAVADOC>\r\n    <SOURCES>\r\n      <root url=\"jar://$MAVEN_REPOSITORY$/com/google/guava/guava/28.2-android/guava-28.2-android-sources.jar!/\" />\r\n    </SOURCES>\r\n  </library>\r\n</component>
+===================================================================
+--- .idea/libraries/Maven__com_google_guava_guava_28_2_android.xml	(revision 6a2320f00477d9ee07a2747f7b10127f4c0d1f98)
++++ .idea/libraries/Maven__com_google_guava_guava_29_0_jre.xml	(date 1597755557599)
+@@ -1,13 +1,13 @@
+ <component name="libraryTable">
+-  <library name="Maven: com.google.guava:guava:28.2-android">
++  <library name="Maven: com.google.guava:guava:29.0-jre">
+     <CLASSES>
+-      <root url="jar://$MAVEN_REPOSITORY$/com/google/guava/guava/28.2-android/guava-28.2-android.jar!/" />
++      <root url="jar://$MAVEN_REPOSITORY$/com/google/guava/guava/29.0-jre/guava-29.0-jre.jar!/" />
+     </CLASSES>
+     <JAVADOC>
+-      <root url="jar://$MAVEN_REPOSITORY$/com/google/guava/guava/28.2-android/guava-28.2-android-javadoc.jar!/" />
++      <root url="jar://$MAVEN_REPOSITORY$/com/google/guava/guava/29.0-jre/guava-29.0-jre-javadoc.jar!/" />
+     </JAVADOC>
+     <SOURCES>
+-      <root url="jar://$MAVEN_REPOSITORY$/com/google/guava/guava/28.2-android/guava-28.2-android-sources.jar!/" />
++      <root url="jar://$MAVEN_REPOSITORY$/com/google/guava/guava/29.0-jre/guava-29.0-jre-sources.jar!/" />
+     </SOURCES>
+   </library>
+ </component>
+\ No newline at end of file
+Index: .idea/libraries/Maven__com_netflix_eureka_eureka_core_1_9_17.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><component name=\"libraryTable\">\r\n  <library name=\"Maven: com.netflix.eureka:eureka-core:1.9.17\">\r\n    <CLASSES>\r\n      <root url=\"jar://$MAVEN_REPOSITORY$/com/netflix/eureka/eureka-core/1.9.17/eureka-core-1.9.17.jar!/\" />\r\n    </CLASSES>\r\n    <JAVADOC>\r\n      <root url=\"jar://$MAVEN_REPOSITORY$/com/netflix/eureka/eureka-core/1.9.17/eureka-core-1.9.17-javadoc.jar!/\" />\r\n    </JAVADOC>\r\n    <SOURCES>\r\n      <root url=\"jar://$MAVEN_REPOSITORY$/com/netflix/eureka/eureka-core/1.9.17/eureka-core-1.9.17-sources.jar!/\" />\r\n    </SOURCES>\r\n  </library>\r\n</component>
+===================================================================
+--- .idea/libraries/Maven__com_netflix_eureka_eureka_core_1_9_17.xml	(revision 6a2320f00477d9ee07a2747f7b10127f4c0d1f98)
++++ .idea/libraries/Maven__com_netflix_eureka_eureka_core_1_9_21.xml	(date 1597755557596)
+@@ -1,13 +1,13 @@
+ <component name="libraryTable">
+-  <library name="Maven: com.netflix.eureka:eureka-core:1.9.17">
++  <library name="Maven: com.netflix.eureka:eureka-core:1.9.21">
+     <CLASSES>
+-      <root url="jar://$MAVEN_REPOSITORY$/com/netflix/eureka/eureka-core/1.9.17/eureka-core-1.9.17.jar!/" />
++      <root url="jar://$MAVEN_REPOSITORY$/com/netflix/eureka/eureka-core/1.9.21/eureka-core-1.9.21.jar!/" />
+     </CLASSES>
+     <JAVADOC>
+-      <root url="jar://$MAVEN_REPOSITORY$/com/netflix/eureka/eureka-core/1.9.17/eureka-core-1.9.17-javadoc.jar!/" />
++      <root url="jar://$MAVEN_REPOSITORY$/com/netflix/eureka/eureka-core/1.9.21/eureka-core-1.9.21-javadoc.jar!/" />
+     </JAVADOC>
+     <SOURCES>
+-      <root url="jar://$MAVEN_REPOSITORY$/com/netflix/eureka/eureka-core/1.9.17/eureka-core-1.9.17-sources.jar!/" />
++      <root url="jar://$MAVEN_REPOSITORY$/com/netflix/eureka/eureka-core/1.9.21/eureka-core-1.9.21-sources.jar!/" />
+     </SOURCES>
+   </library>
+ </component>
+\ No newline at end of file
+Index: README.md
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+># mybibliotheque\r\n\r\n# Projet 7 OC Gestion d'une bibliothèque d'une grande ville\r\n\r\nDescription :\r\n  \r\n  myBibliotheque est composé de 3 modules :  \r\n  \r\n                    Un Module : microservice-myclient\r\n                    Un Module : microservice-myLibrary\r\n                    Un Module : microservice-myusers\r\n                    \r\n  Api Gateway :\r\n \r\n                    Zuul : zuul-server\r\n\r\n  Edge services utilisés : \r\n                    \r\n                    Spring-Cloud-Config : config-server\r\n                    Eureka : Eureka-server\r\n                    Zipkin\r\n                    Spring-admin/Acuator\r\n\r\nLancer l'application : \r\n                    \r\n                    mvn spring-boot:run\r\n\r\nEtapes : \r\n\r\n      Ordre de déploiement\r\n\r\nEtape 1 : \r\n      \r\n       1 _ Zipkin-server\r\n      \r\nEtape 2 : \r\n      \r\n       1 _ config-server\r\n       2 _ eureka-server\r\n       \r\nEtape 3 : \r\n      \r\n       1 _ zuul-server\r\n       \r\nEtape 4 : \r\n      \r\n       1 _ microservice-myusers\r\n       2 _ microservice-myLibrary\r\n       3 _ microservice-myclient\r\n       \r\n      \r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- README.md	(revision 6a2320f00477d9ee07a2747f7b10127f4c0d1f98)
++++ README.md	(date 1597755557287)
+@@ -1,6 +1,6 @@
+ # mybibliotheque
+ 
+-# Projet 7 OC Gestion d'une bibliothèque d'une grande ville
++# Projet 10 OC Gestion d'une bibliothèque d'une grande ville
+ 
+ Description :
+   
+Index: .idea/libraries/Maven__com_fasterxml_jackson_dataformat_jackson_dataformat_xml_2_10_3.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/libraries/Maven__com_fasterxml_jackson_dataformat_jackson_dataformat_xml_2_10_3.xml	(date 1597755557235)
++++ .idea/libraries/Maven__com_fasterxml_jackson_dataformat_jackson_dataformat_xml_2_10_3.xml	(date 1597755557235)
+@@ -0,0 +1,13 @@
++<component name="libraryTable">
++  <library name="Maven: com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.10.3">
++    <CLASSES>
++      <root url="jar://$MAVEN_REPOSITORY$/com/fasterxml/jackson/dataformat/jackson-dataformat-xml/2.10.3/jackson-dataformat-xml-2.10.3.jar!/" />
++    </CLASSES>
++    <JAVADOC>
++      <root url="jar://$MAVEN_REPOSITORY$/com/fasterxml/jackson/dataformat/jackson-dataformat-xml/2.10.3/jackson-dataformat-xml-2.10.3-javadoc.jar!/" />
++    </JAVADOC>
++    <SOURCES>
++      <root url="jar://$MAVEN_REPOSITORY$/com/fasterxml/jackson/dataformat/jackson-dataformat-xml/2.10.3/jackson-dataformat-xml-2.10.3-sources.jar!/" />
++    </SOURCES>
++  </library>
++</component>
+\ No newline at end of file
+Index: microservice-myclient/src/main/java/com/bibliotheque/microservicemyclient/dto/ReservationBeanDTO.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- microservice-myclient/src/main/java/com/bibliotheque/microservicemyclient/dto/ReservationBeanDTO.java	(date 1597755557315)
++++ microservice-myclient/src/main/java/com/bibliotheque/microservicemyclient/dto/ReservationBeanDTO.java	(date 1597755557315)
+@@ -0,0 +1,56 @@
++package com.bibliotheque.microservicemyclient.dto;
++
++import com.bibliotheque.microservicemyclient.bean.EmpruntBean;
++import com.bibliotheque.microservicemyclient.bean.LivreBean;
++import com.bibliotheque.microservicemyclient.bean.ReservationBean;
++
++import java.util.Optional;
++
++public class ReservationBeanDTO {
++
++    private Optional<LivreBean> livre;
++    private ReservationBean reservation;
++    private EmpruntBean emprunt;
++    private Integer position;
++    private String stateEnum;
++
++    public Optional<LivreBean> getLivre() {
++        return livre;
++    }
++
++    public void setLivre(Optional<LivreBean> livre) {
++        this.livre = livre;
++    }
++
++    public ReservationBean getReservation() {
++        return reservation;
++    }
++
++    public void setReservation(ReservationBean reservation) {
++        this.reservation = reservation;
++    }
++
++    public EmpruntBean getEmprunt() {
++        return emprunt;
++    }
++
++    public void setEmprunt(EmpruntBean emprunt) {
++        this.emprunt = emprunt;
++    }
++
++    public Integer getPosition() {
++        return position;
++    }
++
++    public void setPosition(Integer position) {
++        this.position = position;
++    }
++
++    public String getStateEnum() {
++        return stateEnum;
++    }
++
++    public void setStateEnum(String stateEnum) {
++        this.stateEnum = stateEnum;
++    }
++}
+Index: .idea/libraries/Maven__org_springframework_cloud_spring_cloud_starter_2_2_3_BUILD_SNAPSHOT.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><component name=\"libraryTable\">\r\n  <library name=\"Maven: org.springframework.cloud:spring-cloud-starter:2.2.3.BUILD-SNAPSHOT\">\r\n    <CLASSES>\r\n      <root url=\"jar://$MAVEN_REPOSITORY$/org/springframework/cloud/spring-cloud-starter/2.2.3.BUILD-SNAPSHOT/spring-cloud-starter-2.2.3.BUILD-20200325.094143-16.jar!/\" />\r\n    </CLASSES>\r\n    <JAVADOC>\r\n      <root url=\"jar://$MAVEN_REPOSITORY$/org/springframework/cloud/spring-cloud-starter/2.2.3.BUILD-SNAPSHOT/spring-cloud-starter-2.2.3.BUILD-20200325.094143-16-javadoc.jar!/\" />\r\n    </JAVADOC>\r\n    <SOURCES>\r\n      <root url=\"jar://$MAVEN_REPOSITORY$/org/springframework/cloud/spring-cloud-starter/2.2.3.BUILD-SNAPSHOT/spring-cloud-starter-2.2.3.BUILD-20200325.094143-16-sources.jar!/\" />\r\n    </SOURCES>\r\n  </library>\r\n</component>
+===================================================================
+--- .idea/libraries/Maven__org_springframework_cloud_spring_cloud_starter_2_2_3_BUILD_SNAPSHOT.xml	(revision 6a2320f00477d9ee07a2747f7b10127f4c0d1f98)
++++ .idea/libraries/Maven__org_springframework_cloud_spring_cloud_starter_2_2_4_BUILD_SNAPSHOT.xml	(date 1597755557591)
+@@ -1,13 +1,13 @@
+ <component name="libraryTable">
+-  <library name="Maven: org.springframework.cloud:spring-cloud-starter:2.2.3.BUILD-SNAPSHOT">
++  <library name="Maven: org.springframework.cloud:spring-cloud-starter:2.2.4.BUILD-SNAPSHOT">
+     <CLASSES>
+-      <root url="jar://$MAVEN_REPOSITORY$/org/springframework/cloud/spring-cloud-starter/2.2.3.BUILD-SNAPSHOT/spring-cloud-starter-2.2.3.BUILD-20200325.094143-16.jar!/" />
++      <root url="jar://$MAVEN_REPOSITORY$/org/springframework/cloud/spring-cloud-starter/2.2.4.BUILD-SNAPSHOT/spring-cloud-starter-2.2.4.BUILD-20200720.094013-57.jar!/" />
+     </CLASSES>
+     <JAVADOC>
+-      <root url="jar://$MAVEN_REPOSITORY$/org/springframework/cloud/spring-cloud-starter/2.2.3.BUILD-SNAPSHOT/spring-cloud-starter-2.2.3.BUILD-20200325.094143-16-javadoc.jar!/" />
++      <root url="jar://$MAVEN_REPOSITORY$/org/springframework/cloud/spring-cloud-starter/2.2.4.BUILD-SNAPSHOT/spring-cloud-starter-2.2.4.BUILD-20200720.094013-57-javadoc.jar!/" />
+     </JAVADOC>
+     <SOURCES>
+-      <root url="jar://$MAVEN_REPOSITORY$/org/springframework/cloud/spring-cloud-starter/2.2.3.BUILD-SNAPSHOT/spring-cloud-starter-2.2.3.BUILD-20200325.094143-16-sources.jar!/" />
++      <root url="jar://$MAVEN_REPOSITORY$/org/springframework/cloud/spring-cloud-starter/2.2.4.BUILD-SNAPSHOT/spring-cloud-starter-2.2.4.BUILD-20200720.094013-57-sources.jar!/" />
+     </SOURCES>
+   </library>
+ </component>
+\ No newline at end of file
+Index: .idea/libraries/Maven__commons_configuration_commons_configuration_1_10.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/libraries/Maven__commons_configuration_commons_configuration_1_10.xml	(date 1597755557249)
++++ .idea/libraries/Maven__commons_configuration_commons_configuration_1_10.xml	(date 1597755557249)
+@@ -0,0 +1,13 @@
++<component name="libraryTable">
++  <library name="Maven: commons-configuration:commons-configuration:1.10">
++    <CLASSES>
++      <root url="jar://$MAVEN_REPOSITORY$/commons-configuration/commons-configuration/1.10/commons-configuration-1.10.jar!/" />
++    </CLASSES>
++    <JAVADOC>
++      <root url="jar://$MAVEN_REPOSITORY$/commons-configuration/commons-configuration/1.10/commons-configuration-1.10-javadoc.jar!/" />
++    </JAVADOC>
++    <SOURCES>
++      <root url="jar://$MAVEN_REPOSITORY$/commons-configuration/commons-configuration/1.10/commons-configuration-1.10-sources.jar!/" />
++    </SOURCES>
++  </library>
++</component>
+\ No newline at end of file
+Index: .idea/libraries/Maven__org_springframework_cloud_spring_cloud_starter_netflix_ribbon_2_2_4_BUILD_SNAPSHOT.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/libraries/Maven__org_springframework_cloud_spring_cloud_starter_netflix_ribbon_2_2_4_BUILD_SNAPSHOT.xml	(date 1597755557284)
++++ .idea/libraries/Maven__org_springframework_cloud_spring_cloud_starter_netflix_ribbon_2_2_4_BUILD_SNAPSHOT.xml	(date 1597755557284)
+@@ -0,0 +1,13 @@
++<component name="libraryTable">
++  <library name="Maven: org.springframework.cloud:spring-cloud-starter-netflix-ribbon:2.2.4.BUILD-SNAPSHOT">
++    <CLASSES>
++      <root url="jar://$MAVEN_REPOSITORY$/org/springframework/cloud/spring-cloud-starter-netflix-ribbon/2.2.4.BUILD-SNAPSHOT/spring-cloud-starter-netflix-ribbon-2.2.4.BUILD-20200720.092943-419.jar!/" />
++    </CLASSES>
++    <JAVADOC>
++      <root url="jar://$MAVEN_REPOSITORY$/org/springframework/cloud/spring-cloud-starter-netflix-ribbon/2.2.4.BUILD-SNAPSHOT/spring-cloud-starter-netflix-ribbon-2.2.4.BUILD-20200720.092943-419-javadoc.jar!/" />
++    </JAVADOC>
++    <SOURCES>
++      <root url="jar://$MAVEN_REPOSITORY$/org/springframework/cloud/spring-cloud-starter-netflix-ribbon/2.2.4.BUILD-SNAPSHOT/spring-cloud-starter-netflix-ribbon-2.2.4.BUILD-20200720.092943-419-sources.jar!/" />
++    </SOURCES>
++  </library>
++</component>
+\ No newline at end of file
+Index: .idea/libraries/Maven__org_springframework_cloud_spring_cloud_starter_netflix_eureka_client_2_2_4_BUILD_SNAPSHOT.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/libraries/Maven__org_springframework_cloud_spring_cloud_starter_netflix_eureka_client_2_2_4_BUILD_SNAPSHOT.xml	(date 1597755557282)
++++ .idea/libraries/Maven__org_springframework_cloud_spring_cloud_starter_netflix_eureka_client_2_2_4_BUILD_SNAPSHOT.xml	(date 1597755557282)
+@@ -0,0 +1,13 @@
++<component name="libraryTable">
++  <library name="Maven: org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:2.2.4.BUILD-SNAPSHOT">
++    <CLASSES>
++      <root url="jar://$MAVEN_REPOSITORY$/org/springframework/cloud/spring-cloud-starter-netflix-eureka-client/2.2.4.BUILD-SNAPSHOT/spring-cloud-starter-netflix-eureka-client-2.2.4.BUILD-20200720.092947-419.jar!/" />
++    </CLASSES>
++    <JAVADOC>
++      <root url="jar://$MAVEN_REPOSITORY$/org/springframework/cloud/spring-cloud-starter-netflix-eureka-client/2.2.4.BUILD-SNAPSHOT/spring-cloud-starter-netflix-eureka-client-2.2.4.BUILD-20200720.092947-419-javadoc.jar!/" />
++    </JAVADOC>
++    <SOURCES>
++      <root url="jar://$MAVEN_REPOSITORY$/org/springframework/cloud/spring-cloud-starter-netflix-eureka-client/2.2.4.BUILD-SNAPSHOT/spring-cloud-starter-netflix-eureka-client-2.2.4.BUILD-20200720.092947-419-sources.jar!/" />
++    </SOURCES>
++  </library>
++</component>
+\ No newline at end of file
+Index: .idea/libraries/Maven__org_springframework_cloud_spring_cloud_netflix_archaius_2_2_4_BUILD_SNAPSHOT.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/libraries/Maven__org_springframework_cloud_spring_cloud_netflix_archaius_2_2_4_BUILD_SNAPSHOT.xml	(date 1597755557263)
++++ .idea/libraries/Maven__org_springframework_cloud_spring_cloud_netflix_archaius_2_2_4_BUILD_SNAPSHOT.xml	(date 1597755557263)
+@@ -0,0 +1,13 @@
++<component name="libraryTable">
++  <library name="Maven: org.springframework.cloud:spring-cloud-netflix-archaius:2.2.4.BUILD-SNAPSHOT">
++    <CLASSES>
++      <root url="jar://$MAVEN_REPOSITORY$/org/springframework/cloud/spring-cloud-netflix-archaius/2.2.4.BUILD-SNAPSHOT/spring-cloud-netflix-archaius-2.2.4.BUILD-20200720.092525-420.jar!/" />
++    </CLASSES>
++    <JAVADOC>
++      <root url="jar://$MAVEN_REPOSITORY$/org/springframework/cloud/spring-cloud-netflix-archaius/2.2.4.BUILD-SNAPSHOT/spring-cloud-netflix-archaius-2.2.4.BUILD-20200720.092525-420-javadoc.jar!/" />
++    </JAVADOC>
++    <SOURCES>
++      <root url="jar://$MAVEN_REPOSITORY$/org/springframework/cloud/spring-cloud-netflix-archaius/2.2.4.BUILD-SNAPSHOT/spring-cloud-netflix-archaius-2.2.4.BUILD-20200720.092525-420-sources.jar!/" />
++    </SOURCES>
++  </library>
++</component>
+\ No newline at end of file
+Index: .idea/libraries/Maven__com_fasterxml_jackson_module_jackson_module_jaxb_annotations_2_10_3.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/libraries/Maven__com_fasterxml_jackson_module_jackson_module_jaxb_annotations_2_10_3.xml	(date 1597755557237)
++++ .idea/libraries/Maven__com_fasterxml_jackson_module_jackson_module_jaxb_annotations_2_10_3.xml	(date 1597755557237)
+@@ -0,0 +1,13 @@
++<component name="libraryTable">
++  <library name="Maven: com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.10.3">
++    <CLASSES>
++      <root url="jar://$MAVEN_REPOSITORY$/com/fasterxml/jackson/module/jackson-module-jaxb-annotations/2.10.3/jackson-module-jaxb-annotations-2.10.3.jar!/" />
++    </CLASSES>
++    <JAVADOC>
++      <root url="jar://$MAVEN_REPOSITORY$/com/fasterxml/jackson/module/jackson-module-jaxb-annotations/2.10.3/jackson-module-jaxb-annotations-2.10.3-javadoc.jar!/" />
++    </JAVADOC>
++    <SOURCES>
++      <root url="jar://$MAVEN_REPOSITORY$/com/fasterxml/jackson/module/jackson-module-jaxb-annotations/2.10.3/jackson-module-jaxb-annotations-2.10.3-sources.jar!/" />
++    </SOURCES>
++  </library>
++</component>
+\ No newline at end of file
+Index: .idea/libraries/Maven__org_springframework_cloud_spring_cloud_context_2_2_3_BUILD_SNAPSHOT.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><component name=\"libraryTable\">\r\n  <library name=\"Maven: org.springframework.cloud:spring-cloud-context:2.2.3.BUILD-SNAPSHOT\">\r\n    <CLASSES>\r\n      <root url=\"jar://$MAVEN_REPOSITORY$/org/springframework/cloud/spring-cloud-context/2.2.3.BUILD-SNAPSHOT/spring-cloud-context-2.2.3.BUILD-20200325.094009-39.jar!/\" />\r\n    </CLASSES>\r\n    <JAVADOC>\r\n      <root url=\"jar://$MAVEN_REPOSITORY$/org/springframework/cloud/spring-cloud-context/2.2.3.BUILD-SNAPSHOT/spring-cloud-context-2.2.3.BUILD-20200325.094009-39-javadoc.jar!/\" />\r\n    </JAVADOC>\r\n    <SOURCES>\r\n      <root url=\"jar://$MAVEN_REPOSITORY$/org/springframework/cloud/spring-cloud-context/2.2.3.BUILD-SNAPSHOT/spring-cloud-context-2.2.3.BUILD-20200325.094009-39-sources.jar!/\" />\r\n    </SOURCES>\r\n  </library>\r\n</component>
+===================================================================
+--- .idea/libraries/Maven__org_springframework_cloud_spring_cloud_context_2_2_3_BUILD_SNAPSHOT.xml	(revision 6a2320f00477d9ee07a2747f7b10127f4c0d1f98)
++++ .idea/libraries/Maven__org_springframework_cloud_spring_cloud_context_2_2_4_BUILD_SNAPSHOT.xml	(date 1597755557592)
+@@ -1,13 +1,13 @@
+ <component name="libraryTable">
+-  <library name="Maven: org.springframework.cloud:spring-cloud-context:2.2.3.BUILD-SNAPSHOT">
++  <library name="Maven: org.springframework.cloud:spring-cloud-context:2.2.4.BUILD-SNAPSHOT">
+     <CLASSES>
+-      <root url="jar://$MAVEN_REPOSITORY$/org/springframework/cloud/spring-cloud-context/2.2.3.BUILD-SNAPSHOT/spring-cloud-context-2.2.3.BUILD-20200325.094009-39.jar!/" />
++      <root url="jar://$MAVEN_REPOSITORY$/org/springframework/cloud/spring-cloud-context/2.2.4.BUILD-SNAPSHOT/spring-cloud-context-2.2.4.BUILD-20200720.093829-57.jar!/" />
+     </CLASSES>
+     <JAVADOC>
+-      <root url="jar://$MAVEN_REPOSITORY$/org/springframework/cloud/spring-cloud-context/2.2.3.BUILD-SNAPSHOT/spring-cloud-context-2.2.3.BUILD-20200325.094009-39-javadoc.jar!/" />
++      <root url="jar://$MAVEN_REPOSITORY$/org/springframework/cloud/spring-cloud-context/2.2.4.BUILD-SNAPSHOT/spring-cloud-context-2.2.4.BUILD-20200720.093829-57-javadoc.jar!/" />
+     </JAVADOC>
+     <SOURCES>
+-      <root url="jar://$MAVEN_REPOSITORY$/org/springframework/cloud/spring-cloud-context/2.2.3.BUILD-SNAPSHOT/spring-cloud-context-2.2.3.BUILD-20200325.094009-39-sources.jar!/" />
++      <root url="jar://$MAVEN_REPOSITORY$/org/springframework/cloud/spring-cloud-context/2.2.4.BUILD-SNAPSHOT/spring-cloud-context-2.2.4.BUILD-20200720.093829-57-sources.jar!/" />
+     </SOURCES>
+   </library>
+ </component>
+\ No newline at end of file
+Index: microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/batch/MyTaskTwo.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/batch/MyTaskTwo.java	(date 1597755557346)
++++ microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/batch/MyTaskTwo.java	(date 1597755557346)
+@@ -0,0 +1,120 @@
++package com.bibliotheque.microservicemylibrary.batch;
++
++
++import com.bibliotheque.microservicemylibrary.beans.UtilisateurBean;
++import com.bibliotheque.microservicemylibrary.dao.IEmailDao;
++import com.bibliotheque.microservicemylibrary.dao.IReservationDao;
++import com.bibliotheque.microservicemylibrary.model.Email;
++import com.bibliotheque.microservicemylibrary.model.Reservation;
++import com.bibliotheque.microservicemylibrary.model.StateEnum;
++import com.bibliotheque.microservicemylibrary.outils.EmailTypeReservation;
++import com.bibliotheque.microservicemylibrary.proxies.IMicroserviceMyUsersProxy;
++import org.apache.commons.lang.time.DateUtils;
++import org.springframework.batch.core.StepContribution;
++import org.springframework.batch.core.scope.context.ChunkContext;
++import org.springframework.batch.core.step.tasklet.Tasklet;
++import org.springframework.batch.repeat.RepeatStatus;
++import org.springframework.mail.SimpleMailMessage;
++import org.springframework.mail.javamail.JavaMailSenderImpl;
++
++import java.text.SimpleDateFormat;
++import java.util.ArrayList;
++import java.util.Date;
++import java.util.List;
++
++public class MyTaskTwo implements Tasklet {
++
++
++    private final IReservationDao iReservationDao;
++    private final IEmailDao iEmailDao;
++    private final IMicroserviceMyUsersProxy iMicroserviceMyUsersProxy;
++    private final JavaMailSenderImpl sender;
++
++    public MyTaskTwo(IReservationDao iReservationDao, IEmailDao iEmailDao, IMicroserviceMyUsersProxy iMicroserviceMyUsersProxy, JavaMailSenderImpl sender) {
++        this.iReservationDao = iReservationDao;
++        this.iEmailDao = iEmailDao;
++        this.iMicroserviceMyUsersProxy = iMicroserviceMyUsersProxy;
++        this.sender = sender;
++    }
++
++
++    @Override
++    public RepeatStatus execute(StepContribution stepContribution, ChunkContext chunkContext) throws Exception {
++
++        SimpleDateFormat oldFormat = new SimpleDateFormat("dd/MM/yyyy");
++        Date dateDuJour = new Date();
++
++        List<Reservation> reservationList = iReservationDao.findByEmailEnvoyerAndStateEnums(true, StateEnum.enCours);
++        if (reservationList.size() > 0) {
++            for (Reservation r : reservationList) {
++                Date deadLine = DateUtils.addDays(r.getDateEnvoiEmail(), 2);
++                if (dateDuJour.after(deadLine)) {
++                    System.out.println("debut du batch annulation réservation");
++                    ArrayList<EmailTypeReservation> emailTypeReservations = new ArrayList<>();
++                    UtilisateurBean utilisateurBean = iMicroserviceMyUsersProxy.findById(r.getIdUtilisateur());
++                    emailTypeReservations.add(new EmailTypeReservation(utilisateurBean.getEmail(), r.getLivre().getTitre(), oldFormat.format(deadLine)));
++                    r.setStateEnums(StateEnum.annuler);
++                    iReservationDao.save(r);
++                    List<EmailTypeReservation> emailTypeReservationList = new ArrayList<>(emailTypeReservations);
++                    this.sendCancelRevival(emailTypeReservationList);
++                    System.out.println("fin du batch annulation réservation");
++                }
++            }
++        }
++
++
++       List<Reservation> reservations = iReservationDao.findByLivreAndStateEnumsOrderByDateDeReservationAsc(reservationList.get(0).getLivre(), StateEnum.enCours);
++        if (reservations.size() > 0){
++            System.out.println("debut du batch réservation");
++            Reservation reservation = reservations.get(0);
++            reservation.setDateEnvoiEmail(dateDuJour);
++            reservation.setEmailEnvoyer(true);
++            Date dateOfDeadLine = DateUtils.addDays(reservation.getDateEnvoiEmail(), 2);
++            ArrayList<EmailTypeReservation> emailTypeReservations1 = new ArrayList<>();
++            UtilisateurBean utilisateurBean = iMicroserviceMyUsersProxy.findById(reservation.getIdUtilisateur());
++            emailTypeReservations1.add(new EmailTypeReservation(utilisateurBean.getEmail(), reservation.getLivre().getTitre(), oldFormat.format(dateOfDeadLine)));
++            iReservationDao.save(reservation);
++            List<EmailTypeReservation> emailTypeReservationList1 = new ArrayList<>(emailTypeReservations1);
++            this.sendRevival(emailTypeReservationList1);
++            System.out.println("fin du batch de réservation");
++        }
++
++        return RepeatStatus.FINISHED;
++    }
++
++
++    private void sendCancelRevival(List<EmailTypeReservation> emailTypeReservations){
++
++        Email email = iEmailDao.findByName("annulationReservation");
++
++        for (EmailTypeReservation e : emailTypeReservations) {
++            String text = email.getContenu()
++                    .replace("[LIVRE_TITRE]", e.getTitre())
++                    .replace("[DEADLINE]", e.getDeadLine());
++            this.sendSimpleMessage(e.getEmail(), email.getObjet(), text);
++        }
++
++    }
++
++    private void sendRevival(List<EmailTypeReservation> emailTypeReservations){
++
++        Email email = iEmailDao.findByName("reservation");
++
++        for (EmailTypeReservation e : emailTypeReservations) {
++            String text = email.getContenu()
++                    .replace("[LIVRE_TITRE]", e.getTitre())
++                    .replace("[DEADLINE]", e.getDeadLine());
++            this.sendSimpleMessage(e.getEmail(), email.getObjet(), text);
++        }
++
++    }
++
++    private void sendSimpleMessage(String email, String objet, String contenu) {
++        SimpleMailMessage message = new SimpleMailMessage();
++        message.setTo(email);
++        message.setSubject(objet);
++        message.setText(contenu);
++        sender.send(message);
++    }
++}
++
+Index: microservice-myclient/src/main/java/com/bibliotheque/microservicemyclient/bean/EmpruntBean.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- microservice-myclient/src/main/java/com/bibliotheque/microservicemyclient/bean/EmpruntBean.java	(date 1597755557294)
++++ microservice-myclient/src/main/java/com/bibliotheque/microservicemyclient/bean/EmpruntBean.java	(date 1597755557294)
+@@ -0,0 +1,54 @@
++package com.bibliotheque.microservicemyclient.bean;
++
++import com.fasterxml.jackson.annotation.JsonProperty;
++import lombok.*;
++
++import java.io.Serializable;
++import java.util.Date;
++
++@NoArgsConstructor
++@Getter
++@Setter
++public
++class EmpruntBean implements Serializable {
++
++    private Long id;
++
++    private Long idUtilisateur;
++
++    private Date dateDeDebutEmprunt;
++
++    private Date dateDeFinEmprunt;
++
++    private Date dateRetour;
++
++    private boolean rendu;
++
++    private Date dateDuJour = new Date();
++
++    private boolean prolongerEmprunt;
++
++    @JsonProperty("copie")
++    private CopieBean copieBean;
++
++    public EmpruntBean(Long id, Long idUtilisateur, Date dateDeDebutEmprunt, Date dateDeFinEmprunt, boolean prolongerEmprunt, CopieBean copieBean) {
++        this.id = id;
++        this.idUtilisateur = idUtilisateur;
++        this.dateDeDebutEmprunt = dateDeDebutEmprunt;
++        this.dateDeFinEmprunt = dateDeFinEmprunt;
++        this.prolongerEmprunt = prolongerEmprunt;
++        this.copieBean = copieBean;
++    }
++
++    @Override
++    public String toString() {
++        return "EmpruntBean{" +
++                "id=" + id +
++                ", idUtilisateur=" + idUtilisateur +
++                ", dateDeDebutPret=" + dateDeDebutEmprunt +
++                ", dateDeFinDuPret=" + dateDeFinEmprunt +
++                ", prolongerPret=" + prolongerEmprunt +
++                ", copieBean=" + copieBean +
++                '}';
++    }
++}
+Index: microservice-myclient/src/main/java/com/bibliotheque/microservicemyclient/proxies/IMicroserviceMyLibraryProxy.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.bibliotheque.microservicemyclient.proxies;\r\n\r\nimport com.bibliotheque.microservicemyclient.bean.CopieBean;\r\nimport com.bibliotheque.microservicemyclient.bean.LivreBean;\r\nimport com.bibliotheque.microservicemyclient.bean.ReservationBean;\r\nimport com.bibliotheque.microservicemyclient.configurations.FeignConfig;\r\nimport org.springframework.cloud.netflix.ribbon.RibbonClient;\r\nimport org.springframework.cloud.openfeign.FeignClient;\r\nimport org.springframework.web.bind.annotation.*;\r\n\r\n\r\nimport java.util.List;\r\n\r\n@RequestMapping(value = \"/microservice-mylibrary\")\r\n@FeignClient(name =\"zuul-server\", contextId = \"IMicroserviceMyLibraryProxy\", configuration = FeignConfig.class, url = \"http://localhost:9006\")\r\n@RibbonClient(name =\"microservice-mylibrary\")\r\npublic interface IMicroserviceMyLibraryProxy {\r\n\r\n    /*===========================** Livres **===========================*/\r\n    @GetMapping(value = \"/livres\")\r\n    List<LivreBean> ListeDeLivres();\r\n\r\n    @GetMapping(value = \"/livre/{id}\")\r\n    LivreBean afficherUnLivre(@PathVariable(\"id\") Long id);\r\n\r\n    @GetMapping(value = \"/recherche\")\r\n    List<LivreBean> faireUneRechercheParTitre(@RequestParam(name = \"mc\", defaultValue = \"\")String mc);\r\n\r\n    /*===========================** Copies **===========================*/\r\n\r\n    @GetMapping(value = \"/copies/{id}\")\r\n    List<CopieBean> afficherLesCopiesDunLivre(@PathVariable(\"id\")Long id);\r\n\r\n    @GetMapping(value = \"/copie/{id}\")\r\n    CopieBean afficherUneCopie(@PathVariable(\"id\")Long id);\r\n\r\n    @GetMapping(value = \"/copies/dispos/{id}\")\r\n    List<CopieBean> afficherLesCopiesDisponibles(@PathVariable(\"id\") Long id);\r\n\r\n    /*===========================** Reservations **===========================*/\r\n\r\n    @GetMapping(value = \"/listeDesReservations/{id}\")\r\n    List<ReservationBean> afficherLaListeDesReservationsParUtilisateur(@PathVariable(\"id\")Long id);\r\n\r\n    @PostMapping(value = \"/reserver/{id}\")\r\n    void demandeDeReservation(@PathVariable Long id, @RequestParam Long idUtilisateur);\r\n\r\n    @PostMapping(value = \"/prolonger/{id}\")\r\n    ReservationBean prolongerPret(@PathVariable Long id, @RequestParam Long idUtilisateur);\r\n\r\n    @GetMapping(value = \"/reservation/{id}\")\r\n    ReservationBean afficherUneReservation(@PathVariable(\"id\")Long id);\r\n\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- microservice-myclient/src/main/java/com/bibliotheque/microservicemyclient/proxies/IMicroserviceMyLibraryProxy.java	(revision 6a2320f00477d9ee07a2747f7b10127f4c0d1f98)
++++ microservice-myclient/src/main/java/com/bibliotheque/microservicemyclient/proxies/IMicroserviceMyLibraryProxy.java	(date 1597755557329)
+@@ -1,9 +1,10 @@
+ package com.bibliotheque.microservicemyclient.proxies;
+ 
+-import com.bibliotheque.microservicemyclient.bean.CopieBean;
+-import com.bibliotheque.microservicemyclient.bean.LivreBean;
+-import com.bibliotheque.microservicemyclient.bean.ReservationBean;
++import com.bibliotheque.microservicemyclient.bean.*;
+ import com.bibliotheque.microservicemyclient.configurations.FeignConfig;
++import com.bibliotheque.microservicemyclient.dto.CopieBeanDTO;
++import com.bibliotheque.microservicemyclient.dto.EmpruntBeanDTO;
++import com.bibliotheque.microservicemyclient.dto.ReservationBeanDTO;
+ import org.springframework.cloud.netflix.ribbon.RibbonClient;
+ import org.springframework.cloud.openfeign.FeignClient;
+ import org.springframework.web.bind.annotation.*;
+@@ -29,26 +30,37 @@
+     /*===========================** Copies **===========================*/
+ 
+     @GetMapping(value = "/copies/{id}")
+-    List<CopieBean> afficherLesCopiesDunLivre(@PathVariable("id")Long id);
++    List<CopieBeanDTO> afficherLesCopiesDunLivre(@PathVariable("id")Long id);
+ 
+     @GetMapping(value = "/copie/{id}")
+-    CopieBean afficherUneCopie(@PathVariable("id")Long id);
++    CopieBeanDTO afficherUneCopie(@PathVariable("id")Long id);
+ 
+     @GetMapping(value = "/copies/dispos/{id}")
+     List<CopieBean> afficherLesCopiesDisponibles(@PathVariable("id") Long id);
+ 
+-    /*===========================** Reservations **===========================*/
++    /*===========================** Emprunts **===========================*/
++
++    @GetMapping(value = "/listeDesEmprunts/{id}")
++    List<EmpruntBeanDTO> afficherLaListeDesEmpruntsParUtilisateur(@PathVariable("id") Long id);
++
++    @GetMapping(value = "/emprunt/{id}")
++    EmpruntBean afficherUnEmprunt(@PathVariable("id")Long id);
++
++    @PostMapping(value = "/emprunter/{id}")
++    void demandeEmprunt(@PathVariable Long id, @RequestParam Long idUtilisateur);
+ 
+-    @GetMapping(value = "/listeDesReservations/{id}")
+-    List<ReservationBean> afficherLaListeDesReservationsParUtilisateur(@PathVariable("id")Long id);
++    @PostMapping(value = "/prolonger/{id}")
++    EmpruntBean prolongerEmprunt(@PathVariable Long id, @RequestParam Long idUtilisateur);
++
++    /*===========================** Reservation **===========================*/
+ 
+     @PostMapping(value = "/reserver/{id}")
+     void demandeDeReservation(@PathVariable Long id, @RequestParam Long idUtilisateur);
+ 
+-    @PostMapping(value = "/prolonger/{id}")
+-    ReservationBean prolongerPret(@PathVariable Long id, @RequestParam Long idUtilisateur);
++    @GetMapping(value = "/listeDesReservations/{id}")
++    List<ReservationBeanDTO> afficherlesReservationsParUtilisateur(@PathVariable("id") Long id);
+ 
+-    @GetMapping(value = "/reservation/{id}")
+-    ReservationBean afficherUneReservation(@PathVariable("id")Long id);
++    @RequestMapping(value = "/annuler/reserver/{id}", method = RequestMethod.POST)
++    public void annulerReservation(@PathVariable("id") Long id, @RequestParam Long idUtilisateur);
+ 
+ }
+\ No newline at end of file
+Index: microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/outils/EmailTypeReservation.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/outils/EmailTypeReservation.java	(date 1597755557374)
++++ microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/outils/EmailTypeReservation.java	(date 1597755557374)
+@@ -0,0 +1,20 @@
++package com.bibliotheque.microservicemylibrary.outils;
++
++import lombok.Data;
++import lombok.NoArgsConstructor;
++import lombok.NonNull;
++
++@NoArgsConstructor
++@Data
++public class EmailTypeReservation {
++
++    @NonNull String email;
++    @NonNull String titre;
++    @NonNull String deadLine;
++
++    public EmailTypeReservation(@NonNull String email, @NonNull String titre, @NonNull String deadLine) {
++        this.email = email;
++        this.titre = titre;
++        this.deadLine = deadLine;
++    }
++}
+Index: microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/exeptions/CannotAddBookingException.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/exeptions/CannotAddBookingException.java	(date 1597755557362)
++++ microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/exeptions/CannotAddBookingException.java	(date 1597755557362)
+@@ -0,0 +1,11 @@
++package com.bibliotheque.microservicemylibrary.exeptions;
++
++import org.springframework.http.HttpStatus;
++import org.springframework.web.bind.annotation.ResponseStatus;
++
++@ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
++public class CannotAddBookingException extends RuntimeException{
++    public CannotAddBookingException(String message){
++        super(message);
++    }
++}
+Index: microservice-mylibrary/src/main/resources/bootstrap.properties
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>spring.application.name=microservice-mylibrary\r\n\r\nspring.cloud.config.uri=http://localhost:9101\r\n\r\n#Actuator\r\nmanagement.endpoints.web.exposure.include=health,info,metrics\r\ninfo.app.version=1.0\r\n\r\n#Eureka\r\neureka.instance.health-check-url-path=/actuator/health\r\n\r\n#spring Batch\r\nspring.batch.job.enabled=false\r\nspring.batch.initialize-schema=always\r\nmicroservice.config.cron.job=0 42 12 * * *\r\n\r\n#spring mail config\r\nspring.mail.default-encoding=UTF-8\r\nspring.mail.protocol=smtp\r\nspring.mail.host=smtp.gmail.com\r\nspring.mail.username=oc.projet07@gmail.com\r\nspring.mail.password=123#A*5z\r\nspring.mail.port=587\r\nspring.mail.properties.mail.smtp.auth=true\r\nspring.mail.properties.mail.smtp.starttls.enable=true\r\nspring.mail.test-connection=false
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>windows-1252
+===================================================================
+--- microservice-mylibrary/src/main/resources/bootstrap.properties	(revision 6a2320f00477d9ee07a2747f7b10127f4c0d1f98)
++++ microservice-mylibrary/src/main/resources/bootstrap.properties	(date 1597755557387)
+@@ -12,7 +12,7 @@
+ #spring Batch
+ spring.batch.job.enabled=false
+ spring.batch.initialize-schema=always
+-microservice.config.cron.job=0 42 12 * * *
++microservice.config.cron.job=*/120 * * * * *
+ 
+ #spring mail config
+ spring.mail.default-encoding=UTF-8
+Index: .idea/jarRepositories.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/jarRepositories.xml	(date 1597755557232)
++++ .idea/jarRepositories.xml	(date 1597755557232)
+@@ -0,0 +1,30 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="RemoteRepositoriesConfiguration">
++    <remote-repository>
++      <option name="id" value="spring-milestones" />
++      <option name="name" value="Spring Milestones" />
++      <option name="url" value="https://repo.spring.io/milestone" />
++    </remote-repository>
++    <remote-repository>
++      <option name="id" value="central" />
++      <option name="name" value="Central Repository" />
++      <option name="url" value="https://repo.maven.apache.org/maven2" />
++    </remote-repository>
++    <remote-repository>
++      <option name="id" value="central" />
++      <option name="name" value="Maven Central repository" />
++      <option name="url" value="https://repo1.maven.org/maven2" />
++    </remote-repository>
++    <remote-repository>
++      <option name="id" value="spring-snapshots" />
++      <option name="name" value="Spring Snapshots" />
++      <option name="url" value="https://repo.spring.io/snapshot" />
++    </remote-repository>
++    <remote-repository>
++      <option name="id" value="jboss.community" />
++      <option name="name" value="JBoss Community repository" />
++      <option name="url" value="https://repository.jboss.org/nexus/content/repositories/public/" />
++    </remote-repository>
++  </component>
++</project>
+\ No newline at end of file
+Index: microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/exeptions/LivresNotFoundExeption.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.bibliotheque.microservicemylibrary.exeptions;\r\n\r\nimport org.springframework.http.HttpStatus;\r\nimport org.springframework.web.bind.annotation.ResponseStatus;\r\n\r\n@ResponseStatus(HttpStatus.NOT_FOUND)\r\npublic class LivresNotFoundExeption extends RuntimeException {\r\n    public LivresNotFoundExeption(String message) {\r\n        super(message);\r\n    }\r\n}\r\n
+===================================================================
+--- microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/exeptions/LivresNotFoundExeption.java	(revision 6a2320f00477d9ee07a2747f7b10127f4c0d1f98)
++++ microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/exeptions/LivresNotFoundException.java	(date 1597755557553)
+@@ -4,8 +4,8 @@
+ import org.springframework.web.bind.annotation.ResponseStatus;
+ 
+ @ResponseStatus(HttpStatus.NOT_FOUND)
+-public class LivresNotFoundExeption extends RuntimeException {
+-    public LivresNotFoundExeption(String message) {
++public class LivresNotFoundException extends RuntimeException {
++    public LivresNotFoundException(String message) {
+         super(message);
+     }
+ }
+Index: microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/service/livre/ILivreServiceImpl.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.bibliotheque.microservicemylibrary.service.livre;\r\n\r\nimport com.bibliotheque.microservicemylibrary.dao.ILivreDao;\r\nimport com.bibliotheque.microservicemylibrary.model.Livre;\r\nimport org.springframework.beans.factory.annotation.Autowired;\r\nimport org.springframework.data.repository.query.Param;\r\nimport org.springframework.stereotype.Service;\r\n\r\nimport java.util.List;\r\nimport java.util.Optional;\r\n\r\n@Service\r\npublic class ILivreServiceImpl implements ILivreService {\r\n\r\n    @Autowired\r\n    ILivreDao mLivreDao;\r\n\r\n\r\n    /**\r\n     * Permet la recherche de tous les livres\r\n     * @return la liste de tous les livres\r\n     */\r\n    @Override\r\n    public List<Livre> findAll(){return  mLivreDao.findAll();\r\n    }\r\n\r\n    /**\r\n     * Permet la recherche d'un livre\r\n     * @param id du livre\r\n     * @return le livre\r\n     */\r\n    @Override\r\n    public Optional<Livre> findById(Long id){\r\n        return mLivreDao.findById(id);\r\n    }\r\n\r\n    /**\r\n     * Permet d'enregistrer un livre\r\n     * @param livre Objet à enregistrer\r\n     * @return Objet livre\r\n     */\r\n    @Override\r\n    public Livre save(Livre livre){\r\n        return mLivreDao.save(livre);\r\n    }\r\n\r\n    /**\r\n     * Permet de rechercher un livre par son titre\r\n     * @param motCle saisie de la recherche\r\n     * @return le resultat de la recherche\r\n     */\r\n    @Override\r\n    public List<Livre> chercherParTitre(@Param(\"x\")String motCle){\r\n        return mLivreDao.chercherParTitre(motCle);\r\n    }\r\n\r\n\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/service/livre/ILivreServiceImpl.java	(revision 6a2320f00477d9ee07a2747f7b10127f4c0d1f98)
++++ microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/service/livre/ILivreServiceImpl.java	(date 1597755557385)
+@@ -24,13 +24,14 @@
+     public List<Livre> findAll(){return  mLivreDao.findAll();
+     }
+ 
++
+     /**
+      * Permet la recherche d'un livre
+      * @param id du livre
+      * @return le livre
+      */
+     @Override
+-    public Optional<Livre> findById(Long id){
++    public Optional<Livre> findById(Long id) {
+         return mLivreDao.findById(id);
+     }
+ 
+@@ -54,6 +55,10 @@
+         return mLivreDao.chercherParTitre(motCle);
+     }
+ 
++    @Override
++    public Optional<Livre> findByCopiesId(Long id) {
++        return mLivreDao.findByCopiesId(id);
++    }
+ 
+ 
+ }
+Index: .idea/libraries/Maven__org_springframework_cloud_spring_cloud_starter_loadbalancer_2_2_4_BUILD_SNAPSHOT.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/libraries/Maven__org_springframework_cloud_spring_cloud_starter_loadbalancer_2_2_4_BUILD_SNAPSHOT.xml	(date 1597755557276)
++++ .idea/libraries/Maven__org_springframework_cloud_spring_cloud_starter_loadbalancer_2_2_4_BUILD_SNAPSHOT.xml	(date 1597755557276)
+@@ -0,0 +1,13 @@
++<component name="libraryTable">
++  <library name="Maven: org.springframework.cloud:spring-cloud-starter-loadbalancer:2.2.4.BUILD-SNAPSHOT">
++    <CLASSES>
++      <root url="jar://$MAVEN_REPOSITORY$/org/springframework/cloud/spring-cloud-starter-loadbalancer/2.2.4.BUILD-SNAPSHOT/spring-cloud-starter-loadbalancer-2.2.4.BUILD-20200720.094018-57.jar!/" />
++    </CLASSES>
++    <JAVADOC>
++      <root url="jar://$MAVEN_REPOSITORY$/org/springframework/cloud/spring-cloud-starter-loadbalancer/2.2.4.BUILD-SNAPSHOT/spring-cloud-starter-loadbalancer-2.2.4.BUILD-20200720.094018-57-javadoc.jar!/" />
++    </JAVADOC>
++    <SOURCES>
++      <root url="jar://$MAVEN_REPOSITORY$/org/springframework/cloud/spring-cloud-starter-loadbalancer/2.2.4.BUILD-SNAPSHOT/spring-cloud-starter-loadbalancer-2.2.4.BUILD-20200720.094018-57-sources.jar!/" />
++    </SOURCES>
++  </library>
++</component>
+\ No newline at end of file
+Index: microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/exeptions/CustumErrorDecoder.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.bibliotheque.microservicemylibrary.exeptions;\r\n\r\nimport feign.Response;\r\nimport feign.codec.ErrorDecoder;\r\n\r\npublic class CustumErrorDecoder implements ErrorDecoder {\r\n\r\n    private final ErrorDecoder defaultErrorDecoder = new Default();\r\n\r\n    @Override\r\n    public Exception decode(String methodKey, Response response) {\r\n        if (response.status()==404){\r\n            return new LivresNotFoundExeption(\"livre non trouvé\");\r\n        }\r\n        return defaultErrorDecoder.decode(methodKey, response);\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/exeptions/CustumErrorDecoder.java	(revision 6a2320f00477d9ee07a2747f7b10127f4c0d1f98)
++++ microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/exeptions/CustumErrorDecoder.java	(date 1597755557365)
+@@ -1,17 +1,45 @@
+ package com.bibliotheque.microservicemylibrary.exeptions;
+ 
++import com.fasterxml.jackson.databind.ObjectMapper;
+ import feign.Response;
+ import feign.codec.ErrorDecoder;
+ 
++import java.io.IOException;
++
+ public class CustumErrorDecoder implements ErrorDecoder {
+ 
+     private final ErrorDecoder defaultErrorDecoder = new Default();
+ 
+     @Override
+     public Exception decode(String methodKey, Response response) {
++
+         if (response.status()==404){
+-            return new LivresNotFoundExeption("livre non trouvé");
++            return new LivresNotFoundException("livre non trouvé");
+         }
++
++        ObjectMapper mapper = new ObjectMapper();
++        try {
++            ApiError error = mapper.readValue(response.body().asInputStream(), ApiError.class);
++            switch (error.getMessage()){
++                case"cannotBorrowException01":
++                    return new CannotAddBorrowingException("Emprunt impossible, vous avez  déjà un emprunt en cours pour cet ouvrage");
++
++                case"cannotBookingException01":
++                    return new CannotAddBookingException("réservation impossible, vous avez déjà une réservation en cours pour cet ouvrage");
++
++                case"cannotBookingException02":
++                    return new CannotAddBookingException("réservation impossible, vous avez déjà un emprunt en cours pour cet ouvrage");
++
++                case"cannotBookingException03":
++                    return new CannotAddBookingException("réservation impossible, la liste des réservations pour cet ouvrage est compléte");
++
++                default: return defaultErrorDecoder.decode(methodKey, response);
++
++            }
++        } catch (IOException e) {
++            e.printStackTrace();
++        }
++
+         return defaultErrorDecoder.decode(methodKey, response);
+     }
+ }
+Index: microservice-myclient/src/main/java/com/bibliotheque/microservicemyclient/exeptions/ApiError.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- microservice-myclient/src/main/java/com/bibliotheque/microservicemyclient/exeptions/ApiError.java	(date 1597755557318)
++++ microservice-myclient/src/main/java/com/bibliotheque/microservicemyclient/exeptions/ApiError.java	(date 1597755557318)
+@@ -0,0 +1,43 @@
++package com.bibliotheque.microservicemyclient.exeptions;
++
++import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
++
++@JsonIgnoreProperties(ignoreUnknown = true)
++public class ApiError {
++
++    private String message;
++
++    private String apiError;
++
++    public ApiError() {
++    }
++
++    public ApiError(String message, String apiError) {
++        this.message = message;
++        this.apiError = apiError;
++    }
++
++    public String getMessage() {
++        return message;
++    }
++
++    public void setMessage(String message) {
++        this.message = message;
++    }
++
++    public String getApiError() {
++        return apiError;
++    }
++
++    public void setApiError(String apiError) {
++        this.apiError = apiError;
++    }
++
++    @Override
++    public String toString() {
++        return "ApiError{" +
++                "message='" + message + '\'' +
++                ", apiError='" + apiError + '\'' +
++                '}';
++    }
++}
+Index: microservice-myclient/src/main/java/com/bibliotheque/microservicemyclient/service/myLibrary/IMicroserviceMyLibraryProxyService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.bibliotheque.microservicemyclient.service.myLibrary;\r\n\r\nimport com.bibliotheque.microservicemyclient.bean.CopieBean;\r\nimport com.bibliotheque.microservicemyclient.bean.LivreBean;\r\nimport com.bibliotheque.microservicemyclient.bean.ReservationBean;\r\nimport org.springframework.web.bind.annotation.PathVariable;\r\nimport org.springframework.web.bind.annotation.RequestParam;\r\n\r\nimport java.util.List;\r\n\r\npublic interface IMicroserviceMyLibraryProxyService {\r\n\r\n    List<LivreBean> ListeDeLivres();\r\n\r\n    LivreBean afficherUnLivre(Long id);\r\n\r\n    List<CopieBean> afficherLesCopiesDunLivre(Long id);\r\n\r\n    CopieBean afficherUneCopie(Long id);\r\n\r\n    List<ReservationBean> afficherLaListeDesReservationsParUtilisateur(Long id);\r\n\r\n    List<CopieBean> afficherLesCopiesDisponibles(Long id);\r\n\r\n    void demandeDeReservation(Long id, Long idUtilisateur);\r\n\r\n    ReservationBean prolongerPret(Long id, Long idUtilisateur);\r\n\r\n    ReservationBean afficherUneReservation(@PathVariable(\"id\") Long id);\r\n\r\n    List<LivreBean> faireUneRechercheParTitre(@RequestParam(name = \"mc\", defaultValue = \"\") String mc);\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- microservice-myclient/src/main/java/com/bibliotheque/microservicemyclient/service/myLibrary/IMicroserviceMyLibraryProxyService.java	(revision 6a2320f00477d9ee07a2747f7b10127f4c0d1f98)
++++ microservice-myclient/src/main/java/com/bibliotheque/microservicemyclient/service/myLibrary/IMicroserviceMyLibraryProxyService.java	(date 1597755557332)
+@@ -1,32 +1,48 @@
+ package com.bibliotheque.microservicemyclient.service.myLibrary;
+ 
+-import com.bibliotheque.microservicemyclient.bean.CopieBean;
+-import com.bibliotheque.microservicemyclient.bean.LivreBean;
+-import com.bibliotheque.microservicemyclient.bean.ReservationBean;
+-import org.springframework.web.bind.annotation.PathVariable;
+-import org.springframework.web.bind.annotation.RequestParam;
++import com.bibliotheque.microservicemyclient.bean.*;
++import com.bibliotheque.microservicemyclient.dto.CopieBeanDTO;
++import com.bibliotheque.microservicemyclient.dto.EmpruntBeanDTO;
++import com.bibliotheque.microservicemyclient.dto.ReservationBeanDTO;
++import org.springframework.web.bind.annotation.*;
+ 
+ import java.util.List;
+ 
+ public interface IMicroserviceMyLibraryProxyService {
+ 
++    /*===========================** Livre **===========================*/
++
+     List<LivreBean> ListeDeLivres();
+ 
+     LivreBean afficherUnLivre(Long id);
+ 
+-    List<CopieBean> afficherLesCopiesDunLivre(Long id);
++    List<LivreBean> faireUneRechercheParTitre(@RequestParam(name = "mc", defaultValue = "") String mc);
+ 
+-    CopieBean afficherUneCopie(Long id);
+-
+-    List<ReservationBean> afficherLaListeDesReservationsParUtilisateur(Long id);
++    /*===========================** Copie **===========================*/
+ 
+     List<CopieBean> afficherLesCopiesDisponibles(Long id);
+ 
++    List<CopieBeanDTO> afficherLesCopiesDunLivre(Long id);
++
++    CopieBeanDTO afficherUneCopie(Long id);
++
++    /*===========================** Emprunt **===========================*/
++
++    void demandeEmprunt(Long id, Long idUtilisateur);
++
++    EmpruntBean prolongerEmprunt(Long id, Long idUtilisateur);
++
++    EmpruntBean afficherUnEmprunt(Long id);
++
++    List<EmpruntBeanDTO> afficherLaListeDesEmpruntsParUtilisateur(Long id);
++
++    /*===========================** Reservation **===========================*/
++
+     void demandeDeReservation(Long id, Long idUtilisateur);
+ 
+-    ReservationBean prolongerPret(Long id, Long idUtilisateur);
++    List<ReservationBeanDTO> afficherlesReservationsParUtilisateur(Long id);
+ 
+-    ReservationBean afficherUneReservation(@PathVariable("id") Long id);
++    void annulerReservation(Long id, Long idUtilisateur);
+ 
+-    List<LivreBean> faireUneRechercheParTitre(@RequestParam(name = "mc", defaultValue = "") String mc);
++
+ }
+Index: microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/exeptions/ApiError.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/exeptions/ApiError.java	(date 1597755557360)
++++ microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/exeptions/ApiError.java	(date 1597755557360)
+@@ -0,0 +1,43 @@
++package com.bibliotheque.microservicemylibrary.exeptions;
++
++import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
++
++@JsonIgnoreProperties(ignoreUnknown = true)
++public class ApiError {
++
++    private String message;
++
++    private String apiError;
++
++    public ApiError() {
++    }
++
++    public ApiError(String message, String apiError) {
++        this.message = message;
++        this.apiError = apiError;
++    }
++
++    public String getMessage() {
++        return message;
++    }
++
++    public void setMessage(String message) {
++        this.message = message;
++    }
++
++    public String getApiError() {
++        return apiError;
++    }
++
++    public void setApiError(String apiError) {
++        this.apiError = apiError;
++    }
++
++    @Override
++    public String toString() {
++        return "ApiError{" +
++                "message='" + message + '\'' +
++                ", apiError='" + apiError + '\'' +
++                '}';
++    }
++}
+Index: microservice-myclient/src/main/java/com/bibliotheque/microservicemyclient/service/myLibrary/IMicroserviceMyLibraryProxyServiceImpl.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.bibliotheque.microservicemyclient.service.myLibrary;\r\n\r\nimport com.bibliotheque.microservicemyclient.bean.CopieBean;\r\nimport com.bibliotheque.microservicemyclient.bean.LivreBean;\r\nimport com.bibliotheque.microservicemyclient.bean.ReservationBean;\r\nimport com.bibliotheque.microservicemyclient.proxies.IMicroserviceMyLibraryProxy;\r\nimport org.springframework.beans.factory.annotation.Autowired;\r\nimport org.springframework.stereotype.Service;\r\nimport org.springframework.web.bind.annotation.PathVariable;\r\nimport org.springframework.web.bind.annotation.RequestParam;\r\n\r\nimport java.util.List;\r\n\r\n@Service\r\npublic class IMicroserviceMyLibraryProxyServiceImpl implements IMicroserviceMyLibraryProxyService {\r\n\r\n    @Autowired\r\n    IMicroserviceMyLibraryProxy iMicroserviceMyLibraryProxy;\r\n\r\n    /**\r\n     *Permet la recherche de tous les livres\r\n     * @return la liste de tous les livres\r\n     */\r\n    @Override\r\n    public List<LivreBean> ListeDeLivres(){\r\n        return iMicroserviceMyLibraryProxy.ListeDeLivres();\r\n    }\r\n\r\n    /**\r\n     * Permet la recherche d'un livre\r\n     * @param id du livre\r\n     * @return le livre recherché\r\n     */\r\n    @Override\r\n    public LivreBean afficherUnLivre(Long id){\r\n        return iMicroserviceMyLibraryProxy.afficherUnLivre(id);\r\n    }\r\n\r\n    /**\r\n     * permet de rechercher les copies d'un livre\r\n     * @param id identifiant du livre\r\n     * @return la liste des copies d'un livre\r\n     */\r\n    @Override\r\n    public List<CopieBean> afficherLesCopiesDunLivre(Long id){\r\n        return iMicroserviceMyLibraryProxy.afficherLesCopiesDunLivre(id);\r\n    }\r\n\r\n    /**\r\n     * Permet de rechercher une copie\r\n     * @param id identifiant de la copie\r\n     * @return la copie recherchée\r\n     */\r\n    @Override\r\n    public CopieBean afficherUneCopie(Long id){\r\n        return iMicroserviceMyLibraryProxy.afficherUneCopie(id);\r\n    }\r\n\r\n    /**\r\n     * Permet de rechercher les emprunts d'un utilisateur\r\n     * @param id identifiant de l'utilisateur\r\n     * @return la liste des emprunts d'un utilisateur\r\n     */\r\n    @Override\r\n    public List<ReservationBean> afficherLaListeDesReservationsParUtilisateur(Long id){\r\n        return iMicroserviceMyLibraryProxy.afficherLaListeDesReservationsParUtilisateur(id);\r\n    }\r\n\r\n    /**\r\n     * Permet rechercher les copies disponibles d'un livre\r\n     * @param id identifiant du livre\r\n     * @return la liste des copies disponibles\r\n     */\r\n    @Override\r\n    public List<CopieBean> afficherLesCopiesDisponibles(Long id){\r\n        return iMicroserviceMyLibraryProxy.afficherLesCopiesDisponibles(id);\r\n    }\r\n\r\n    /**\r\n     * Permet de faire une demande de reservation d'une copie d'un livre\r\n     * @param id identifiant de la copie du livre\r\n     * @param idUtilisateur identifiant de l'utilisateur\r\n     */\r\n    @Override\r\n    public void demandeDeReservation(Long id, Long idUtilisateur){\r\n        iMicroserviceMyLibraryProxy.demandeDeReservation(id, idUtilisateur);\r\n    }\r\n\r\n    /**\r\n     * Permet de prolonger un prêt\r\n     * @param id identifiant du prêt\r\n     * @param idUtilisateur identifiant de l'utilisateur\r\n     * @return le prêt prolongé\r\n     */\r\n    @Override\r\n    public ReservationBean prolongerPret(Long id, Long idUtilisateur){\r\n        return iMicroserviceMyLibraryProxy.prolongerPret(id, idUtilisateur);\r\n    }\r\n\r\n    /**\r\n     * Permet de rechercher une reservation\r\n     * @param id identifiant de la reservation\r\n     * @return la reservation recherchée\r\n     */\r\n    @Override\r\n    public ReservationBean afficherUneReservation(@PathVariable(\"id\")Long id){\r\n       return iMicroserviceMyLibraryProxy.afficherUneReservation(id);\r\n    }\r\n\r\n    /**\r\n     * Permet de rechercher un livre par son titre\r\n     * @param mc mot clé de la recherche\r\n     * @return la liste du résultat de la recherche\r\n     */\r\n    @Override\r\n    public List<LivreBean> faireUneRechercheParTitre(@RequestParam(name = \"mc\", defaultValue = \"\") String mc){\r\n        return iMicroserviceMyLibraryProxy.faireUneRechercheParTitre(mc);\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- microservice-myclient/src/main/java/com/bibliotheque/microservicemyclient/service/myLibrary/IMicroserviceMyLibraryProxyServiceImpl.java	(revision 6a2320f00477d9ee07a2747f7b10127f4c0d1f98)
++++ microservice-myclient/src/main/java/com/bibliotheque/microservicemyclient/service/myLibrary/IMicroserviceMyLibraryProxyServiceImpl.java	(date 1597755557589)
+@@ -1,12 +1,12 @@
+ package com.bibliotheque.microservicemyclient.service.myLibrary;
+ 
+-import com.bibliotheque.microservicemyclient.bean.CopieBean;
+-import com.bibliotheque.microservicemyclient.bean.LivreBean;
+-import com.bibliotheque.microservicemyclient.bean.ReservationBean;
++import com.bibliotheque.microservicemyclient.bean.*;
++import com.bibliotheque.microservicemyclient.dto.CopieBeanDTO;
++import com.bibliotheque.microservicemyclient.dto.EmpruntBeanDTO;
++import com.bibliotheque.microservicemyclient.dto.ReservationBeanDTO;
+ import com.bibliotheque.microservicemyclient.proxies.IMicroserviceMyLibraryProxy;
+ import org.springframework.beans.factory.annotation.Autowired;
+ import org.springframework.stereotype.Service;
+-import org.springframework.web.bind.annotation.PathVariable;
+ import org.springframework.web.bind.annotation.RequestParam;
+ 
+ import java.util.List;
+@@ -21,6 +21,8 @@
+      *Permet la recherche de tous les livres
+      * @return la liste de tous les livres
+      */
++
++
+     @Override
+     public List<LivreBean> ListeDeLivres(){
+         return iMicroserviceMyLibraryProxy.ListeDeLivres();
+@@ -36,34 +38,38 @@
+         return iMicroserviceMyLibraryProxy.afficherUnLivre(id);
+     }
+ 
++
+     /**
+      * permet de rechercher les copies d'un livre
+      * @param id identifiant du livre
+      * @return la liste des copies d'un livre
+      */
+     @Override
+-    public List<CopieBean> afficherLesCopiesDunLivre(Long id){
++    public List<CopieBeanDTO> afficherLesCopiesDunLivre(Long id) {
+         return iMicroserviceMyLibraryProxy.afficherLesCopiesDunLivre(id);
+     }
+ 
++
+     /**
+      * Permet de rechercher une copie
+      * @param id identifiant de la copie
+      * @return la copie recherchée
+      */
+     @Override
+-    public CopieBean afficherUneCopie(Long id){
++    public CopieBeanDTO afficherUneCopie(Long id){
+         return iMicroserviceMyLibraryProxy.afficherUneCopie(id);
+     }
+ 
++
++
+     /**
+      * Permet de rechercher les emprunts d'un utilisateur
+      * @param id identifiant de l'utilisateur
+      * @return la liste des emprunts d'un utilisateur
+      */
+     @Override
+-    public List<ReservationBean> afficherLaListeDesReservationsParUtilisateur(Long id){
+-        return iMicroserviceMyLibraryProxy.afficherLaListeDesReservationsParUtilisateur(id);
++    public List<EmpruntBeanDTO> afficherLaListeDesEmpruntsParUtilisateur(Long id) {
++        return iMicroserviceMyLibraryProxy.afficherLaListeDesEmpruntsParUtilisateur(id);
+     }
+ 
+     /**
+@@ -77,13 +83,13 @@
+     }
+ 
+     /**
+-     * Permet de faire une demande de reservation d'une copie d'un livre
++     * Permet de faire une demande d'emprunt d'une copie d'un livre
+      * @param id identifiant de la copie du livre
+      * @param idUtilisateur identifiant de l'utilisateur
+      */
+     @Override
+-    public void demandeDeReservation(Long id, Long idUtilisateur){
+-        iMicroserviceMyLibraryProxy.demandeDeReservation(id, idUtilisateur);
++    public void demandeEmprunt(Long id, Long idUtilisateur) {
++    iMicroserviceMyLibraryProxy.demandeEmprunt(id, idUtilisateur);
+     }
+ 
+     /**
+@@ -93,18 +99,18 @@
+      * @return le prêt prolongé
+      */
+     @Override
+-    public ReservationBean prolongerPret(Long id, Long idUtilisateur){
+-        return iMicroserviceMyLibraryProxy.prolongerPret(id, idUtilisateur);
++    public EmpruntBean prolongerEmprunt(Long id, Long idUtilisateur) {
++        return iMicroserviceMyLibraryProxy.prolongerEmprunt(id, idUtilisateur);
+     }
+ 
+     /**
+-     * Permet de rechercher une reservation
+-     * @param id identifiant de la reservation
+-     * @return la reservation recherchée
++     * Permet de rechercher un emprunt
++     * @param id identifiant de l'emprunt
++     * @return l'emprunt recherchée
+      */
+     @Override
+-    public ReservationBean afficherUneReservation(@PathVariable("id")Long id){
+-       return iMicroserviceMyLibraryProxy.afficherUneReservation(id);
++    public EmpruntBean afficherUnEmprunt(Long id) {
++        return iMicroserviceMyLibraryProxy.afficherUnEmprunt(id);
+     }
+ 
+     /**
+@@ -116,4 +122,36 @@
+     public List<LivreBean> faireUneRechercheParTitre(@RequestParam(name = "mc", defaultValue = "") String mc){
+         return iMicroserviceMyLibraryProxy.faireUneRechercheParTitre(mc);
+     }
++
++    /**
++     * Permet de faire une demande de réservation d'une copie d'un livre
++     * @param id identifiant de la copie du livre
++     * @param idUtilisateur identifiant de l'utilisateur
++     */
++    @Override
++    public void demandeDeReservation(Long id, Long idUtilisateur) {
++        iMicroserviceMyLibraryProxy.demandeDeReservation(id, idUtilisateur);
++    }
++
++    /**
++     * Permet de rechercher les réservations d'un utilisateur
++     * @param id identifiant de l'utilisateur
++     * @return la liste des réservations d'un utilisateur
++     */
++    @Override
++    public List<ReservationBeanDTO> afficherlesReservationsParUtilisateur(Long id) {
++        return iMicroserviceMyLibraryProxy.afficherlesReservationsParUtilisateur(id);
++    }
++
++    /**
++     * permet d'annuler une reservation
++     * @param id identifiant de la reservation
++     * @param idUtilisateur identifiant de l'utilisateur
++     */
++    @Override
++    public void annulerReservation(Long id, Long idUtilisateur) {
++        iMicroserviceMyLibraryProxy.annulerReservation(id, idUtilisateur);
++    }
++
++
+ }
+Index: microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/controller/LivreController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.bibliotheque.microservicemylibrary.controller;\r\n\r\nimport com.bibliotheque.microservicemylibrary.exeptions.LivresNotFoundExeption;\r\nimport com.bibliotheque.microservicemylibrary.model.Livre;\r\nimport com.bibliotheque.microservicemylibrary.service.livre.ILivreService;\r\nimport org.slf4j.Logger;\r\nimport org.slf4j.LoggerFactory;\r\nimport org.springframework.beans.factory.annotation.Autowired;\r\nimport org.springframework.http.MediaType;\r\nimport org.springframework.web.bind.annotation.*;\r\n\r\n\r\nimport java.util.List;\r\nimport java.util.Optional;\r\n\r\n@RestController\r\npublic class LivreController {\r\n\r\n    Logger logger = LoggerFactory.getLogger(this.getClass());\r\n\r\n    @Autowired\r\n    private ILivreService iLivreService;\r\n\r\n    @RequestMapping(value = \"/livres\")\r\n    public List<Livre> ListeDeLivres(){\r\n        List<Livre> livres = iLivreService.findAll();\r\n        if (livres.isEmpty()) throw new LivresNotFoundExeption(\"Il n'y a pas de livres\");\r\n        logger.info(\"Récupération de la liste des produits\");\r\n        return livres;\r\n    }\r\n\r\n    @RequestMapping(value = \"/livre/{id}\")\r\n    public Optional<Livre> afficherUnLivre(@PathVariable(\"id\") Long id) {\r\n        Optional<Livre> livre = iLivreService.findById(id);\r\n        logger.info(\"Le détail d'un livre est demandé\");\r\n        return livre;\r\n    }\r\n\r\n    @RequestMapping(value = \"/addLivre\", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)\r\n    public String ajouterUnLivre(@RequestBody Livre livre){\r\n       iLivreService.save(livre);\r\n       logger.info(\"ajout d'une demande de reservation pour un livre\");\r\n       return \"ok\";\r\n    }\r\n\r\n    @RequestMapping(value = \"/recherche\", method = RequestMethod.GET)\r\n    public List<Livre> faireUneRechercheParTitre(@RequestParam(name = \"mc\", defaultValue = \"\")String mc){\r\n        logger.info(\"recherche pour un livre\");\r\n       return iLivreService.chercherParTitre(\"%\"+mc+\"%\");\r\n    }\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/controller/LivreController.java	(revision 6a2320f00477d9ee07a2747f7b10127f4c0d1f98)
++++ microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/controller/LivreController.java	(date 1597755557352)
+@@ -1,7 +1,11 @@
+ package com.bibliotheque.microservicemylibrary.controller;
+ 
+-import com.bibliotheque.microservicemylibrary.exeptions.LivresNotFoundExeption;
++import com.bibliotheque.microservicemylibrary.exeptions.LivresNotFoundException;
++import com.bibliotheque.microservicemylibrary.model.Copie;
++import com.bibliotheque.microservicemylibrary.model.Emprunt;
+ import com.bibliotheque.microservicemylibrary.model.Livre;
++import com.bibliotheque.microservicemylibrary.service.copie.ICopieService;
++import com.bibliotheque.microservicemylibrary.service.emprunt.IEmpruntService;
+ import com.bibliotheque.microservicemylibrary.service.livre.ILivreService;
+ import org.slf4j.Logger;
+ import org.slf4j.LoggerFactory;
+@@ -10,8 +14,7 @@
+ import org.springframework.web.bind.annotation.*;
+ 
+ 
+-import java.util.List;
+-import java.util.Optional;
++import java.util.*;
+ 
+ @RestController
+ public class LivreController {
+@@ -21,10 +24,16 @@
+     @Autowired
+     private ILivreService iLivreService;
+ 
++    @Autowired
++    private ICopieService iCopieService;
++
++    @Autowired
++    private IEmpruntService iEmpruntService;
++
+     @RequestMapping(value = "/livres")
+     public List<Livre> ListeDeLivres(){
+         List<Livre> livres = iLivreService.findAll();
+-        if (livres.isEmpty()) throw new LivresNotFoundExeption("Il n'y a pas de livres");
++        if (livres.isEmpty()) throw new LivresNotFoundException("Il n'y a pas de livres");
+         logger.info("Récupération de la liste des produits");
+         return livres;
+     }
+@@ -32,6 +41,22 @@
+     @RequestMapping(value = "/livre/{id}")
+     public Optional<Livre> afficherUnLivre(@PathVariable("id") Long id) {
+         Optional<Livre> livre = iLivreService.findById(id);
++
++        List<Date> dates = new ArrayList<>();
++        List<Copie> copies = iCopieService.findAllByLivreId(livre.get().getId());
++        for (Copie c : copies) {
++            List<Emprunt> emprunts = iEmpruntService.findAllByCopie_IdAndDateRetourIsNull(c.getId());
++            if (emprunts.size() > 0){
++                Emprunt emprunt = emprunts.get(0);
++                dates.add(emprunt.getDateDeFinEmprunt());
++            }
++        }
++        Collections.sort(dates);
++        if (dates.size() > 0){
++            Date dateLaPlusProche = dates.get(0);
++            livre.get().setDateRetourLaPlusProche(dateLaPlusProche);
++        }
++
+         logger.info("Le détail d'un livre est demandé");
+         return livre;
+     }
+Index: microservice-myclient/src/main/java/com/bibliotheque/microservicemyclient/bean/ReservationBean.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.bibliotheque.microservicemyclient.bean;\r\n\r\nimport com.fasterxml.jackson.annotation.JsonProperty;\r\nimport lombok.*;\r\n\r\nimport java.io.Serializable;\r\nimport java.util.Date;\r\n\r\n@NoArgsConstructor\r\n@Getter\r\n@Setter\r\npublic @Data\r\nclass ReservationBean implements Serializable {\r\n\r\n    private Long id;\r\n\r\n    private Long idUtilisateur;\r\n\r\n    private Date dateDeDebutPret;\r\n\r\n    private Date dateDeFinDuPret;\r\n\r\n    private Date dateRetour;\r\n\r\n    private boolean rendu;\r\n\r\n    private Date dateDuJour = new Date();\r\n\r\n    private boolean prolongerPret;\r\n\r\n    @JsonProperty(\"copie\")\r\n    private CopieBean copieBean;\r\n\r\n    public ReservationBean(Long id, Long idUtilisateur, Date dateDeDebutPret, Date dateDeFinDuPret, boolean prolongerPret, CopieBean copieBean) {\r\n        this.id = id;\r\n        this.idUtilisateur = idUtilisateur;\r\n        this.dateDeDebutPret = dateDeDebutPret;\r\n        this.dateDeFinDuPret = dateDeFinDuPret;\r\n        this.prolongerPret = prolongerPret;\r\n        this.copieBean = copieBean;\r\n    }\r\n\r\n    @Override\r\n    public String toString() {\r\n        return \"ReservationBean{\" +\r\n                \"id=\" + id +\r\n                \", idUtilisateur=\" + idUtilisateur +\r\n                \", dateDeDebutPret=\" + dateDeDebutPret +\r\n                \", dateDeFinDuPret=\" + dateDeFinDuPret +\r\n                \", prolongerPret=\" + prolongerPret +\r\n                \", copieBean=\" + copieBean +\r\n                '}';\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- microservice-myclient/src/main/java/com/bibliotheque/microservicemyclient/bean/ReservationBean.java	(revision 6a2320f00477d9ee07a2747f7b10127f4c0d1f98)
++++ microservice-myclient/src/main/java/com/bibliotheque/microservicemyclient/bean/ReservationBean.java	(date 1597755557301)
+@@ -1,43 +1,38 @@
+ package com.bibliotheque.microservicemyclient.bean;
+ 
+ import com.fasterxml.jackson.annotation.JsonProperty;
+-import lombok.*;
++import lombok.Data;
++import lombok.Getter;
++import lombok.NoArgsConstructor;
++import lombok.Setter;
+ 
+ import java.io.Serializable;
+ import java.util.Date;
+-
+ @NoArgsConstructor
+ @Getter
+ @Setter
+-public @Data
+-class ReservationBean implements Serializable {
++public class ReservationBean implements Serializable {
+ 
+     private Long id;
+ 
+     private Long idUtilisateur;
+ 
+-    private Date dateDeDebutPret;
+-
+-    private Date dateDeFinDuPret;
++    private Date dateDeReservation;
+ 
+-    private Date dateRetour;
++    private Integer position;
+ 
+-    private boolean rendu;
++    private String stateEnum;
+ 
+-    private Date dateDuJour = new Date();
++    @JsonProperty("livre")
++    private LivreBean livreBean;
+ 
+-    private boolean prolongerPret;
+-
+-    @JsonProperty("copie")
+-    private CopieBean copieBean;
+-
+-    public ReservationBean(Long id, Long idUtilisateur, Date dateDeDebutPret, Date dateDeFinDuPret, boolean prolongerPret, CopieBean copieBean) {
++    public ReservationBean(Long id, Long idUtilisateur, Date dateDeReservation, Integer position, String stateEnum, LivreBean livreBean) {
+         this.id = id;
+         this.idUtilisateur = idUtilisateur;
+-        this.dateDeDebutPret = dateDeDebutPret;
+-        this.dateDeFinDuPret = dateDeFinDuPret;
+-        this.prolongerPret = prolongerPret;
+-        this.copieBean = copieBean;
++        this.dateDeReservation = dateDeReservation;
++        this.position = position;
++        this.stateEnum = stateEnum;
++        this.livreBean = livreBean;
+     }
+ 
+     @Override
+@@ -45,10 +40,10 @@
+         return "ReservationBean{" +
+                 "id=" + id +
+                 ", idUtilisateur=" + idUtilisateur +
+-                ", dateDeDebutPret=" + dateDeDebutPret +
+-                ", dateDeFinDuPret=" + dateDeFinDuPret +
+-                ", prolongerPret=" + prolongerPret +
+-                ", copieBean=" + copieBean +
++                ", dateDeReservation=" + dateDeReservation +
++                ", position=" + position +
++                ", stateEnum='" + stateEnum + '\'' +
++                ", livreBean=" + livreBean +
+                 '}';
+     }
+ }
+Index: microservice-myclient/src/main/java/com/bibliotheque/microservicemyclient/dto/CopieBeanDTO.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- microservice-myclient/src/main/java/com/bibliotheque/microservicemyclient/dto/CopieBeanDTO.java	(date 1597755557310)
++++ microservice-myclient/src/main/java/com/bibliotheque/microservicemyclient/dto/CopieBeanDTO.java	(date 1597755557310)
+@@ -0,0 +1,63 @@
++package com.bibliotheque.microservicemyclient.dto;
++
++import com.bibliotheque.microservicemyclient.bean.CopieBean;
++import com.bibliotheque.microservicemyclient.bean.EmpruntBean;
++import com.bibliotheque.microservicemyclient.bean.LivreBean;
++
++public class CopieBeanDTO {
++
++    private Long id;
++    private Integer isbn;
++    private EmpruntBean emprunt;
++    private CopieBean copie;
++    private LivreBean livre;
++    private boolean disponible;
++
++    public boolean isDisponible() {
++        return disponible;
++    }
++
++    public void setDisponible(boolean disponible) {
++        this.disponible = disponible;
++    }
++
++    public Integer getIsbn() {
++        return isbn;
++    }
++
++    public void setIsbn(Integer isbn) {
++        this.isbn = isbn;
++    }
++
++    public Long getId() {
++        return id;
++    }
++
++    public void setId(Long id) {
++        this.id = id;
++    }
++
++    public LivreBean getLivre() {
++        return livre;
++    }
++
++    public void setLivre(LivreBean livre) {
++        this.livre = livre;
++    }
++
++    public EmpruntBean getEmprunt() {
++        return emprunt;
++    }
++
++    public void setEmprunt(EmpruntBean empruntBean) {
++        this.emprunt = empruntBean;
++    }
++
++    public CopieBean getCopie() {
++        return copie;
++    }
++
++    public void setCopie(CopieBean copie) {
++        this.copie = copie;
++    }
++}
+Index: microservice-myclient/src/main/java/com/bibliotheque/microservicemyclient/dto/EmpruntBeanDTO.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- microservice-myclient/src/main/java/com/bibliotheque/microservicemyclient/dto/EmpruntBeanDTO.java	(date 1597755557313)
++++ microservice-myclient/src/main/java/com/bibliotheque/microservicemyclient/dto/EmpruntBeanDTO.java	(date 1597755557313)
+@@ -0,0 +1,36 @@
++package com.bibliotheque.microservicemyclient.dto;
++
++import com.bibliotheque.microservicemyclient.bean.CopieBean;
++import com.bibliotheque.microservicemyclient.bean.EmpruntBean;
++import com.bibliotheque.microservicemyclient.bean.LivreBean;
++
++public class EmpruntBeanDTO {
++
++    private EmpruntBean emprunt;
++    private CopieBean copie;
++    private LivreBean livre;
++
++    public EmpruntBean getEmprunt() {
++        return emprunt;
++    }
++
++    public void setEmprunt(EmpruntBean emprunt) {
++        this.emprunt = emprunt;
++    }
++
++    public CopieBean getCopie() {
++        return copie;
++    }
++
++    public void setCopie(CopieBean copie) {
++        this.copie = copie;
++    }
++
++    public LivreBean getLivre() {
++        return livre;
++    }
++
++    public void setLivre(LivreBean livre) {
++        this.livre = livre;
++    }
++}
+Index: microservice-myclient/src/main/java/com/bibliotheque/microservicemyclient/exeptions/CannotAddBookingException.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- microservice-myclient/src/main/java/com/bibliotheque/microservicemyclient/exeptions/CannotAddBookingException.java	(date 1597755557320)
++++ microservice-myclient/src/main/java/com/bibliotheque/microservicemyclient/exeptions/CannotAddBookingException.java	(date 1597755557320)
+@@ -0,0 +1,11 @@
++package com.bibliotheque.microservicemyclient.exeptions;
++
++import org.springframework.http.HttpStatus;
++import org.springframework.web.bind.annotation.ResponseStatus;
++
++@ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
++public class CannotAddBookingException extends RuntimeException{
++    public CannotAddBookingException(String message){
++        super(message);
++    }
++}
+\ No newline at end of file
+Index: microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/dto/ReservationDTO.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/dto/ReservationDTO.java	(date 1597755557360)
++++ microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/dto/ReservationDTO.java	(date 1597755557360)
+@@ -0,0 +1,55 @@
++package com.bibliotheque.microservicemylibrary.dto;
++
++import com.bibliotheque.microservicemylibrary.model.Emprunt;
++import com.bibliotheque.microservicemylibrary.model.Livre;
++import com.bibliotheque.microservicemylibrary.model.Reservation;
++
++
++public class ReservationDTO {
++
++    private Livre livre;
++    private Reservation reservation;
++    private Emprunt emprunt;
++    private Integer position;
++    private String stateEnum;
++
++    public Livre getLivre() {
++        return livre;
++    }
++
++    public void setLivre(Livre livre) {
++        this.livre = livre;
++    }
++
++    public Reservation getReservation() {
++        return reservation;
++    }
++
++    public void setReservation(Reservation reservation) {
++        this.reservation = reservation;
++    }
++
++    public Emprunt getEmprunt() {
++        return emprunt;
++    }
++
++    public void setEmprunt(Emprunt emprunt) {
++        this.emprunt = emprunt;
++    }
++
++    public Integer getPosition() {
++        return position;
++    }
++
++    public void setPosition(Integer position) {
++        this.position = position;
++    }
++
++    public String getStateEnum() {
++        return stateEnum;
++    }
++
++    public void setStateEnum(String stateEnum) {
++        this.stateEnum = stateEnum;
++    }
++}
+Index: microservice-myclient/src/main/java/com/bibliotheque/microservicemyclient/exeptions/CustumErrorDecoder.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.bibliotheque.microservicemyclient.exeptions;\r\n\r\nimport feign.Response;\r\nimport feign.codec.ErrorDecoder;\r\n\r\npublic class CustumErrorDecoder implements ErrorDecoder {\r\n\r\n    private final ErrorDecoder defaultErrorDecoder = new Default();\r\n\r\n    @Override\r\n    public Exception decode(String methodKey, Response response) {\r\n        if (response.status()==404){\r\n            return new LivresNotFoundException(\"livre non trouvé\");\r\n        }\r\n        return defaultErrorDecoder.decode(methodKey, response);\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- microservice-myclient/src/main/java/com/bibliotheque/microservicemyclient/exeptions/CustumErrorDecoder.java	(revision 6a2320f00477d9ee07a2747f7b10127f4c0d1f98)
++++ microservice-myclient/src/main/java/com/bibliotheque/microservicemyclient/exeptions/CustumErrorDecoder.java	(date 1597755557325)
+@@ -1,17 +1,45 @@
+ package com.bibliotheque.microservicemyclient.exeptions;
+ 
++import com.fasterxml.jackson.databind.ObjectMapper;
+ import feign.Response;
+ import feign.codec.ErrorDecoder;
+ 
++import java.io.IOException;
++
+ public class CustumErrorDecoder implements ErrorDecoder {
+ 
+     private final ErrorDecoder defaultErrorDecoder = new Default();
+ 
+     @Override
+     public Exception decode(String methodKey, Response response) {
++
+         if (response.status()==404){
+             return new LivresNotFoundException("livre non trouvé");
+         }
++
++        ObjectMapper mapper = new ObjectMapper();
++        try {
++            ApiError error = mapper.readValue(response.body().asInputStream(), ApiError.class);
++            switch (error.getMessage()){
++                case "cannotBorrowException01":
++                    return new CannotAddBorrowingException("Emprunt impossible, vous avez  déjà un emprunt en cours pour cet ouvrage");
++
++                case "cannotBookingException01":
++                    return new CannotAddBookingException("réservation impossible, vous avez déjà une réservation en cours pour cet ouvrage");
++
++                case "cannotBookingException02":
++                    return new CannotAddBookingException("réservation impossible, vous avez déjà un emprunt en cours pour cet ouvrage");
++
++                case "cannotBookingException03":
++                    return new CannotAddBookingException("réservation impossible, la liste des réservations pour cet ouvrage est compléte");
++
++                default: return defaultErrorDecoder.decode(methodKey, response);
++
++            }
++        } catch (IOException e) {
++            e.printStackTrace();
++        }
++
+         return defaultErrorDecoder.decode(methodKey, response);
+     }
+ }
+Index: microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/model/Email.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.bibliotheque.microservicemylibrary.model;\r\n\r\nimport lombok.Data;\r\nimport lombok.NoArgsConstructor;\r\nimport lombok.NonNull;\r\nimport lombok.RequiredArgsConstructor;\r\n\r\nimport javax.persistence.*;\r\n\r\n@NoArgsConstructor\r\n@RequiredArgsConstructor\r\n@Entity\r\npublic @Data\r\nclass Email {\r\n    @Id\r\n    @GeneratedValue(strategy = GenerationType.AUTO)\r\n    private Long id;\r\n\r\n    @NonNull\r\n    private String name;\r\n\r\n    @NonNull\r\n    @Column(columnDefinition = \"TEXT\")\r\n    private String objet;\r\n\r\n    @NonNull\r\n    @Column(columnDefinition = \"TEXT\")\r\n    private String contenu;\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/model/Email.java	(revision 6a2320f00477d9ee07a2747f7b10127f4c0d1f98)
++++ microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/model/Email.java	(date 1597755557368)
+@@ -1,16 +1,15 @@
+ package com.bibliotheque.microservicemylibrary.model;
+ 
+-import lombok.Data;
+-import lombok.NoArgsConstructor;
+-import lombok.NonNull;
+-import lombok.RequiredArgsConstructor;
++import lombok.*;
+ 
+ import javax.persistence.*;
+ 
+ @NoArgsConstructor
+ @RequiredArgsConstructor
+ @Entity
+-public @Data
++@Getter
++@Setter
++public
+ class Email {
+     @Id
+     @GeneratedValue(strategy = GenerationType.AUTO)
+Index: microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/service/copie/ICopieService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.bibliotheque.microservicemylibrary.service.copie;\r\n\r\nimport com.bibliotheque.microservicemylibrary.model.Copie;\r\n\r\nimport java.util.List;\r\nimport java.util.Optional;\r\n\r\npublic interface ICopieService {\r\n\r\n    //trouve les dopie d'un livre par son id\r\n    List<Copie> findAllByLivreId(Long id);\r\n\r\n    //trouve une copie par son id\r\n    Optional<Copie> findById(Long id);\r\n\r\n    //enregistre une copie\r\n    Copie save(Copie copie);\r\n\r\n    //trouve les copies disponibles d'un livre\r\n    List<Copie> getCopieLivresDisponibles(Long idLivre);\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/service/copie/ICopieService.java	(revision 6a2320f00477d9ee07a2747f7b10127f4c0d1f98)
++++ microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/service/copie/ICopieService.java	(date 1597755557376)
+@@ -18,4 +18,7 @@
+ 
+     //trouve les copies disponibles d'un livre
+     List<Copie> getCopieLivresDisponibles(Long idLivre);
++
++    //trouve les copies inDisponibles d'un livre
++    List<Copie> getCopieLivresIndisponibles(Long id);
+ }
+Index: microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/service/copie/ICopieServiceImpl.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.bibliotheque.microservicemylibrary.service.copie;\r\n\r\nimport com.bibliotheque.microservicemylibrary.dao.ICopieDao;\r\nimport com.bibliotheque.microservicemylibrary.model.Copie;\r\nimport org.springframework.beans.factory.annotation.Autowired;\r\nimport org.springframework.stereotype.Service;\r\n\r\nimport java.util.List;\r\nimport java.util.Optional;\r\n\r\n@Service\r\npublic class ICopieServiceImpl implements ICopieService {\r\n\r\n    @Autowired\r\n    ICopieDao iCopieDao;\r\n\r\n    /**\r\n     * Permet de trouver toutes les copies d'un livre\r\n     * @param id identifiant du livre\r\n     * @return la liste des copies d'un livre\r\n     */\r\n    @Override\r\n    public List<Copie> findAllByLivreId(Long id){\r\n        return iCopieDao.findAllByLivreId(id);\r\n    }\r\n\r\n    /**\r\n     * Permet de trouver une copie\r\n     * @param id identifiant de la copie\r\n     * @return la copie\r\n     */\r\n    @Override\r\n    public Optional<Copie> findById(Long id){\r\n        return iCopieDao.findById(id);\r\n    }\r\n\r\n    /**\r\n     * Permet d'enregitrer une copie\r\n     * @param copie Objet à enregitrer\r\n     * @return Objet copie\r\n     */\r\n    @Override\r\n    public Copie save(Copie copie){\r\n        return iCopieDao.save(copie);\r\n    }\r\n\r\n    /**\r\n     * Permet de trouver les copies disponibles d'un livre\r\n     * @param idLivre identifiant du livre\r\n     * @return la liste des copies disponibles\r\n     */\r\n    @Override\r\n    public List<Copie> getCopieLivresDisponibles(Long idLivre){\r\n        return iCopieDao.getCopieLivresDisponibles(idLivre);\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/service/copie/ICopieServiceImpl.java	(revision 6a2320f00477d9ee07a2747f7b10127f4c0d1f98)
++++ microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/service/copie/ICopieServiceImpl.java	(date 1597755557377)
+@@ -53,4 +53,9 @@
+     public List<Copie> getCopieLivresDisponibles(Long idLivre){
+         return iCopieDao.getCopieLivresDisponibles(idLivre);
+     }
++
++    @Override
++    public List<Copie> getCopieLivresIndisponibles(Long id) {
++        return iCopieDao.getCopieLivresIndisponibles(id);
++    }
+ }
+Index: microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/dto/CopieDTO.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/dto/CopieDTO.java	(date 1597755557357)
++++ microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/dto/CopieDTO.java	(date 1597755557357)
+@@ -0,0 +1,67 @@
++package com.bibliotheque.microservicemylibrary.dto;
++
++import com.bibliotheque.microservicemylibrary.model.Copie;
++import com.bibliotheque.microservicemylibrary.model.Emprunt;
++import com.bibliotheque.microservicemylibrary.model.Livre;
++
++import java.util.Optional;
++
++public class CopieDTO {
++
++    private Long id;
++    private Integer isbn;
++    private Emprunt emprunt;
++    private Copie copie;
++    private Livre livre;
++    private boolean disponible;
++
++    public Long getId() {
++        return id;
++    }
++
++    public void setId(Long id) {
++        this.id = id;
++    }
++
++    public Integer getIsbn() {
++        return isbn;
++    }
++
++    public void setIsbn(Integer isbn) {
++        this.isbn = isbn;
++    }
++
++    public boolean isDisponible() {
++        return disponible;
++    }
++
++    public void setDisponible(boolean disponible) {
++        this.disponible = disponible;
++    }
++
++    public Livre getLivre() {
++        return livre;
++    }
++
++    public void setLivre(Livre livre) {
++        this.livre = livre;
++    }
++
++    public Emprunt getEmprunt() {
++        return emprunt;
++    }
++
++    public void setEmprunt(Emprunt emprunt) {
++        this.emprunt = emprunt;
++    }
++
++    public Copie getCopie() {
++        return copie;
++    }
++
++    public void setCopie(Copie copie) {
++        this.copie = copie;
++    }
++
++
++}
+Index: microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/dto/EmpruntDTO.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/dto/EmpruntDTO.java	(date 1597755557358)
++++ microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/dto/EmpruntDTO.java	(date 1597755557358)
+@@ -0,0 +1,36 @@
++package com.bibliotheque.microservicemylibrary.dto;
++
++import com.bibliotheque.microservicemylibrary.model.Copie;
++import com.bibliotheque.microservicemylibrary.model.Emprunt;
++import com.bibliotheque.microservicemylibrary.model.Livre;
++
++public class EmpruntDTO {
++
++    private Emprunt emprunt;
++    private Copie copie;
++    private Livre livre;
++
++    public Livre getLivre() {
++        return livre;
++    }
++
++    public void setLivre(Livre livre) {
++        this.livre = livre;
++    }
++
++    public Copie getCopie() {
++        return copie;
++    }
++
++    public void setCopie(Copie copie) {
++        this.copie = copie;
++    }
++
++    public Emprunt getEmprunt() {
++        return emprunt;
++    }
++
++    public void setEmprunt(Emprunt emprunt) {
++        this.emprunt = emprunt;
++    }
++}
+Index: microservice-myclient/src/main/java/com/bibliotheque/microservicemyclient/bean/CopieBean.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.bibliotheque.microservicemyclient.bean;\r\n\r\nimport com.fasterxml.jackson.annotation.JsonProperty;\r\nimport lombok.Data;\r\nimport lombok.Getter;\r\nimport lombok.NoArgsConstructor;\r\nimport lombok.Setter;\r\n\r\nimport java.io.Serializable;\r\nimport java.util.List;\r\nimport java.util.Set;\r\n\r\n@NoArgsConstructor\r\n@Getter\r\n@Setter\r\npublic @Data\r\nclass CopieBean implements Serializable {\r\n\r\n    private Long id;\r\n\r\n    private Integer isbn;\r\n\r\n    private boolean disponible;\r\n\r\n    @JsonProperty(\"livre\")\r\n    private LivreBean livreBean;\r\n\r\n    @JsonProperty(\"reservation\")\r\n    private List<ReservationBean> reservationBeans;\r\n\r\n    public CopieBean(Long id, Integer isbn, boolean disponible, LivreBean livreBean, List<ReservationBean> reservationBeans) {\r\n        this.id = id;\r\n        this.isbn = isbn;\r\n        this.disponible = disponible;\r\n        this.livreBean = livreBean;\r\n        this.reservationBeans = reservationBeans;\r\n    }\r\n\r\n    @Override\r\n    public String toString() {\r\n        return \"CopieBean{\" +\r\n                \"id=\" + id +\r\n                \", isbn=\" + isbn +\r\n                \", disponible=\" + disponible +\r\n                \", livreBean=\" + livreBean +\r\n                \", reservationBeans=\" + reservationBeans +\r\n                '}';\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- microservice-myclient/src/main/java/com/bibliotheque/microservicemyclient/bean/CopieBean.java	(revision 6a2320f00477d9ee07a2747f7b10127f4c0d1f98)
++++ microservice-myclient/src/main/java/com/bibliotheque/microservicemyclient/bean/CopieBean.java	(date 1597755557292)
+@@ -8,13 +8,11 @@
+ 
+ import java.io.Serializable;
+ import java.util.List;
+-import java.util.Set;
+ 
+ @NoArgsConstructor
+ @Getter
+ @Setter
+-public @Data
+-class CopieBean implements Serializable {
++public class CopieBean implements Serializable {
+ 
+     private Long id;
+ 
+@@ -25,15 +23,15 @@
+     @JsonProperty("livre")
+     private LivreBean livreBean;
+ 
+-    @JsonProperty("reservation")
+-    private List<ReservationBean> reservationBeans;
++    @JsonProperty("emprunts")
++    private List<EmpruntBean> empruntBeans;
+ 
+-    public CopieBean(Long id, Integer isbn, boolean disponible, LivreBean livreBean, List<ReservationBean> reservationBeans) {
++    public CopieBean(Long id, Integer isbn, boolean disponible, LivreBean livreBean, List<EmpruntBean> empruntBeans) {
+         this.id = id;
+         this.isbn = isbn;
+         this.disponible = disponible;
+         this.livreBean = livreBean;
+-        this.reservationBeans = reservationBeans;
++        this.empruntBeans = empruntBeans;
+     }
+ 
+     @Override
+@@ -43,7 +41,7 @@
+                 ", isbn=" + isbn +
+                 ", disponible=" + disponible +
+                 ", livreBean=" + livreBean +
+-                ", reservationBeans=" + reservationBeans +
++                ", empruntBeans=" + empruntBeans +
+                 '}';
+     }
+ }
+Index: microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/dao/ILivreDao.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.bibliotheque.microservicemylibrary.dao;\r\n\r\nimport com.bibliotheque.microservicemylibrary.model.Livre;\r\nimport org.springframework.data.jpa.repository.JpaRepository;\r\nimport org.springframework.data.jpa.repository.Query;\r\nimport org.springframework.data.repository.query.Param;\r\nimport org.springframework.stereotype.Repository;\r\n\r\nimport java.util.List;\r\nimport java.util.Optional;\r\n\r\n@Repository\r\npublic interface\r\nILivreDao extends JpaRepository<Livre, Long> {\r\n\r\n    //recupere la liste de tous les livres\r\n    List<Livre> findAll();\r\n\r\n    //recupere un livre par son id\r\n    Optional<Livre> findById(Long id);\r\n\r\n    //sauvegarder un livre\r\n    Livre save(Livre livre);\r\n\r\n    //recherche par titre\r\n    @Query(\"select t from Livre t where lower(t.titre) like lower(concat('%',:x,'%')) order by t.id\")\r\n    List<Livre> chercherParTitre(@Param(\"x\")String motCle);\r\n\r\n    //recherche par nom auteur\r\n    @Query(\"select n from Livre n where lower(n.nomAuteur) like lower(concat('%',:x,'%')) order by n.id\")\r\n    List<Livre> chercherParNom(@Param(\"x\")String motcle);\r\n\r\n\r\n}\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/dao/ILivreDao.java	(revision 6a2320f00477d9ee07a2747f7b10127f4c0d1f98)
++++ microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/dao/ILivreDao.java	(date 1597755557355)
+@@ -28,8 +28,9 @@
+ 
+     //recherche par nom auteur
+     @Query("select n from Livre n where lower(n.nomAuteur) like lower(concat('%',:x,'%')) order by n.id")
+-    List<Livre> chercherParNom(@Param("x")String motcle);
++    List<Livre> chercherParNomAuteur(@Param("x")String motcle);
+ 
++    Optional<Livre> findByCopiesId(Long id);
+ 
+ }
+ 
