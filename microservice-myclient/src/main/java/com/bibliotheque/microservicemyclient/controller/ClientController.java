@@ -65,12 +65,12 @@ public class ClientController {
     @GetMapping("/livres")
     public String afficherUneListeDeLivres(Model model){
 
-       List<LivreBean> livreBeanList = iMicroserviceMyLibraryProxyService.ListeDeLivres();
-       model.addAttribute("livreBeanList", livreBeanList);
+        List<LivreBean> livreBeanList = iMicroserviceMyLibraryProxyService.ListeDeLivres();
+        model.addAttribute("livreBeanList", livreBeanList);
 
-       logger.info("Liste de livre demandée");
+        logger.info("Liste de livre demandée");
 
-       return "Livres";
+        return "Livres";
     }
 
     //afficher un livre
@@ -164,6 +164,7 @@ public class ClientController {
         logger.info("l'utilisateur : "+utilisateurBean.getPseudo()+" a prolonger le prêt dont l' id est : "+ empruntBean.getId());
 
         return "redirect:/profil";
+
     }
 
     /*============== #Reservation ======================*/

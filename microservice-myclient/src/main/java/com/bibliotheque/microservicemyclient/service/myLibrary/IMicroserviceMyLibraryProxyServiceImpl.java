@@ -89,7 +89,7 @@ public class IMicroserviceMyLibraryProxyServiceImpl implements IMicroserviceMyLi
      */
     @Override
     public void demandeEmprunt(Long id, Long idUtilisateur) {
-    iMicroserviceMyLibraryProxy.demandeEmprunt(id, idUtilisateur);
+        iMicroserviceMyLibraryProxy.demandeEmprunt(id, idUtilisateur);
     }
 
     /**
