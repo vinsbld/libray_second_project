@@ -47,7 +47,6 @@ public class BatchConfig {
                 .build();
     }
 
-
     @Bean
     public Step stepTwo(){
         return steps.get("stepTwo")

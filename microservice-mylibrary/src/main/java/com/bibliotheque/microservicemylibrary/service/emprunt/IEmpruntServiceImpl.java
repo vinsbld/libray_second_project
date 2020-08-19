@@ -24,7 +24,7 @@ public class IEmpruntServiceImpl implements IEmpruntService {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         calendar.add(Calendar.WEEK_OF_MONTH, 4);
-    return calendar.getTime();}
+        return calendar.getTime();}
 
     /**
      * Permet d'afficher la liste des emprunts pour un utilisateur
@@ -63,7 +63,7 @@ public class IEmpruntServiceImpl implements IEmpruntService {
      */
     @Override
     public List<Emprunt> relance(Date dateNow){
-       return iEmpruntDao.findAllByDateRetourIsNullAndAndDateDeFinEmpruntBefore(dateNow);
+        return iEmpruntDao.findAllByDateRetourIsNullAndAndDateDeFinEmpruntBefore(dateNow);
     }
 
     /**
@@ -101,4 +101,3 @@ public class IEmpruntServiceImpl implements IEmpruntService {
 
 
 }
-

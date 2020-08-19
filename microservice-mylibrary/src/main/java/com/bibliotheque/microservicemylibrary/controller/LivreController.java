@@ -63,15 +63,15 @@ public class LivreController {
 
     @RequestMapping(value = "/addLivre", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public String ajouterUnLivre(@RequestBody Livre livre){
-       iLivreService.save(livre);
-       logger.info("ajout d'une demande de reservation pour un livre");
-       return "ok";
+        iLivreService.save(livre);
+        logger.info("ajout d'une demande de reservation pour un livre");
+        return "ok";
     }
 
     @RequestMapping(value = "/recherche", method = RequestMethod.GET)
     public List<Livre> faireUneRechercheParTitre(@RequestParam(name = "mc", defaultValue = "")String mc){
         logger.info("recherche pour un livre");
-       return iLivreService.chercherParTitre("%"+mc+"%");
+        return iLivreService.chercherParTitre("%"+mc+"%");
     }
 
 }

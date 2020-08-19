@@ -32,4 +32,14 @@ class Copie {
     @OneToMany(mappedBy = "copie", fetch = FetchType.EAGER)
     private List<Emprunt> emprunts;
 
+    @Override
+    public String toString() {
+        return "Copie{" +
+                "id=" + id +
+                ", isbn=" + isbn +
+                ", disponible=" + disponible +
+                ", livre=" + livre +
+                ", emprunts=" + emprunts +
+                '}';
+    }
 }

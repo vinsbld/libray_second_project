@@ -33,4 +33,3 @@ ILivreDao extends JpaRepository<Livre, Long> {
     Optional<Livre> findByCopiesId(Long id);
 
 }
-

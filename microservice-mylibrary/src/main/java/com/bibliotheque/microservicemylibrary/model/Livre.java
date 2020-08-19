@@ -23,12 +23,9 @@ class Livre {
     @GeneratedValue
     private Long id;
 
-
     private String titre;
 
-
     private String nomAuteur;
-
 
     private String prenomAuteur;
 
@@ -84,5 +81,18 @@ class Livre {
         return copies.size();
     }
 
-
+    @Override
+    public String toString() {
+        return "Livre{" +
+                "id=" + id +
+                ", titre='" + titre + '\'' +
+                ", nomAuteur='" + nomAuteur + '\'' +
+                ", prenomAuteur='" + prenomAuteur + '\'' +
+                ", dateEdition=" + dateEdition +
+                ", editeur='" + editeur + '\'' +
+                ", dateRetourLaPlusProche=" + dateRetourLaPlusProche +
+                ", copies=" + copies +
+                ", reservations=" + reservations +
+                '}';
+    }
 }

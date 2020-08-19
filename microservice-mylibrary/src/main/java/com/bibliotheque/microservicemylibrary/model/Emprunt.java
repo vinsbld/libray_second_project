@@ -20,7 +20,6 @@ class Emprunt {
     @GeneratedValue
     private Long id;
 
-
     private Long idUtilisateur;
 
     @DateTimeFormat(pattern="dd-MM-yyyy")
@@ -43,5 +42,18 @@ class Emprunt {
     private Copie copie;
 
 
-
+    @Override
+    public String toString() {
+        return "Emprunt{" +
+                "id=" + id +
+                ", idUtilisateur=" + idUtilisateur +
+                ", dateDeDebutEmprunt=" + dateDeDebutEmprunt +
+                ", dateDeFinEmprunt=" + dateDeFinEmprunt +
+                ", dateRetour=" + dateRetour +
+                ", rendu=" + rendu +
+                ", dateDuJour=" + dateDuJour +
+                ", prolongerEmprunt=" + prolongerEmprunt +
+                ", copie=" + copie +
+                '}';
+    }
 }
