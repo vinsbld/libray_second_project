@@ -63,7 +63,7 @@ public class MyTaskTwo implements Tasklet {
         }
 
 
-       List<Reservation> reservations = iReservationDao.findByLivreAndStateEnumsOrderByDateDeReservationAsc(reservationList.get(0).getLivre(), StateEnum.enCours);
+        List<Reservation> reservations = iReservationDao.findByLivreAndStateEnumsOrderByDateDeReservationAsc(reservationList.get(0).getLivre(), StateEnum.enCours);
         if (reservations.size() > 0){
             System.out.println("debut du batch réservation");
             Reservation reservation = reservations.get(0);
@@ -117,4 +117,3 @@ public class MyTaskTwo implements Tasklet {
         sender.send(message);
     }
 }
-

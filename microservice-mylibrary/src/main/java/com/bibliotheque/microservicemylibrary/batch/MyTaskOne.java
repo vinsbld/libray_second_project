@@ -45,7 +45,7 @@ public class MyTaskOne implements Tasklet {
 
         SimpleDateFormat oldFormat = new SimpleDateFormat("dd/MM/yyyy");
         Date date = new Date();
-       List<Emprunt> empruntList = iEmpruntDao.findAllByDateRetourIsNullAndAndDateDeFinEmpruntBefore(date);
+        List<Emprunt> empruntList = iEmpruntDao.findAllByDateRetourIsNullAndAndDateDeFinEmpruntBefore(date);
 
         ArrayList<EmailType> emailType = new ArrayList<>();
 
@@ -71,7 +71,7 @@ public class MyTaskOne implements Tasklet {
         for (EmailType e: emailList) {
             String text = email.getContenu()
                     .replace("[LIVRE_TITRE]", e.getTitre())
-                            .replace("[DATE_FIN]", e.getDateDeFinEmprunt());
+                    .replace("[DATE_FIN]", e.getDateDeFinEmprunt());
             this.sendSimpleMessage(e.getEmail(),email.getObjet(),text);
         }
     }
