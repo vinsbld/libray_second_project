@@ -1,0 +1,248 @@
+Index: microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/batch/MyTaskOne.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.bibliotheque.microservicemylibrary.batch;\r\n\r\nimport com.bibliotheque.microservicemylibrary.beans.UtilisateurBean;\r\nimport com.bibliotheque.microservicemylibrary.dao.IEmailDao;\r\nimport com.bibliotheque.microservicemylibrary.dao.IEmpruntDao;\r\nimport com.bibliotheque.microservicemylibrary.model.Email;\r\nimport com.bibliotheque.microservicemylibrary.model.Emprunt;\r\nimport com.bibliotheque.microservicemylibrary.outils.EmailType;\r\nimport com.bibliotheque.microservicemylibrary.proxies.IMicroserviceMyUsersProxy;\r\nimport org.springframework.batch.core.StepContribution;\r\nimport org.springframework.batch.core.scope.context.ChunkContext;\r\nimport org.springframework.batch.core.step.tasklet.Tasklet;\r\nimport org.springframework.batch.repeat.RepeatStatus;\r\nimport org.springframework.mail.SimpleMailMessage;\r\nimport org.springframework.mail.javamail.JavaMailSenderImpl;\r\n\r\nimport java.text.SimpleDateFormat;\r\nimport java.util.ArrayList;\r\nimport java.util.Date;\r\nimport java.util.List;\r\n\r\npublic class MyTaskOne implements Tasklet {\r\n\r\n\r\n    private final IEmpruntDao iEmpruntDao;\r\n    private final IEmailDao iEmailDao;\r\n    private final IMicroserviceMyUsersProxy iMicroserviceMyUsersProxy;\r\n    private final JavaMailSenderImpl sender;\r\n\r\n    /**\r\n     * Tache par batch permettant de relancer les utilisateurs qui n'ont pas rendu leurs livres\r\n     */\r\n    public MyTaskOne(IEmpruntDao iEmpruntDao, IEmailDao iEmailDao, IMicroserviceMyUsersProxy iMicroserviceMyUsersProxy, JavaMailSenderImpl sender) {\r\n        this.iEmpruntDao = iEmpruntDao;\r\n        this.iEmailDao = iEmailDao;\r\n        this.iMicroserviceMyUsersProxy = iMicroserviceMyUsersProxy;\r\n        this.sender = sender;\r\n    }\r\n\r\n\r\n    @Override\r\n    public RepeatStatus execute(StepContribution stepContribution, ChunkContext chunkContext) throws Exception {\r\n\r\n        System.out.println(\"debut du batch de relance\");\r\n\r\n        SimpleDateFormat oldFormat = new SimpleDateFormat(\"dd/MM/yyyy\");\r\n        Date date = new Date();\r\n       List<Emprunt> empruntList = iEmpruntDao.findAllByDateRetourIsNullAndDateDeFinDuPretBefore(date);\r\n\r\n        ArrayList<EmailType> emailType = new ArrayList<>();\r\n\r\n        if (empruntList.size() > 0)\r\n            for (Emprunt res : empruntList) {\r\n                UtilisateurBean utilisateurBean = iMicroserviceMyUsersProxy.findById(res.getIdUtilisateur());\r\n                emailType.add(new EmailType(utilisateurBean.getEmail(), res.getCopie().getLivre().getTitre(), oldFormat.format(res.getDateDeFinDuPret())));\r\n\r\n            }\r\n\r\n        List<EmailType> emailList = new ArrayList<>(emailType);\r\n        this.sendRevival(emailList);\r\n\r\n        System.out.println(\"fin du batch de relance\");\r\n\r\n        return RepeatStatus.FINISHED;\r\n    }\r\n\r\n    public void sendRevival(List<EmailType> emailList){\r\n\r\n        Email email = iEmailDao.findByName(\"relance\");\r\n\r\n\r\n        for (EmailType e: emailList) {\r\n            String text = email.getContenu()\r\n                    .replace(\"[LIVRE_TITRE]\", e.getTitre())\r\n                            .replace(\"[DATE_FIN]\", e.getDateDeFinDuPret());\r\n            this.sendSimpleMessage(e.getEmail(),email.getObjet(),text);\r\n        }\r\n    }\r\n\r\n    private void sendSimpleMessage(String email, String objet, String contenu) {\r\n        SimpleMailMessage message = new SimpleMailMessage();\r\n        message.setTo(email);\r\n        message.setSubject(objet);\r\n        message.setText(contenu);\r\n        sender.send(message);\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/batch/MyTaskOne.java	(revision 25eb96576e93298421a656eba986e2c4c763150c)
++++ microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/batch/MyTaskOne.java	(date 1597844312877)
+@@ -45,15 +45,14 @@
+ 
+         SimpleDateFormat oldFormat = new SimpleDateFormat("dd/MM/yyyy");
+         Date date = new Date();
+-       List<Emprunt> empruntList = iEmpruntDao.findAllByDateRetourIsNullAndDateDeFinDuPretBefore(date);
++        List<Emprunt> empruntList = iEmpruntDao.findAllByDateRetourIsNullAndAndDateDeFinEmpruntBefore(date);
+ 
+         ArrayList<EmailType> emailType = new ArrayList<>();
+ 
+         if (empruntList.size() > 0)
+             for (Emprunt res : empruntList) {
+                 UtilisateurBean utilisateurBean = iMicroserviceMyUsersProxy.findById(res.getIdUtilisateur());
+-                emailType.add(new EmailType(utilisateurBean.getEmail(), res.getCopie().getLivre().getTitre(), oldFormat.format(res.getDateDeFinDuPret())));
+-
++                emailType.add(new EmailType(utilisateurBean.getEmail(), res.getCopie().getLivre().getTitre(), oldFormat.format(res.getDateDeFinEmprunt())));
+             }
+ 
+         List<EmailType> emailList = new ArrayList<>(emailType);
+@@ -72,7 +71,7 @@
+         for (EmailType e: emailList) {
+             String text = email.getContenu()
+                     .replace("[LIVRE_TITRE]", e.getTitre())
+-                            .replace("[DATE_FIN]", e.getDateDeFinDuPret());
++                    .replace("[DATE_FIN]", e.getDateDeFinEmprunt());
+             this.sendSimpleMessage(e.getEmail(),email.getObjet(),text);
+         }
+     }
+@@ -84,4 +83,4 @@
+         message.setText(contenu);
+         sender.send(message);
+     }
+-}
++}
+\ No newline at end of file
+Index: microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/batch/BatchJob.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.bibliotheque.microservicemylibrary.batch;\r\n\r\nimport org.springframework.batch.core.Job;\r\nimport org.springframework.batch.core.JobParameters;\r\nimport org.springframework.batch.core.JobParametersBuilder;\r\nimport org.springframework.batch.core.launch.JobLauncher;\r\nimport org.springframework.beans.factory.annotation.Autowired;\r\nimport org.springframework.scheduling.annotation.Scheduled;\r\nimport org.springframework.stereotype.Component;\r\n\r\n@Component\r\npublic class BatchJob {\r\n\r\n    @Autowired\r\n    JobLauncher jobLauncher;\r\n\r\n    @Autowired\r\n    Job job;\r\n\r\n    /**\r\n     * Programmation de la relance par mail tous les jours, heure réglable dans le bootstap.properties du microservice\r\n     * @throws Exception\r\n     */\r\n    @Scheduled(cron = \"${microservice.config.cron.job}\")\r\n    public void lendingRevival() throws Exception\r\n    {\r\n        JobParameters params = new JobParametersBuilder()\r\n                .addString(\"JobID\", String.valueOf(System.currentTimeMillis()))\r\n                .toJobParameters();\r\n        jobLauncher.run(job, params);\r\n\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/batch/BatchJob.java	(revision 25eb96576e93298421a656eba986e2c4c763150c)
++++ microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/batch/BatchJob.java	(date 1597844285645)
+@@ -22,7 +22,7 @@
+      * @throws Exception
+      */
+     @Scheduled(cron = "${microservice.config.cron.job}")
+-    public void lendingRevival() throws Exception
++    public void revival() throws Exception
+     {
+         JobParameters params = new JobParametersBuilder()
+                 .addString("JobID", String.valueOf(System.currentTimeMillis()))
+@@ -30,4 +30,4 @@
+         jobLauncher.run(job, params);
+ 
+     }
+-}
++}
+\ No newline at end of file
+Index: microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/batch/MyTaskTwo.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/batch/MyTaskTwo.java	(date 1597844365989)
++++ microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/batch/MyTaskTwo.java	(date 1597844365989)
+@@ -0,0 +1,119 @@
++package com.bibliotheque.microservicemylibrary.batch;
++
++
++import com.bibliotheque.microservicemylibrary.beans.UtilisateurBean;
++import com.bibliotheque.microservicemylibrary.dao.IEmailDao;
++import com.bibliotheque.microservicemylibrary.dao.IReservationDao;
++import com.bibliotheque.microservicemylibrary.model.Email;
++import com.bibliotheque.microservicemylibrary.model.Reservation;
++import com.bibliotheque.microservicemylibrary.model.StateEnum;
++import com.bibliotheque.microservicemylibrary.outils.EmailTypeReservation;
++import com.bibliotheque.microservicemylibrary.proxies.IMicroserviceMyUsersProxy;
++import org.apache.commons.lang.time.DateUtils;
++import org.springframework.batch.core.StepContribution;
++import org.springframework.batch.core.scope.context.ChunkContext;
++import org.springframework.batch.core.step.tasklet.Tasklet;
++import org.springframework.batch.repeat.RepeatStatus;
++import org.springframework.mail.SimpleMailMessage;
++import org.springframework.mail.javamail.JavaMailSenderImpl;
++
++import java.text.SimpleDateFormat;
++import java.util.ArrayList;
++import java.util.Date;
++import java.util.List;
++
++public class MyTaskTwo implements Tasklet {
++
++
++    private final IReservationDao iReservationDao;
++    private final IEmailDao iEmailDao;
++    private final IMicroserviceMyUsersProxy iMicroserviceMyUsersProxy;
++    private final JavaMailSenderImpl sender;
++
++    public MyTaskTwo(IReservationDao iReservationDao, IEmailDao iEmailDao, IMicroserviceMyUsersProxy iMicroserviceMyUsersProxy, JavaMailSenderImpl sender) {
++        this.iReservationDao = iReservationDao;
++        this.iEmailDao = iEmailDao;
++        this.iMicroserviceMyUsersProxy = iMicroserviceMyUsersProxy;
++        this.sender = sender;
++    }
++
++
++    @Override
++    public RepeatStatus execute(StepContribution stepContribution, ChunkContext chunkContext) throws Exception {
++
++        SimpleDateFormat oldFormat = new SimpleDateFormat("dd/MM/yyyy");
++        Date dateDuJour = new Date();
++
++        List<Reservation> reservationList = iReservationDao.findByEmailEnvoyerAndStateEnums(true, StateEnum.enCours);
++        if (reservationList.size() > 0) {
++            for (Reservation r : reservationList) {
++                Date deadLine = DateUtils.addDays(r.getDateEnvoiEmail(), 2);
++                if (dateDuJour.after(deadLine)) {
++                    System.out.println("debut du batch annulation réservation");
++                    ArrayList<EmailTypeReservation> emailTypeReservations = new ArrayList<>();
++                    UtilisateurBean utilisateurBean = iMicroserviceMyUsersProxy.findById(r.getIdUtilisateur());
++                    emailTypeReservations.add(new EmailTypeReservation(utilisateurBean.getEmail(), r.getLivre().getTitre(), oldFormat.format(deadLine)));
++                    r.setStateEnums(StateEnum.annuler);
++                    iReservationDao.save(r);
++                    List<EmailTypeReservation> emailTypeReservationList = new ArrayList<>(emailTypeReservations);
++                    this.sendCancelRevival(emailTypeReservationList);
++                    System.out.println("fin du batch annulation réservation");
++                }
++            }
++        }
++
++
++        List<Reservation> reservations = iReservationDao.findByLivreAndStateEnumsOrderByDateDeReservationAsc(reservationList.get(0).getLivre(), StateEnum.enCours);
++        if (reservations.size() > 0){
++            System.out.println("debut du batch réservation");
++            Reservation reservation = reservations.get(0);
++            reservation.setDateEnvoiEmail(dateDuJour);
++            reservation.setEmailEnvoyer(true);
++            Date dateOfDeadLine = DateUtils.addDays(reservation.getDateEnvoiEmail(), 2);
++            ArrayList<EmailTypeReservation> emailTypeReservations1 = new ArrayList<>();
++            UtilisateurBean utilisateurBean = iMicroserviceMyUsersProxy.findById(reservation.getIdUtilisateur());
++            emailTypeReservations1.add(new EmailTypeReservation(utilisateurBean.getEmail(), reservation.getLivre().getTitre(), oldFormat.format(dateOfDeadLine)));
++            iReservationDao.save(reservation);
++            List<EmailTypeReservation> emailTypeReservationList1 = new ArrayList<>(emailTypeReservations1);
++            this.sendRevival(emailTypeReservationList1);
++            System.out.println("fin du batch de réservation");
++        }
++
++        return RepeatStatus.FINISHED;
++    }
++
++
++    private void sendCancelRevival(List<EmailTypeReservation> emailTypeReservations){
++
++        Email email = iEmailDao.findByName("annulationReservation");
++
++        for (EmailTypeReservation e : emailTypeReservations) {
++            String text = email.getContenu()
++                    .replace("[LIVRE_TITRE]", e.getTitre())
++                    .replace("[DEADLINE]", e.getDeadLine());
++            this.sendSimpleMessage(e.getEmail(), email.getObjet(), text);
++        }
++
++    }
++
++    private void sendRevival(List<EmailTypeReservation> emailTypeReservations){
++
++        Email email = iEmailDao.findByName("reservation");
++
++        for (EmailTypeReservation e : emailTypeReservations) {
++            String text = email.getContenu()
++                    .replace("[LIVRE_TITRE]", e.getTitre())
++                    .replace("[DEADLINE]", e.getDeadLine());
++            this.sendSimpleMessage(e.getEmail(), email.getObjet(), text);
++        }
++
++    }
++
++    private void sendSimpleMessage(String email, String objet, String contenu) {
++        SimpleMailMessage message = new SimpleMailMessage();
++        message.setTo(email);
++        message.setSubject(objet);
++        message.setText(contenu);
++        sender.send(message);
++    }
++}
+Index: microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/batch/BatchConfig.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.bibliotheque.microservicemylibrary.batch;\r\n\r\nimport com.bibliotheque.microservicemylibrary.dao.IEmailDao;\r\nimport com.bibliotheque.microservicemylibrary.dao.IEmpruntDao;\r\nimport com.bibliotheque.microservicemylibrary.proxies.IMicroserviceMyUsersProxy;\r\nimport org.springframework.batch.core.Job;\r\nimport org.springframework.batch.core.Step;\r\nimport org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;\r\nimport org.springframework.batch.core.configuration.annotation.JobBuilderFactory;\r\nimport org.springframework.batch.core.configuration.annotation.StepBuilderFactory;\r\nimport org.springframework.batch.core.launch.support.RunIdIncrementer;\r\nimport org.springframework.beans.factory.annotation.Autowired;\r\nimport org.springframework.context.annotation.Bean;\r\nimport org.springframework.context.annotation.Configuration;\r\nimport org.springframework.mail.javamail.JavaMailSenderImpl;\r\n\r\n@Configuration\r\n@EnableBatchProcessing\r\npublic class BatchConfig {\r\n\r\n    @Autowired\r\n    private JobBuilderFactory jobs;\r\n\r\n    @Autowired\r\n    private StepBuilderFactory steps;\r\n\r\n    @Autowired\r\n    private IEmpruntDao iEmpruntDao;\r\n\r\n    @Autowired\r\n    private IEmailDao iEmailDao;\r\n\r\n    @Autowired\r\n    private JavaMailSenderImpl sender;\r\n\r\n    @Autowired\r\n    private IMicroserviceMyUsersProxy iMicroserviceMyUsersProxy;\r\n\r\n    @Bean\r\n    public Step stepOne() {\r\n        return steps.get(\"stepOne\")\r\n                .tasklet(new MyTaskOne(iEmpruntDao, iEmailDao, iMicroserviceMyUsersProxy, sender))\r\n                .build();\r\n    }\r\n\r\n    @Bean\r\n    public Job demoJob(){\r\n        return jobs.get(\"demoJob\")\r\n                .incrementer(new RunIdIncrementer())\r\n                .start(stepOne())\r\n                .build();\r\n    }\r\n\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/batch/BatchConfig.java	(revision 25eb96576e93298421a656eba986e2c4c763150c)
++++ microservice-mylibrary/src/main/java/com/bibliotheque/microservicemylibrary/batch/BatchConfig.java	(date 1597844266740)
+@@ -2,6 +2,7 @@
+ 
+ import com.bibliotheque.microservicemylibrary.dao.IEmailDao;
+ import com.bibliotheque.microservicemylibrary.dao.IEmpruntDao;
++import com.bibliotheque.microservicemylibrary.dao.IReservationDao;
+ import com.bibliotheque.microservicemylibrary.proxies.IMicroserviceMyUsersProxy;
+ import org.springframework.batch.core.Job;
+ import org.springframework.batch.core.Step;
+@@ -30,6 +31,9 @@
+     @Autowired
+     private IEmailDao iEmailDao;
+ 
++    @Autowired
++    private IReservationDao iReservationDao;
++
+     @Autowired
+     private JavaMailSenderImpl sender;
+ 
+@@ -43,13 +47,23 @@
+                 .build();
+     }
+ 
++    @Bean
++    public Step stepTwo(){
++        return steps.get("stepTwo")
++                .tasklet(new MyTaskTwo(iReservationDao, iEmailDao, iMicroserviceMyUsersProxy, sender))
++                .build();
++    }
++
+     @Bean
+     public Job demoJob(){
+         return jobs.get("demoJob")
+                 .incrementer(new RunIdIncrementer())
+                 .start(stepOne())
++                .next(stepTwo())
+                 .build();
+     }
+ 
+ 
+-}
++
++
++}
+\ No newline at end of file
