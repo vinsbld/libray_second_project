@@ -30,11 +30,6 @@
 
 </head>
 
-
-<!--==========================
-    Index section
-  ============================-->
-
 <body>
 
 <main id="main">
@@ -78,20 +73,20 @@
                     </thead>
                     <tbody>
                     <tr th:each="mEmprunt:${empruntList}">
-                            <td th:text="${#dates.format(mEmprunt.emprunt.dateDeDebutEmprunt, 'dd/MM/yyyy')}"></td>
-                            <td th:text="${#dates.format(mEmprunt.emprunt.dateDeFinEmprunt, 'dd/MM/yyyy')}"></td>
-                            <td th:text="${mEmprunt.livre.titre}"></td>
-                            <td th:if="${(mEmprunt.emprunt.isProlongerEmprunt() == false) and (mEmprunt.emprunt.dateDeFinEmprunt>mEmprunt.emprunt.getDateDuJour())}">
-                                <form th:action="@{/prolonger/{id}(id=${mEmprunt.copie.id})}" method="post">
-                                    <button type="submit" class="btn-get-create btn-xs ">Prolonger</button>
-                                </form>
-                            </td>
-                            <td th:if="${mEmprunt.emprunt.isProlongerEmprunt()==true}">
-                                <span style="color:gray">Prolongation en cours</span>
-                            </td>
-                            <td th:if="${mEmprunt.emprunt.dateDeFinEmprunt<mEmprunt.emprunt.getDateDuJour()}">
-                                <span style="color:red">Délais dépassé !</span>
-                            </td>
+                        <td th:text="${#dates.format(mEmprunt.emprunt.dateDeDebutEmprunt, 'dd/MM/yyyy')}"></td>
+                        <td th:text="${#dates.format(mEmprunt.emprunt.dateDeFinEmprunt, 'dd/MM/yyyy')}"></td>
+                        <td th:text="${mEmprunt.livre.titre}"></td>
+                        <td th:if="${(mEmprunt.emprunt.isProlongerEmprunt() == false) and (mEmprunt.emprunt.dateDeFinEmprunt>mEmprunt.emprunt.getDateDuJour())}">
+                            <form th:action="@{/prolonger/{id}(id=${mEmprunt.copie.id})}" method="post">
+                                <button type="submit" class="btn-get-create btn-xs ">Prolonger</button>
+                            </form>
+                        </td>
+                        <td th:if="${mEmprunt.emprunt.isProlongerEmprunt()==true}">
+                            <span style="color:gray">Prolongation en cours</span>
+                        </td>
+                        <td th:if="${mEmprunt.emprunt.dateDeFinEmprunt<mEmprunt.emprunt.getDateDuJour()}">
+                            <span style="color:red">Délais dépassé !</span>
+                        </td>
                     </tr>
                     </tbody>
                 </table>
@@ -126,7 +121,5 @@
         </div>
     </section>
 </main>
-<!-- #index -->
-
 </body>
 </html>
