@@ -14,6 +14,7 @@ public class ICopieServiceImpl implements ICopieService {
     @Autowired
     ICopieDao iCopieDao;
 
+
     /**
      * Permet de trouver toutes les copies d'un livre
      * @param id identifiant du livre
@@ -58,4 +59,5 @@ public class ICopieServiceImpl implements ICopieService {
     public List<Copie> getCopieLivresIndisponibles(Long id) {
         return iCopieDao.getCopieLivresIndisponibles(id);
     }
+
 }
