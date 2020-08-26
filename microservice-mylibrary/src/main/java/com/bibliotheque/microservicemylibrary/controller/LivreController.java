@@ -7,6 +7,7 @@ import com.bibliotheque.microservicemylibrary.model.Livre;
 import com.bibliotheque.microservicemylibrary.service.copie.ICopieService;
 import com.bibliotheque.microservicemylibrary.service.emprunt.IEmpruntService;
 import com.bibliotheque.microservicemylibrary.service.livre.ILivreService;
+import com.bibliotheque.microservicemylibrary.service.livre.LivreService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,9 @@ public class LivreController {
 
     @Autowired
     private ILivreService iLivreService;
+
+    @Autowired
+    private LivreService livreService;
 
     @Autowired
     private ICopieService iCopieService;
@@ -42,20 +46,7 @@ public class LivreController {
     public Optional<Livre> afficherUnLivre(@PathVariable("id") Long id) {
         Optional<Livre> livre = iLivreService.findById(id);
 
-        List<Date> dates = new ArrayList<>();
-        List<Copie> copies = iCopieService.findAllByLivreId(livre.get().getId());
-        for (Copie c : copies) {
-            List<Emprunt> emprunts = iEmpruntService.findAllByCopie_IdAndDateRetourIsNull(c.getId());
-            if (emprunts.size() > 0){
-                Emprunt emprunt = emprunts.get(0);
-                dates.add(emprunt.getDateDeFinEmprunt());
-            }
-        }
-        Collections.sort(dates);
-        if (dates.size() > 0){
-            Date dateLaPlusProche = dates.get(0);
-            livre.get().setDateRetourLaPlusProche(dateLaPlusProche);
-        }
+        livreService.dateDeRetourLaplusProche(livre.get());
 
         logger.info("Le détail d'un livre est demandé");
         return livre;
