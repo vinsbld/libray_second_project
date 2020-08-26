@@ -1,4 +1,4 @@
-package com.bibliotheque.microservicemylibrary.servicesTest;
+package com.bibliotheque.microservicemylibrary.servicesTestUnitaire;
 
 
 import com.bibliotheque.microservicemylibrary.beans.UtilisateurBean;

@@ -1,4 +1,4 @@
-package com.bibliotheque.microservicemylibrary.servicesTestUnit;
+package com.bibliotheque.microservicemylibrary.servicesTestUnitaire;
 
 import com.bibliotheque.microservicemylibrary.dao.ICopieDao;
 import com.bibliotheque.microservicemylibrary.model.Copie;
@@ -35,10 +35,6 @@ public class CopieServiceUnitTest {
     private List<Copie> copiesLivre_1 = new ArrayList<>();
     private List<Copie> copiesLivre_2 = new ArrayList<>();
     private List<Livre> livreList = new ArrayList<>();
-    private List<Copie> copiesLivre_1_Dispo = new ArrayList<>();
-    private List<Copie> copiesLivre_2_Dispo = new ArrayList<>();
-    private List<Copie> copiesLivre_1_noDispo = new ArrayList<>();
-    private List<Copie> copiesLivre_2_noDispo = new ArrayList<>();
 
     @Before
     public void setUp(){
@@ -60,43 +56,39 @@ public class CopieServiceUnitTest {
         copie1.setId(1L);
         copie1.setDisponible(true);
         copiesLivre_1.add(copie1);
-        copiesLivre_1_Dispo.add(copie1);
 
         Copie copie2 = new Copie();
         copie2.setLivre(livre1);
         copie2.setId(2L);
         copie2.setDisponible(false);
         copiesLivre_1.add(copie2);
-        copiesLivre_1_noDispo.add(copie2);
 
         Copie copie3 = new Copie();
         copie3.setLivre(livre2);
         copie3.setId(3L);
         copie3.setDisponible(false);
         copiesLivre_2.add(copie3);
-        copiesLivre_2_noDispo.add(copie3);
 
         Copie copie4 = new Copie();
         copie4.setLivre(livre2);
         copie4.setId(4L);
         copie4.setDisponible(true);
         copiesLivre_2.add(copie4);
-        copiesLivre_2_Dispo.add(copie4);
 
 
         Mockito.when(iCopieDaoMock.findAllByLivreId(livre1.getId())).thenReturn(livre1.getCopies());
         Mockito.when(iCopieDaoMock.findAllByLivreId(livre2.getId())).thenReturn(livre2.getCopies());
 
-        //Mockito.when(iCopieDaoMock.findById(copie1.getId())).thenReturn(Optional.of(copie1));
+        Mockito.when(iCopieDaoMock.findById(copie1.getId())).thenReturn(Optional.of(copie1));
         Mockito.when(iCopieDaoMock.findById(copie2.getId())).thenReturn(Optional.of(copie2));
-        //Mockito.when(iCopieDaoMock.findById(copie3.getId())).thenReturn(Optional.of(copie3));
+        Mockito.when(iCopieDaoMock.findById(copie3.getId())).thenReturn(Optional.of(copie3));
         Mockito.when(iCopieDaoMock.findById(copie4.getId())).thenReturn(Optional.of(copie4));
 
-        Mockito.when(iCopieDaoMock.getCopieLivresDisponibles(livre1.getId())).thenReturn(copiesLivre_1_Dispo);
-        Mockito.when(iCopieDaoMock.getCopieLivresDisponibles(livre2.getId())).thenReturn(copiesLivre_2_Dispo);
+        Mockito.when(iCopieDaoMock.getCopieLivresDisponibles(livre1.getId())).thenReturn(copiesLivre_1);
+        Mockito.when(iCopieDaoMock.getCopieLivresDisponibles(livre2.getId())).thenReturn(copiesLivre_2);
 
-        Mockito.when(iCopieDaoMock.getCopieLivresIndisponibles(livre1.getId())).thenReturn(copiesLivre_1_noDispo);
-        Mockito.when(iCopieDaoMock.getCopieLivresIndisponibles(livre2.getId())).thenReturn(copiesLivre_2_noDispo);
+        Mockito.when(iCopieDaoMock.getCopieLivresIndisponibles(livre1.getId())).thenReturn(copiesLivre_1);
+        Mockito.when(iCopieDaoMock.getCopieLivresIndisponibles(livre2.getId())).thenReturn(copiesLivre_2);
     }
 
     @Test
@@ -127,22 +119,20 @@ public class CopieServiceUnitTest {
     public void getCopieDisponibles_ByIdLivre(){
         List<Copie> copies = iCopieServiceMock.getCopieLivresDisponibles(1L);
         assertThat(copies.size()).isEqualTo(1);
-        assertThat(copies.get(0).isDisponible()).isEqualTo(true);
 
         List<Copie> copies1 = iCopieServiceMock.getCopieLivresDisponibles(2L);
         assertThat(copies1.size()).isEqualTo(1);
-        assertThat(copies1.get(0).isDisponible()).isEqualTo(true);
     }
 
     @Test
     public void getCopiesIndisponibles_ByIdLivre(){
+
         List<Copie> copiesIndisponibles_Livre_1 = iCopieServiceMock.getCopieLivresIndisponibles(1L);
+        assertThat(copiesIndisponibles_Livre_1.size()).isNotEqualTo(2);
         assertThat(copiesIndisponibles_Livre_1.size()).isEqualTo(1);
-        assertThat(copiesIndisponibles_Livre_1.get(0).isDisponible()).isEqualTo(false);
 
         List<Copie> copiesIndisponibles_Livre_2 = iCopieServiceMock.getCopieLivresIndisponibles(2L);
-        assertThat(copiesIndisponibles_Livre_1.size()).isEqualTo(1);
-        assertThat(copiesIndisponibles_Livre_2.get(0).isDisponible()).isEqualTo(false);
-
+        assertThat(copiesIndisponibles_Livre_2.size()).isNotEqualTo(4);
+        assertThat(copiesIndisponibles_Livre_2.size()).isEqualTo(1);
     }
 }
