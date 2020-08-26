@@ -1,4 +1,4 @@
-package com.bibliotheque.microservicemylibrary.servicesTestUnit;
+package com.bibliotheque.microservicemylibrary.servicesTestUnitaire;
 
 import com.bibliotheque.microservicemylibrary.dao.ILivreDao;
 import com.bibliotheque.microservicemylibrary.model.Copie;
@@ -78,9 +78,9 @@ public class LivreServiceUnitTest {
         Mockito.when(iLivreDaoMock.findById(livre_1.getId())).thenReturn(Optional.of(livre_1));
         Mockito.when(iLivreDaoMock.findById(livre_2.getId())).thenReturn(Optional.of(livre_2));
 
-        //Mockito.when(iLivreDaoMock.findByCopiesId(copie_1.getId())).thenReturn(Optional.of(livre_1));
+        Mockito.when(iLivreDaoMock.findByCopiesId(copie_1.getId())).thenReturn(Optional.of(livre_1));
         Mockito.when(iLivreDaoMock.findByCopiesId(copie_2.getId())).thenReturn(Optional.of(livre_1));
-        //Mockito.when(iLivreDaoMock.findByCopiesId(copie_3.getId())).thenReturn(Optional.of(livre_2));
+        Mockito.when(iLivreDaoMock.findByCopiesId(copie_3.getId())).thenReturn(Optional.of(livre_2));
         Mockito.when(iLivreDaoMock.findByCopiesId(copie_4.getId())).thenReturn(Optional.of(livre_2));
     }
 
@@ -105,16 +105,14 @@ public class LivreServiceUnitTest {
 
     @Test
     public void findByCopiesId(){
-        Optional<Livre> livre = iLivreServiceMock.findByCopiesId(2L);
-        assertThat(livre.get().getId()).isEqualTo(1L);
-        assertThat(livre.get().getTitre().contentEquals("a")).isEqualTo(true);
-        assertThat(livre.get().getTitre().contentEquals("b")).isEqualTo(false);
 
-        Optional<Livre> lvr = iLivreServiceMock.findByCopiesId(4L);
-        assertThat(lvr.get().getId()).isEqualTo(2L);
-        assertThat(lvr.get().getTitre().contentEquals("a")).isEqualTo(false);
-        assertThat(lvr.get().getTitre().contentEquals("b")).isEqualTo(true);
+        Optional<Livre> livre = iLivreServiceMock.findByCopiesId(1L);
+        assertThat(livre.get().getTitre()).isEqualTo("a");
+        assertThat(livre.get().getTitre()).isNotEqualTo("b");
 
+        Optional<Livre> lvr = iLivreServiceMock.findById(4L);
+        assertThat(lvr.get().getTitre()).isEqualTo("b");
+        assertThat(lvr.get().getTitre()).isNotEqualTo("a");
     }
 
 

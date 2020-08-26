@@ -1,4 +1,4 @@
-package com.bibliotheque.microservicemylibrary.servicesTestUnit;
+package com.bibliotheque.microservicemylibrary.servicesTestUnitaire;
 
 import com.bibliotheque.microservicemylibrary.beans.UtilisateurBean;
 import com.bibliotheque.microservicemylibrary.dao.IEmpruntDao;
@@ -21,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @RunWith(MockitoJUnitRunner.class)
-public class EmpruntServiceUnitTest {
+public class EmpruntServiceTest {
 
     @Mock
     private IEmpruntDao iEmpruntDao;
@@ -31,12 +31,8 @@ public class EmpruntServiceUnitTest {
     private IEmpruntServiceImpl iEmpruntService;
 
     private List<Emprunt> empruntListing = new ArrayList<>();
-    private List<Emprunt> user_1_liste = new ArrayList<>();
-    private List<Emprunt> user_2_liste = new ArrayList<>();
-    private List<Emprunt> copie_IdAndDateRisNull = new ArrayList<>();
-    private List<Emprunt> relance = new ArrayList<>();
-    private List<Emprunt> iDUserAndDateRisNull = new ArrayList<>();
-    private Date date = new Date();
+    private List<Emprunt> user_1 = new ArrayList<>();
+    private List<Emprunt> user_2 = new ArrayList<>();
 
     @Before
     public void setUp(){
@@ -63,7 +59,6 @@ public class EmpruntServiceUnitTest {
 
         Copie copie_4 = new Copie();
         copie_4.setDisponible(false);
-        copie_4.setIsbn(6433);
         copie_4.setId(4L);
 
         Emprunt emprunt_1 = new Emprunt();
@@ -73,10 +68,7 @@ public class EmpruntServiceUnitTest {
         emprunt_1.setDateDeFinEmprunt(new GregorianCalendar(2019,4,20).getTime());
         emprunt_1.setDateRetour(null);
         empruntListing.add(emprunt_1);
-        user_1_liste.add(emprunt_1);
-        copie_IdAndDateRisNull.add(emprunt_1);
-        relance.add(emprunt_1);
-        iDUserAndDateRisNull.add(emprunt_1);
+        user_1.add(emprunt_1);
 
         Emprunt emprunt_2 = new Emprunt();
         emprunt_2.setId(2L);
@@ -85,9 +77,7 @@ public class EmpruntServiceUnitTest {
         emprunt_2.setDateDeFinEmprunt(new GregorianCalendar(2019,5,20).getTime());
         emprunt_2.setDateRetour(null);
         empruntListing.add(emprunt_2);
-        user_1_liste.add(emprunt_2);
-        relance.add(emprunt_2);
-        iDUserAndDateRisNull.add(emprunt_2);
+        user_1.add(emprunt_2);
 
         Emprunt emprunt_3 = new Emprunt();
         emprunt_3.setId(3L);
@@ -96,29 +86,19 @@ public class EmpruntServiceUnitTest {
         emprunt_3.setDateDeFinEmprunt(new GregorianCalendar(2019,6,05).getTime());
         emprunt_3.setDateRetour(null);
         empruntListing.add(emprunt_3);
-        user_2_liste.add(emprunt_3);
-        relance.add(emprunt_3);
+        user_2.add(emprunt_3);
 
         Emprunt emprunt_4 = new Emprunt();
         emprunt_4.setId(4L);
         emprunt_4.setCopie(copie_4);
         emprunt_4.setIdUtilisateur(2L);
-        emprunt_4.setDateRetour(date);
+        emprunt_4.setDateRetour(new Date());
         empruntListing.add(emprunt_4);
-        user_2_liste.add(emprunt_4);
+        user_2.add(emprunt_4);
 
-
-        Mockito.when(iEmpruntDao.findAllByIdUtilisateur(utilisateur_1.getId())).thenReturn(user_1_liste);
-
+        Mockito.when(iEmpruntDao.findAllByIdUtilisateur(utilisateur_1.getId())).thenReturn(user_1);
         Mockito.when(iEmpruntDao.findById(copie_2.getId())).thenReturn(Optional.of(emprunt_2));
-        //relance
-        Mockito.when(iEmpruntDao.findAllByDateRetourIsNullAndAndDateDeFinEmpruntBefore(date)).thenReturn(empruntListing);
-
-        Mockito.when(iEmpruntDao.findByCopie_Id(copie_4.getId())).thenReturn(emprunt_4);
-
-        Mockito.when(iEmpruntDao.findAllByCopie_IdAndDateRetourIsNull(copie_1.getId())).thenReturn(copie_IdAndDateRisNull);
-
-        Mockito.when(iEmpruntDao.findAllByIdUtilisateurAndDateRetourIsNull(utilisateur_1.getId())).thenReturn(user_1_liste);
+        Mockito.when(iEmpruntDao.findAllByDateRetourIsNullAndAndDateDeFinEmpruntBefore(new GregorianCalendar(2019, 07, 04).getTime())).thenReturn(empruntListing);
 
     }
 
@@ -139,35 +119,9 @@ public class EmpruntServiceUnitTest {
 
     @Test
     public void relance(){
-        List<Emprunt> lst = iEmpruntService.relance(date);
+        List<Emprunt> lst = iEmpruntService.relance(new GregorianCalendar(2019, 07, 04).getTime());
         assertThat(lst.size()).isEqualTo(3);
 
     }
-
-    @Test
-    public void findByCopie_Id(){
-    Emprunt emprunt = iEmpruntService.findByCopie_Id(4L);
-    assertThat(emprunt.getCopie().getIsbn()).isEqualTo(6433);
-    assertThat(emprunt.getCopie().isDisponible()).isEqualTo(false);
-    }
-
-    @Test
-    public void findAllByCopie_IdAndDateRetourIsNull(){
-        List<Emprunt> empts = iEmpruntService.findAllByCopie_IdAndDateRetourIsNull(1L);
-        assertThat(empts.size()).isEqualTo(1);
-        assertThat(empts.size()).isNotEqualTo(4);
-
-    }
-
-    @Test
-    public void findAllByIdUtilisateurAndDateRetourIsNull(){
-        List<Emprunt> emp = iEmpruntService.findAllByIdUtilisateurAndDateRetourIsNull(1L);
-        //assertThat(emp.size()).isEqualTo(2);
-        assertThat(emp.get(0).getDateRetour()).isEqualTo(null);
-        assertThat(emp.get(1).getDateRetour()).isEqualTo(null);
-
-
-    }
-
 
 }
