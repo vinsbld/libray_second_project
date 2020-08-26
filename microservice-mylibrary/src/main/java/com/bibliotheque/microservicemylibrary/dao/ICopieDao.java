@@ -32,4 +32,5 @@ ICopieDao extends JpaRepository<Copie, Long> {
     List<Copie> getCopieLivresIndisponibles(Long id);
 
 
+
 }
