@@ -2,8 +2,6 @@ package com.bibliotheque.microservicemylibrary.controller;
 
 import com.bibliotheque.microservicemylibrary.exeptions.LivresNotFoundException;
 import com.bibliotheque.microservicemylibrary.model.Livre;
-import com.bibliotheque.microservicemylibrary.service.copie.ICopieService;
-import com.bibliotheque.microservicemylibrary.service.emprunt.IEmpruntService;
 import com.bibliotheque.microservicemylibrary.service.livre.ILivreService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +32,6 @@ public class LivreController {
     public Optional<Livre> afficherUnLivre(@PathVariable("id") Long id) {
         Optional<Livre> livre = iLivreService.findById(id);
         iLivreService.dateDeRetourLaplusProche(livre.get());
-
         logger.info("Le détail d'un livre est demandé");
         return livre;
     }

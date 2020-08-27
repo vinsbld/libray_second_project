@@ -34,49 +34,7 @@ public class ReservationController {
 
     @RequestMapping(value = "/reserver/{id}", method = RequestMethod.POST)
     public void demandeDeReservation(@PathVariable("id") Long id, @RequestParam Long idUtilisateur){
-
-        Date date = new Date(Calendar.getInstance().getTime().getTime());
-        Reservation reservation = new Reservation();
-        reservation.setLivre(iLivreService.findById(id).get());
-        reservation.setDateDeReservation(date);
-        reservation.setIdUtilisateur(idUtilisateur);
-        reservation.setStateEnums(StateEnum.enCours);
-
-        List<Reservation> reservations = iReservationService.findByLivreAndStateEnumsOrderByDateDeReservationAsc(reservation.getLivre(), StateEnum.enCours);
-        for (int i = 0; i <= reservations.size(); i++){
-            reservation.setPosition(i + 1);
-        }
-
-
-        /*
-        la liste ne peut comporter qu'un maximum de personnes correspondant
-        à 2x le nombre d'exemplaires de l'ouvrage.
-        */
-        Integer reservationMax = (reservation.getLivre().getNbCopies())*2;
-
-        //verification si l'utilisateur n'a pas déjà une réservation en cours pour cet ouvrage
-        List<Reservation> reservationList = iReservationService.findAllByIdUtilisateurAndStateEnumsOrderByDateDeReservationAsc(reservation.getLivre().getId(), StateEnum.enCours);
-        for (Reservation r : reservationList) {
-            if (r.getIdUtilisateur().equals(reservation.getIdUtilisateur())){
-                throw new CannotAddBookingException("cannotBookingException01");
-            }
-        }
-
-        //verification si l'utilisateur n'a pas déjà un emprunt en cours pour cet ouvrage
-        List<Emprunt> empruntList = iEmpruntService.findAllByIdUtilisateurAndDateRetourIsNull(idUtilisateur);
-        for (Emprunt e : empruntList) {
-            if (e.getCopie().getLivre().getId().equals(reservation.getLivre().getId())){
-                throw new CannotAddBookingException("cannotBookingException02");
-            }
-        }
-
-        //verification que la liste n'est pas complète
-        if (reservationList.size() >= reservationMax){
-            throw new CannotAddBookingException("cannotBookingException03");
-        }
-
-        iReservationService.save(reservation);
-        logger.info("demande de réservation pour un livre");
+        iReservationService.reserver(id, idUtilisateur);
     }
 
     @RequestMapping(value = "/annuler/reserver/{id}", method = RequestMethod.POST)

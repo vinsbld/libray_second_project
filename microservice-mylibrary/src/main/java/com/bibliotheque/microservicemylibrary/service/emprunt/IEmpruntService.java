@@ -47,4 +47,7 @@ public interface IEmpruntService {
 
     //afficher la liste des emprunts par utilisateur
     List<EmpruntDTO> afficherLaListeDesEmpruntsParUtilisateur(Long id);
+
+    //afficher un emprunt
+    Optional<Emprunt> afficherUnEmprunt(Long id);
 }

@@ -1,6 +1,5 @@
 package com.bibliotheque.microservicemylibrary.service.emprunt;
 
-import com.bibliotheque.microservicemylibrary.beans.UtilisateurBean;
 import com.bibliotheque.microservicemylibrary.dao.IEmpruntDao;
 import com.bibliotheque.microservicemylibrary.dto.EmpruntDTO;
 import com.bibliotheque.microservicemylibrary.exeptions.CannotAddBorrowingException;
@@ -9,13 +8,10 @@ import com.bibliotheque.microservicemylibrary.model.*;
 import com.bibliotheque.microservicemylibrary.service.copie.ICopieService;
 import com.bibliotheque.microservicemylibrary.service.livre.ILivreService;
 import com.bibliotheque.microservicemylibrary.service.reservation.IReservationService;
-import com.bibliotheque.microservicemylibrary.service.userbean.IUserbeanService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.*;
 
@@ -146,6 +142,7 @@ public class IEmpruntServiceImpl implements IEmpruntService {
         emprunt.setProlongerEmprunt(true);
         emprunt.setDateDeFinEmprunt(add4Weeks(emprunt.getDateDeFinEmprunt()));
         iEmpruntDao.save(emprunt);
+        logger.info("demande de prolongation d'un prêt");
     }
 
     /**
@@ -174,6 +171,7 @@ public class IEmpruntServiceImpl implements IEmpruntService {
             reservation.getIdUtilisateur();
             iReservationService.save(reservation);
         }
+        logger.info("retour du prêt : " + emprunt.getId() +" de la copie : "+emprunt.getCopie().getId()+" du livre : "+emprunt.getCopie().getLivre().getTitre());
     }
 
     /**
@@ -257,6 +255,18 @@ public class IEmpruntServiceImpl implements IEmpruntService {
         logger.info("demande la liste des emprunts pour un utilisateur");
 
         return empruntDTOS;
+    }
+
+    /**
+     * permet d'afficher un emprunt
+     * @param id identifiant de l'emprunt
+     * @return l'emprunt
+     */
+    @Override
+    public Optional<Emprunt> afficherUnEmprunt(Long id) {
+        Optional<Emprunt>emprunt = iEmpruntDao.findById(id);
+        logger.info("detail d'un emprunt demandée");
+        return emprunt;
     }
 
 
