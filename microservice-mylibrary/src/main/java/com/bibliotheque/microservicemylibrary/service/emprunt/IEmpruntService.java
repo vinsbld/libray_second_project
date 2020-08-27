@@ -1,6 +1,7 @@
 package com.bibliotheque.microservicemylibrary.service.emprunt;
 
 import com.bibliotheque.microservicemylibrary.beans.UtilisateurBean;
+import com.bibliotheque.microservicemylibrary.dto.EmpruntDTO;
 import com.bibliotheque.microservicemylibrary.model.Emprunt;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -40,4 +41,10 @@ public interface IEmpruntService {
 
     //retourner un emprunt
     void retournerEmprunt( Long id, Long idUtilisateur);
+
+    //faire un emprunt
+    void emprunter(Long id, Long idUtilisateur);
+
+    //afficher la liste des emprunts par utilisateur
+    List<EmpruntDTO> afficherLaListeDesEmpruntsParUtilisateur(Long id);
 }
