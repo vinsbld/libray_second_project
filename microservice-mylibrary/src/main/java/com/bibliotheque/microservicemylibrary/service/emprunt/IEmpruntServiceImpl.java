@@ -1,10 +1,18 @@
 package com.bibliotheque.microservicemylibrary.service.emprunt;
 
+import com.bibliotheque.microservicemylibrary.beans.UtilisateurBean;
 import com.bibliotheque.microservicemylibrary.dao.IEmpruntDao;
+import com.bibliotheque.microservicemylibrary.exeptions.CannotExtendBorrowingException;
 import com.bibliotheque.microservicemylibrary.model.Copie;
 import com.bibliotheque.microservicemylibrary.model.Emprunt;
+import com.bibliotheque.microservicemylibrary.model.Reservation;
+import com.bibliotheque.microservicemylibrary.model.StateEnum;
+import com.bibliotheque.microservicemylibrary.service.reservation.IReservationService;
+import com.bibliotheque.microservicemylibrary.service.userbean.IUserbeanService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.*;
 
@@ -13,6 +21,9 @@ public class IEmpruntServiceImpl implements IEmpruntService {
 
     @Autowired
     private IEmpruntDao iEmpruntDao;
+
+    @Autowired
+    private IReservationService iReservationService;
 
     /**
      * Permet d'ajouter 4 semaines à une date
@@ -97,6 +108,61 @@ public class IEmpruntServiceImpl implements IEmpruntService {
     @Override
     public List<Emprunt> findAllByIdUtilisateurAndDateRetourIsNull(Long id) {
         return iEmpruntDao.findAllByIdUtilisateurAndDateRetourIsNull(id);
+    }
+
+    /**
+     * permet de prolonger un emprunt
+     * @param id identifiant de l'emprunt
+     * @param idUtilisateur
+     */
+    @Override
+    public void prolongerEmprunt(Long id, Long idUtilisateur) {
+
+        Date date = new Date();
+        Emprunt emprunt = iEmpruntDao.findById(id).get();
+
+        //verifier si la date butoir n'est pas passer
+        if (date.after(emprunt.getDateDeFinEmprunt())){
+            throw  new CannotExtendBorrowingException("CannotExtendBorrowingException01");
+        }
+
+        //verifier si l'usager n'a pas déjà prolonger l'emprunt
+        if (emprunt.isProlongerEmprunt()==true){
+            throw  new CannotExtendBorrowingException("CannotExtendBorrowingException02");
+        }
+
+        emprunt.setIdUtilisateur(idUtilisateur);
+        emprunt.setProlongerEmprunt(true);
+        emprunt.setDateDeFinEmprunt(add4Weeks(emprunt.getDateDeFinEmprunt()));
+        iEmpruntDao.save(emprunt);
+    }
+
+    /**
+     * permet de retourner un emprunt
+     * @param id identifiant de l'emprunt
+     * @param idUtilisateur
+     */
+    @Override
+    public void retournerEmprunt(Long id, Long idUtilisateur) {
+
+        Date date = new Date(Calendar.getInstance().getTime().getTime());
+        Emprunt emprunt = iEmpruntDao.findById(id).get();
+        emprunt.setIdUtilisateur(idUtilisateur);
+        emprunt.setDateRetour(date);
+        emprunt.setRendu(true);
+        iEmpruntDao.save(emprunt);
+
+        //verifier si il n'y a pas de réservation en cours pour cet ouvrage
+        List<Reservation> reservations = iReservationService.findByLivreAndStateEnumsOrderByDateDeReservationAsc(emprunt.getCopie().getLivre(), StateEnum.enCours);
+        if (reservations.size() > 0){
+            emprunt.getCopie().setDisponible(false);
+            iEmpruntDao.save(emprunt);
+            Reservation reservation = reservations.get(0);
+            reservation.setDateEnvoiEmail(date);
+            reservation.setEmailEnvoyer(true);
+            reservation.getIdUtilisateur();
+            iReservationService.save(reservation);
+        }
     }
 
 

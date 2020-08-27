@@ -19,6 +19,10 @@ public interface ILivreService {
     //trouve un livre par son titre lors d'une recherche
     List<Livre> chercherParTitre(@Param("x") String motCle);
 
+    //trouve un livre par l'id d'une copie
     Optional<Livre> findByCopiesId(Long id);
+
+    //trouve la date de retour la plus proche
+    void dateDeRetourLaplusProche(Livre livre);
 
 }

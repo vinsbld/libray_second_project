@@ -9,6 +9,7 @@ import com.bibliotheque.microservicemylibrary.service.copie.ICopieService;
 import com.bibliotheque.microservicemylibrary.service.emprunt.IEmpruntService;
 import com.bibliotheque.microservicemylibrary.service.livre.ILivreService;
 import com.bibliotheque.microservicemylibrary.service.reservation.IReservationService;
+import com.bibliotheque.microservicemylibrary.service.userbean.IUserbeanService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,9 @@ public class EmpruntController {
 
     @Autowired
     private IReservationService iReservationService;
+
+    @Autowired
+    private IUserbeanService iUserbeanService;
 
 
     @RequestMapping(value = "/listeDesEmprunts/{id}", method = RequestMethod.GET)
@@ -122,47 +126,18 @@ public class EmpruntController {
     @RequestMapping(value = "/prolonger/{id}", method = RequestMethod.POST)
     public void prolongerEmprunt(@PathVariable Long id,@RequestParam Long idUtilisateur){
 
-        Date date = new Date(Calendar.getInstance().getTime().getTime());
         Emprunt emprunt = iEmpruntService.findById(id).get();
-
-        //verifier si la date butoir n'est pas passer
-        if (emprunt.getDateDeFinEmprunt().after(date)){
-            throw  new CannotExtendBorrowingException("CannotExtendBorrowingException01");
-        }
-
-        //verifier si l'usager n'a pas déjà prolonger l'emprunt
-        if (emprunt.isProlongerEmprunt()==true){
-            throw  new CannotExtendBorrowingException("CannotExtendBorrowingException02");
-        }
-
-
-        emprunt.setIdUtilisateur(idUtilisateur);
-        emprunt.setProlongerEmprunt(true);
-        emprunt.setDateDeFinEmprunt(iEmpruntService.add4Weeks(emprunt.getDateDeFinEmprunt()));
+        iEmpruntService.prolongerEmprunt(emprunt.getId(), idUtilisateur);
         logger.info("demande de prolongation d'un prêt");
-        iEmpruntService.save(emprunt);
     }
 
     @RequestMapping(value = "/retour/{id}", method = RequestMethod.POST)
     public void retournerEmprunt(@PathVariable Long id,@RequestParam Long idUtilisateur){
 
-        Date date = new Date(Calendar.getInstance().getTime().getTime());
         Emprunt emprunt = iEmpruntService.findById(id).get();
-        emprunt.setIdUtilisateur(idUtilisateur);
-        emprunt.setDateRetour(date);
-        emprunt.setRendu(true);
-        iEmpruntService.save(emprunt);
+        iEmpruntService.retournerEmprunt(emprunt.getId(), idUtilisateur);
+        logger.info("retour du prêt : " + emprunt.getId() +" de la copie : "+emprunt.getCopie().getId()+" du livre : "+emprunt.getCopie().getLivre().getTitre());
 
-        List<Reservation> reservations = iReservationService.findByLivreAndStateEnumsOrderByDateDeReservationAsc(emprunt.getCopie().getLivre(), StateEnum.enCours);
-        if (reservations.size() > 0){
-            emprunt.getCopie().setDisponible(false);
-            iEmpruntService.save(emprunt);
-            Reservation reservation = reservations.get(0);
-            reservation.setDateEnvoiEmail(date);
-            reservation.setEmailEnvoyer(true);
-            reservation.getIdUtilisateur();
-            iReservationService.save(reservation);
-        }
 
     }
 

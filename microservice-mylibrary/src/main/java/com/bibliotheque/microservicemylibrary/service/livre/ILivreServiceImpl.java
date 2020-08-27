@@ -1,19 +1,28 @@
 package com.bibliotheque.microservicemylibrary.service.livre;
 
 import com.bibliotheque.microservicemylibrary.dao.ILivreDao;
+import com.bibliotheque.microservicemylibrary.model.Copie;
+import com.bibliotheque.microservicemylibrary.model.Emprunt;
 import com.bibliotheque.microservicemylibrary.model.Livre;
+import com.bibliotheque.microservicemylibrary.service.copie.ICopieService;
+import com.bibliotheque.microservicemylibrary.service.emprunt.IEmpruntService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class ILivreServiceImpl implements ILivreService {
 
     @Autowired
     ILivreDao mLivreDao;
+
+    @Autowired
+    ICopieService iCopieService;
+
+    @Autowired
+    IEmpruntService iEmpruntService;
 
 
     /**
@@ -55,10 +64,36 @@ public class ILivreServiceImpl implements ILivreService {
         return mLivreDao.chercherParTitre(motCle);
     }
 
+    /**
+     * permet de trouver un livre par l'id d'une copie
+     * @param id identifiant de la copie
+     * @return le livre
+     */
     @Override
     public Optional<Livre> findByCopiesId(Long id) {
         return mLivreDao.findByCopiesId(id);
     }
 
+    /**
+     * Fonction pour trouver la date de retour la plus proche pour un livre
+     * @param livre
+     */
+    public void dateDeRetourLaplusProche(Livre livre) {
+
+        List<Date> dates = new ArrayList<>();
+        List<Copie> copies = iCopieService.findAllByLivreId(livre.getId());
+        for (Copie c : copies) {
+            List<Emprunt> emprunts = iEmpruntService.findAllByCopie_IdAndDateRetourIsNull(c.getId());
+            if (emprunts.size() > 0) {
+                Emprunt emprunt = emprunts.get(0);
+                dates.add(emprunt.getDateDeFinEmprunt());
+            }
+        }
+        Collections.sort(dates);
+        if (dates.size() > 0) {
+            Date dateLaPlusProche = dates.get(0);
+            livre.setDateRetourLaPlusProche(dateLaPlusProche);
+        }
+    }
 
 }

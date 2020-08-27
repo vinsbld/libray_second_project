@@ -1,13 +1,10 @@
 package com.bibliotheque.microservicemylibrary.controller;
 
 import com.bibliotheque.microservicemylibrary.exeptions.LivresNotFoundException;
-import com.bibliotheque.microservicemylibrary.model.Copie;
-import com.bibliotheque.microservicemylibrary.model.Emprunt;
 import com.bibliotheque.microservicemylibrary.model.Livre;
 import com.bibliotheque.microservicemylibrary.service.copie.ICopieService;
 import com.bibliotheque.microservicemylibrary.service.emprunt.IEmpruntService;
 import com.bibliotheque.microservicemylibrary.service.livre.ILivreService;
-import com.bibliotheque.microservicemylibrary.service.livre.LivreService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,15 +22,6 @@ public class LivreController {
     @Autowired
     private ILivreService iLivreService;
 
-    @Autowired
-    private LivreService livreService;
-
-    @Autowired
-    private ICopieService iCopieService;
-
-    @Autowired
-    private IEmpruntService iEmpruntService;
-
     @RequestMapping(value = "/livres")
     public List<Livre> ListeDeLivres(){
         List<Livre> livres = iLivreService.findAll();
@@ -45,8 +33,7 @@ public class LivreController {
     @RequestMapping(value = "/livre/{id}")
     public Optional<Livre> afficherUnLivre(@PathVariable("id") Long id) {
         Optional<Livre> livre = iLivreService.findById(id);
-
-        livreService.dateDeRetourLaplusProche(livre.get());
+        iLivreService.dateDeRetourLaplusProche(livre.get());
 
         logger.info("Le détail d'un livre est demandé");
         return livre;
