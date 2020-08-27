@@ -2,6 +2,7 @@ package com.bibliotheque.microservicemylibrary.service.livre;
 
 import com.bibliotheque.microservicemylibrary.model.Livre;
 import org.springframework.data.repository.query.Param;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.*;
 
@@ -25,4 +26,9 @@ public interface ILivreService {
     //trouve la date de retour la plus proche
     void dateDeRetourLaplusProche(Livre livre);
 
+    //affiche la liste des livres
+    List<Livre> livres();
+
+    //affiche le détail d'un livre
+    Optional<Livre> livre(Long id);
 }

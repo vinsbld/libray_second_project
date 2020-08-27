@@ -22,18 +22,12 @@ public class LivreController {
 
     @RequestMapping(value = "/livres")
     public List<Livre> ListeDeLivres(){
-        List<Livre> livres = iLivreService.findAll();
-        if (livres.isEmpty()) throw new LivresNotFoundException("Il n'y a pas de livres");
-        logger.info("Récupération de la liste des produits");
-        return livres;
+        return iLivreService.livres();
     }
 
     @RequestMapping(value = "/livre/{id}")
     public Optional<Livre> afficherUnLivre(@PathVariable("id") Long id) {
-        Optional<Livre> livre = iLivreService.findById(id);
-        iLivreService.dateDeRetourLaplusProche(livre.get());
-        logger.info("Le détail d'un livre est demandé");
-        return livre;
+        return iLivreService.livre(id);
     }
 
     @RequestMapping(value = "/addLivre", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)

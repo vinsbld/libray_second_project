@@ -1,11 +1,14 @@
 package com.bibliotheque.microservicemylibrary.service.livre;
 
 import com.bibliotheque.microservicemylibrary.dao.ILivreDao;
+import com.bibliotheque.microservicemylibrary.exeptions.LivresNotFoundException;
 import com.bibliotheque.microservicemylibrary.model.Copie;
 import com.bibliotheque.microservicemylibrary.model.Emprunt;
 import com.bibliotheque.microservicemylibrary.model.Livre;
 import com.bibliotheque.microservicemylibrary.service.copie.ICopieService;
 import com.bibliotheque.microservicemylibrary.service.emprunt.IEmpruntService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
@@ -24,6 +27,7 @@ public class ILivreServiceImpl implements ILivreService {
     @Autowired
     IEmpruntService iEmpruntService;
 
+    Logger logger = LoggerFactory.getLogger(this.getClass());
 
     /**
      * Permet la recherche de tous les livres
@@ -94,6 +98,31 @@ public class ILivreServiceImpl implements ILivreService {
             Date dateLaPlusProche = dates.get(0);
             livre.setDateRetourLaPlusProche(dateLaPlusProche);
         }
+    }
+
+    /**
+     * permet d'afficher la liste de tous les livres
+     * @return la liste des livres
+     */
+    @Override
+    public List<Livre> livres() {
+        List<Livre> livres = mLivreDao.findAll();
+        if (livres.isEmpty()) throw new LivresNotFoundException("Il n'y a pas de livres");
+        logger.info("Récupération de la liste des produits");
+        return livres;
+    }
+
+    /**
+     * permet d'afficher le détail d'un livre
+     * @param id identifiant du livre
+     * @return le livre
+     */
+    @Override
+    public Optional<Livre> livre(Long id) {
+        Optional<Livre> livre = mLivreDao.findById(id);
+        dateDeRetourLaplusProche(livre.get());
+        logger.info("Le détail d'un livre est demandé");
+        return livre;
     }
 
 }
