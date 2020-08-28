@@ -36,11 +36,8 @@ public class ClientController {
 
     @GetMapping("/acceuil")
     public String acceuil(Model model){
-
         logger.info("Page d'acceuil demandée");
-
         return "acceuil";
-
     }
 
     /*============== #Profil ======================*/
@@ -159,8 +156,9 @@ public class ClientController {
         UtilisateurBean utilisateurBean = (UtilisateurBean) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         model.addAttribute("utilisateurBean", utilisateurBean);
 
+        EmpruntBean empruntBean = iMicroserviceMyLibraryProxyService.afficherUnEmprunt(id);
+
         try{
-            EmpruntBean empruntBean = iMicroserviceMyLibraryProxyService.afficherUnEmprunt(id);
             iMicroserviceMyLibraryProxyService.prolongerEmprunt(empruntBean.getId(), utilisateurBean.getId());
 
             logger.info("l'utilisateur : "+utilisateurBean.getPseudo()+" a prolonger le prêt dont l' id est : "+ id);

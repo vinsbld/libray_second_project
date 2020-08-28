@@ -92,6 +92,9 @@ public class ICopieServiceImpl implements ICopieService {
         for (Copie c : copieList) {
             CopieDTO cp = new CopieDTO();
             cp.setCopie(c);
+            cp.setIsbn(c.getIsbn());
+            cp.setId(c.getId());
+            cp.setLivre(c.getLivre());
             Emprunt r = iEmpruntService.findByCopie_Id(c.getId());
             cp.setEmprunt(r);
             copieDTOs.add(cp);
