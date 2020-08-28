@@ -100,13 +100,14 @@
                         <td th:if="${n.copie.isDisponible() == true && nbCopiesDisponibles > 0}">isbn :
                             <span th:text="${n.copie.isbn}"></span>
                         </td>
-                        <td sec:authorize="isAuthenticated()">
-                                <span th:if="${n.copie.isDisponible() == true && nbCopiesDisponibles > 0}">
-                                    <form th:action="@{/emprunter/{id}(id=${n.copie.id})}" method="post">
-                                        <button type="submit" onclick="return confirm('Confirmer emprunt')" class="btn-get-create">Emprunter</button>
-                                    </form>
-                                </span>
-                        </td>
+
+                        <span th:if="${n.copie.isDisponible() == true && nbCopiesDisponibles > 0}">
+                            <td sec:authorize="isAuthenticated()">
+                                <form th:action="@{/emprunter/{id}(id=${n.copie.id})}" method="post">
+                                    <button type="submit" onclick="return confirm('Confirmer emprunt')" class="btn-get-create">Emprunter</button>
+                                </form>
+                            </td>
+                        </span>
                     </tr>
                     </tbody>
                 </table>

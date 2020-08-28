@@ -127,7 +127,6 @@ public class ClientController {
         CopieBeanDTO copieBean = iMicroserviceMyLibraryProxyService.afficherUneCopie(id);
         model.addAttribute("copie", copieBean);
 
-
         try {
             iMicroserviceMyLibraryProxyService.demandeEmprunt(copieBean.getId(), utilisateurBean.getId());
 
