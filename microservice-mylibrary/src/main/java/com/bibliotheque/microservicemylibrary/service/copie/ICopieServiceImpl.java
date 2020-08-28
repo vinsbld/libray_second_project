@@ -30,6 +30,7 @@ public class ICopieServiceImpl implements ICopieService {
 
     Logger logger = LoggerFactory.getLogger(this.getClass());
 
+
     /**
      * Permet de trouver toutes les copies d'un livre
      * @param id identifiant du livre
@@ -145,6 +146,5 @@ public class ICopieServiceImpl implements ICopieService {
         List<Copie> copiesNonDispos = getCopieLivresIndisponibles(id);
         return copiesNonDispos;
     }
-
 
 }
