@@ -1,6 +1,7 @@
 package com.bibliotheque.microservicemylibrary.servicesTestUnitaire;
 
 import com.bibliotheque.microservicemylibrary.dao.ILivreDao;
+import com.bibliotheque.microservicemylibrary.exeptions.LivresNotFoundException;
 import com.bibliotheque.microservicemylibrary.model.Copie;
 import com.bibliotheque.microservicemylibrary.model.Livre;
 import com.bibliotheque.microservicemylibrary.service.livre.ILivreServiceImpl;
@@ -20,6 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.internal.bytebuddy.matcher.ElementMatchers.is;
 
 @SpringBootTest
 @RunWith(MockitoJUnitRunner.class)
@@ -113,6 +115,17 @@ public class LivreServiceUnitTest {
         Optional<Livre> lvr = iLivreServiceMock.findById(4L);
         assertThat(lvr.get().getTitre()).isEqualTo("b");
         assertThat(lvr.get().getTitre()).isNotEqualTo("a");
+    }
+
+    @Test(expected = Exception.class)
+    public void testEmtyLivres(){
+        try {
+            List<Livre> lvrs = new ArrayList<>();
+            lvrs.get(0);
+        }catch (LivresNotFoundException e){
+            assertThat(e.getMessage()).isEqualTo(("Il n'y a pas de livres"));
+        }
+
     }
 
 
