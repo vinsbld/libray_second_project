@@ -1,5 +1,6 @@
 package com.bibliotheque.microservicemylibrary.service.reservation;
 
+import com.bibliotheque.microservicemylibrary.dto.ReservationDTO;
 import com.bibliotheque.microservicemylibrary.model.Livre;
 import com.bibliotheque.microservicemylibrary.model.Reservation;
 import com.bibliotheque.microservicemylibrary.model.StateEnum;
@@ -38,4 +39,12 @@ public interface IReservationService {
     //faire une réservation
     void reserver(Long id, Long idUtilisateur);
 
+    //annuler une reservation
+    void annuler(Long id, Long idUtilisateur);
+
+    //afficher les réservations pour un utilisateur
+    List<ReservationDTO> afficherlesReservations(Long id);
+
+    //afficher toutes les réservations
+    List<Reservation> toutesLesReservations();
 }

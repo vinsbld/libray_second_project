@@ -1,6 +1,5 @@
 package com.bibliotheque.microservicemylibrary.controller;
 
-import com.bibliotheque.microservicemylibrary.exeptions.LivresNotFoundException;
 import com.bibliotheque.microservicemylibrary.model.Livre;
 import com.bibliotheque.microservicemylibrary.service.livre.ILivreService;
 import org.slf4j.Logger;
