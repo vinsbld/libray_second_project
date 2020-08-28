@@ -3,10 +3,15 @@ package com.bibliotheque.microservicemylibrary.servicesTestUnitaire;
 import com.bibliotheque.microservicemylibrary.dao.ILivreDao;
 import com.bibliotheque.microservicemylibrary.exeptions.LivresNotFoundException;
 import com.bibliotheque.microservicemylibrary.model.Copie;
+import com.bibliotheque.microservicemylibrary.model.Emprunt;
 import com.bibliotheque.microservicemylibrary.model.Livre;
+import com.bibliotheque.microservicemylibrary.service.copie.ICopieService;
+import com.bibliotheque.microservicemylibrary.service.emprunt.IEmpruntService;
 import com.bibliotheque.microservicemylibrary.service.livre.ILivreServiceImpl;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -16,9 +21,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.time.LocalDate;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.internal.bytebuddy.matcher.ElementMatchers.is;
@@ -29,6 +33,12 @@ public class LivreServiceUnitTest {
 
     @Mock
     private ILivreDao iLivreDaoMock;
+
+    @Mock
+    private ICopieService iCopieServiceMock;
+
+    @Mock
+    private IEmpruntService iEmpruntServiceMock;
 
 
     @Autowired
@@ -118,15 +128,39 @@ public class LivreServiceUnitTest {
     }
 
     @Test(expected = Exception.class)
-    public void testEmtyLivres(){
+    public void testEmptyLivres(){
+        List<Livre> lvrs = new ArrayList<>();
         try {
-            List<Livre> lvrs = new ArrayList<>();
             lvrs.get(0);
         }catch (LivresNotFoundException e){
             assertThat(e.getMessage()).isEqualTo(("Il n'y a pas de livres"));
         }
-
     }
 
+    @Test
+    public void testDateDeRetourLaplusProche(){
+
+        List<Emprunt> empruntList = new ArrayList<>();
+        List<Copie> copieList = new ArrayList<>();
+        Date date = new Date();
+
+        Livre livre = new Livre();
+        livre.setId(1L);
+
+        Copie copie = new Copie();
+        copie.setId(4L);
+        copie.setEmprunts(empruntList);
+        copieList.add(copie);
+
+        Emprunt emprunt = new Emprunt();
+        emprunt.setDateDeFinEmprunt(date);
+        empruntList.add(emprunt);
+
+        Mockito.when(iCopieServiceMock.findAllByLivreId(livre.getId())).thenReturn(copieList);
+        Mockito.when(iEmpruntServiceMock.findAllByCopie_IdAndDateRetourIsNull(copie.getId())).thenReturn(empruntList);
+
+        iLivreServiceMock.dateDeRetourLaplusProche(livre);
+        assertThat(livre.getDateRetourLaPlusProche()).isEqualTo(date);
+    }
 
 }
