@@ -2,9 +2,13 @@ package com.bibliotheque.microservicemylibrary.servicesTestUnitaire;
 
 import com.bibliotheque.microservicemylibrary.beans.UtilisateurBean;
 import com.bibliotheque.microservicemylibrary.dao.IEmpruntDao;
+import com.bibliotheque.microservicemylibrary.exeptions.CannotAddBorrowingException;
 import com.bibliotheque.microservicemylibrary.model.Copie;
 import com.bibliotheque.microservicemylibrary.model.Emprunt;
+import com.bibliotheque.microservicemylibrary.model.Livre;
+import com.bibliotheque.microservicemylibrary.service.copie.ICopieService;
 import com.bibliotheque.microservicemylibrary.service.emprunt.IEmpruntServiceImpl;
+import com.bibliotheque.microservicemylibrary.service.livre.ILivreService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,6 +29,12 @@ public class EmpruntServiceTest {
 
     @Mock
     private IEmpruntDao iEmpruntDao;
+
+    @Mock
+    ICopieService iCopieService;
+
+    @Mock
+    ILivreService iLivreService;
 
     @Autowired
     @InjectMocks
@@ -122,6 +132,45 @@ public class EmpruntServiceTest {
         List<Emprunt> lst = iEmpruntService.relance(new GregorianCalendar(2019, 07, 04).getTime());
         assertThat(lst.size()).isEqualTo(3);
 
+    }
+
+    @Test(expected = Exception.class)
+    public void testUtilisateurAdejaUnEmpruntEnCoursPourCeLivre(){
+        
+        try {
+            Date date = new Date();
+            List<Copie> copieList = new ArrayList<>();
+            List<Emprunt> empruntList = new ArrayList<>();
+
+            UtilisateurBean user = new UtilisateurBean();
+            user.setId(4L);
+
+            Livre livre = new Livre();
+            livre.setCopies(copieList);
+
+            Copie copie = new Copie();
+            copie.setLivre(livre);
+            copie.setEmprunts(empruntList);
+            copieList.add(copie);
+
+            Copie copie1 = new Copie();
+            copie.setLivre(livre);
+            copie1.setId(2L);
+
+            Emprunt emprunt = new Emprunt();
+            emprunt.setIdUtilisateur(user.getId());
+            emprunt.setCopie(copie);
+            empruntList.add(emprunt);
+
+            Mockito.when(iEmpruntDao.findAllByIdUtilisateurAndDateRetourIsNull(user.getId())).thenReturn(empruntList);
+            Mockito.when(iCopieService.findById(copie1.getId())).thenReturn(Optional.of(copie1));
+            Mockito.when(iLivreService.findById(livre.getId())).thenReturn(Optional.of(livre));
+
+            iEmpruntService.emprunter(user.getId(), copie1.getId());
+
+        }catch (CannotAddBorrowingException e){
+            assertThat(e.getMessage()).isEqualTo("cannotBorrowException01");
+        }
     }
 
 }
