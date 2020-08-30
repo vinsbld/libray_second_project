@@ -3,6 +3,7 @@ package com.bibliotheque.microservicemylibrary.servicesTestUnitaire;
 import com.bibliotheque.microservicemylibrary.beans.UtilisateurBean;
 import com.bibliotheque.microservicemylibrary.dao.IEmpruntDao;
 import com.bibliotheque.microservicemylibrary.exeptions.CannotAddBorrowingException;
+import com.bibliotheque.microservicemylibrary.exeptions.CannotExtendBorrowingException;
 import com.bibliotheque.microservicemylibrary.model.Copie;
 import com.bibliotheque.microservicemylibrary.model.Emprunt;
 import com.bibliotheque.microservicemylibrary.model.Livre;
@@ -136,41 +137,81 @@ public class EmpruntServiceTest {
 
     @Test(expected = Exception.class)
     public void testUtilisateurAdejaUnEmpruntEnCoursPourCeLivre(){
-        
+
+        List<Emprunt> empruntList = new ArrayList<>();
+
+        UtilisateurBean user = new UtilisateurBean();
+        user.setId(4L);
+
+        Livre livre = new Livre();
+
+        Copie copie = new Copie();
+        copie.setLivre(livre);
+        copie.setEmprunts(empruntList);
+
+        Copie copie1 = new Copie();
+        copie.setLivre(livre);
+        copie1.setId(2L);
+
+        Emprunt emprunt = new Emprunt();
+        emprunt.setIdUtilisateur(user.getId());
+        emprunt.setCopie(copie);
+        empruntList.add(emprunt);
+
+        Mockito.when(iEmpruntDao.findAllByIdUtilisateurAndDateRetourIsNull(user.getId())).thenReturn(empruntList);
+        Mockito.when(iCopieService.findById(copie1.getId())).thenReturn(Optional.of(copie1));
+        Mockito.when(iLivreService.findById(livre.getId())).thenReturn(Optional.of(livre));
+
         try {
-            Date date = new Date();
-            List<Copie> copieList = new ArrayList<>();
-            List<Emprunt> empruntList = new ArrayList<>();
-
-            UtilisateurBean user = new UtilisateurBean();
-            user.setId(4L);
-
-            Livre livre = new Livre();
-            livre.setCopies(copieList);
-
-            Copie copie = new Copie();
-            copie.setLivre(livre);
-            copie.setEmprunts(empruntList);
-            copieList.add(copie);
-
-            Copie copie1 = new Copie();
-            copie.setLivre(livre);
-            copie1.setId(2L);
-
-            Emprunt emprunt = new Emprunt();
-            emprunt.setIdUtilisateur(user.getId());
-            emprunt.setCopie(copie);
-            empruntList.add(emprunt);
-
-            Mockito.when(iEmpruntDao.findAllByIdUtilisateurAndDateRetourIsNull(user.getId())).thenReturn(empruntList);
-            Mockito.when(iCopieService.findById(copie1.getId())).thenReturn(Optional.of(copie1));
-            Mockito.when(iLivreService.findById(livre.getId())).thenReturn(Optional.of(livre));
-
             iEmpruntService.emprunter(user.getId(), copie1.getId());
-
         }catch (CannotAddBorrowingException e){
             assertThat(e.getMessage()).isEqualTo("cannotBorrowException01");
         }
+    }
+
+    @Test(expected = Exception.class)
+    public void testProlongerEmpruntDateButoirPassee(){
+
+        UtilisateurBean utilisateurBean = new UtilisateurBean();
+        utilisateurBean.setId(2L);
+
+        Emprunt emprunt = new Emprunt();
+        emprunt.setId(4L);
+        emprunt.setDateDeFinEmprunt(new GregorianCalendar(2018,04,02).getTime());
+
+        Mockito.when(iEmpruntDao.findById(emprunt.getId())).thenReturn(Optional.of(emprunt));
+
+        try {
+            iEmpruntService.prolongerEmprunt(emprunt.getId(), utilisateurBean.getId());
+        }catch (CannotExtendBorrowingException e){
+            assertThat(e.getMessage()).isEqualTo("CannotExtendBorrowingException01");
+        }
+    }
+
+    @Test(expected = Exception.class)
+    public void testProlongerEmpruntDejaProlonge(){
+
+        UtilisateurBean utilisateurBean = new UtilisateurBean();
+        utilisateurBean.setId(2L);
+
+        Emprunt emprunt = new Emprunt();
+        emprunt.setId(4L);
+        emprunt.setProlongerEmprunt(true);
+
+        Mockito.when(iEmpruntDao.findById(emprunt.getId())).thenReturn(Optional.of(emprunt));
+
+        try {
+            iEmpruntService.prolongerEmprunt(emprunt.getId(), utilisateurBean.getId());
+        }catch (CannotExtendBorrowingException e){
+            assertThat(e.getMessage()).isEqualTo("CannotExtendBorrowingException02");
+        }
+    }
+
+    @Test
+    public void testAdd4Weeks(){
+        Date date = new GregorianCalendar(2020,04,02).getTime();
+        iEmpruntService.add4Weeks(date);
+        assertThat(date).isEqualTo("2020-05-02");
     }
 
 }
