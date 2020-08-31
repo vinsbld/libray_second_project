@@ -145,7 +145,7 @@ public class IReservationServiceImpl implements IReservationService{
         Integer reservationMax = (reservation.getLivre().getNbCopies())*2;
 
         //verification si l'utilisateur n'a pas déjà une réservation en cours pour cet ouvrage
-        List<Reservation> reservationList = iReservationDao.findAllByIdUtilisateurAndStateEnumsOrderByDateDeReservationAsc(reservation.getLivre().getId(), StateEnum.enCours);
+        List<Reservation> reservationList = iReservationDao.findAllByIdUtilisateurAndStateEnumsOrderByDateDeReservationAsc(idUtilisateur, StateEnum.enCours);
         for (Reservation r : reservationList) {
             if (r.getIdUtilisateur().equals(reservation.getIdUtilisateur())){
                 throw new CannotAddBookingException("cannotBookingException01");
@@ -161,7 +161,7 @@ public class IReservationServiceImpl implements IReservationService{
         }
 
         //verification que la liste n'est pas complète
-        if (reservationList.size() >= reservationMax){
+        if (reservations.size() >= reservationMax){
             throw new CannotAddBookingException("cannotBookingException03");
         }
 

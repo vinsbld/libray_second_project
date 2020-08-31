@@ -2,10 +2,14 @@ package com.bibliotheque.microservicemylibrary.servicesTestUnitaire;
 
 import com.bibliotheque.microservicemylibrary.beans.UtilisateurBean;
 import com.bibliotheque.microservicemylibrary.dao.IEmpruntDao;
-import com.bibliotheque.microservicemylibrary.model.Copie;
-import com.bibliotheque.microservicemylibrary.model.Emprunt;
+import com.bibliotheque.microservicemylibrary.exeptions.CannotAddBorrowingException;
+import com.bibliotheque.microservicemylibrary.exeptions.CannotExtendBorrowingException;
+import com.bibliotheque.microservicemylibrary.model.*;
+import com.bibliotheque.microservicemylibrary.service.copie.ICopieService;
 import com.bibliotheque.microservicemylibrary.service.emprunt.IEmpruntServiceImpl;
-import org.junit.Before;
+import com.bibliotheque.microservicemylibrary.service.livre.ILivreService;
+import com.bibliotheque.microservicemylibrary.service.reservation.IReservationService;
+import com.bibliotheque.microservicemylibrary.service.userbean.IUserbeanService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -26,102 +30,118 @@ public class EmpruntServiceTest {
     @Mock
     private IEmpruntDao iEmpruntDao;
 
+    @Mock
+    ICopieService iCopieService;
+
+    @Mock
+    ILivreService iLivreService;
+
+    @Mock
+    IUserbeanService iUserbeanService;
+
+    @Mock
+    IReservationService iReservationService;
+
     @Autowired
     @InjectMocks
     private IEmpruntServiceImpl iEmpruntService;
 
-    private List<Emprunt> empruntListing = new ArrayList<>();
-    private List<Emprunt> user_1 = new ArrayList<>();
-    private List<Emprunt> user_2 = new ArrayList<>();
 
-    @Before
-    public void setUp(){
+    @Test
+    public void testUtilisateurAdejaUnEmpruntEnCoursPourCeLivre(){
 
-        UtilisateurBean utilisateur_1 = new UtilisateurBean();
-        utilisateur_1.setId(1L);
+        List<Emprunt> empruntList = new ArrayList<>();
+        List<Copie> copieList = new ArrayList<>();
+        List<Reservation> reservationList = new ArrayList<>();
 
-        UtilisateurBean utilisateur_2 = new UtilisateurBean();
-        utilisateur_2.setId(2L);
+        UtilisateurBean user = new UtilisateurBean();
+        user.setId(4L);
 
-        Copie copie_1 = new Copie();
-        copie_1.setDisponible(false);
-        copie_1.setId(1L);
-        copie_1.setIsbn(2459);
+        Livre livre = new Livre();
+        livre.setId(2L);
+        livre.setCopies(copieList);
+        livre.setReservations(reservationList);
 
-        Copie copie_2 = new Copie();
-        copie_2.setDisponible(false);
-        copie_2.setId(2L);
-        copie_2.setIsbn(4221);
+        Copie copie = new Copie();
+        copie.setLivre(livre);
+        copie.setId(4L);
+        copie.setDisponible(false);
+        copie.setEmprunts(empruntList);
+        copieList.add(copie);
 
-        Copie copie_3 = new Copie();
-        copie_3.setDisponible(false);
-        copie_3.setId(3L);
+        Copie copie1 = new Copie();
+        copie1.setLivre(livre);
+        copie1.setId(1L);
+        copieList.add(copie1);
 
-        Copie copie_4 = new Copie();
-        copie_4.setDisponible(false);
-        copie_4.setId(4L);
+        Emprunt emprunt = new Emprunt();
+        emprunt.setId(8L);
+        emprunt.setIdUtilisateur(user.getId());
+        emprunt.setCopie(copie);
+        emprunt.setDateRetour(null);
+        empruntList.add(emprunt);
 
-        Emprunt emprunt_1 = new Emprunt();
-        emprunt_1.setId(1L);
-        emprunt_1.setCopie(copie_1);
-        emprunt_1.setIdUtilisateur(1L);
-        emprunt_1.setDateDeFinEmprunt(new GregorianCalendar(2019,4,20).getTime());
-        emprunt_1.setDateRetour(null);
-        empruntListing.add(emprunt_1);
-        user_1.add(emprunt_1);
+        Mockito.when(iUserbeanService.findById(user.getId())).thenReturn(user);
+        Mockito.when(iEmpruntDao.findAllByIdUtilisateurAndDateRetourIsNull(user.getId())).thenReturn(empruntList);
+        Mockito.when(iCopieService.findById(copie1.getId())).thenReturn(Optional.of(copie1));
+        Mockito.when(iCopieService.findById(copie.getId())).thenReturn(Optional.of(copie));
+        Mockito.when(iLivreService.findById(livre.getId())).thenReturn(Optional.of(livre));
+        Mockito.when(iReservationService.findByLivreAndStateEnumsOrderByDateDeReservationAsc(copie1.getLivre(), StateEnum.enCours)).thenReturn(reservationList);
 
-        Emprunt emprunt_2 = new Emprunt();
-        emprunt_2.setId(2L);
-        emprunt_2.setCopie(copie_2);
-        emprunt_2.setIdUtilisateur(1L);
-        emprunt_2.setDateDeFinEmprunt(new GregorianCalendar(2019,5,20).getTime());
-        emprunt_2.setDateRetour(null);
-        empruntListing.add(emprunt_2);
-        user_1.add(emprunt_2);
-
-        Emprunt emprunt_3 = new Emprunt();
-        emprunt_3.setId(3L);
-        emprunt_3.setCopie(copie_3);
-        emprunt_3.setIdUtilisateur(2L);
-        emprunt_3.setDateDeFinEmprunt(new GregorianCalendar(2019,6,05).getTime());
-        emprunt_3.setDateRetour(null);
-        empruntListing.add(emprunt_3);
-        user_2.add(emprunt_3);
-
-        Emprunt emprunt_4 = new Emprunt();
-        emprunt_4.setId(4L);
-        emprunt_4.setCopie(copie_4);
-        emprunt_4.setIdUtilisateur(2L);
-        emprunt_4.setDateRetour(new Date());
-        empruntListing.add(emprunt_4);
-        user_2.add(emprunt_4);
-
-        Mockito.when(iEmpruntDao.findAllByIdUtilisateur(utilisateur_1.getId())).thenReturn(user_1);
-        Mockito.when(iEmpruntDao.findById(copie_2.getId())).thenReturn(Optional.of(emprunt_2));
-        Mockito.when(iEmpruntDao.findAllByDateRetourIsNullAndAndDateDeFinEmpruntBefore(new GregorianCalendar(2019, 07, 04).getTime())).thenReturn(empruntListing);
-
+        assertThat(empruntList.size()).isEqualTo(1);
+        try {
+            iEmpruntService.emprunter(copie1.getId(), user.getId());
+        }catch (CannotAddBorrowingException e){
+            assertThat(e.getMessage()).isEqualTo("cannotBorrowException01");
+        }
     }
 
     @Test
-    public void findAllByIdUtilisateur(){
-        List<Emprunt> list = iEmpruntService.findAllByIdUtilisateur(1L);
-        assertThat(list.get(0).getCopie().getIsbn()).isEqualTo(2459);
-        assertThat(list.size()).isEqualTo(2);
-        assertThat(list.size()).isNotEqualTo(4);
+    public void testProlongerEmpruntDateButoirPassee(){
+
+        UtilisateurBean utilisateurBean = new UtilisateurBean();
+        utilisateurBean.setId(2L);
+
+        Emprunt emprunt = new Emprunt();
+        emprunt.setId(4L);
+        emprunt.setDateDeFinEmprunt(new GregorianCalendar(2018,04,02).getTime());
+
+        Mockito.when(iUserbeanService.findById(utilisateurBean.getId())).thenReturn(utilisateurBean);
+        Mockito.when(iEmpruntDao.findById(emprunt.getId())).thenReturn(Optional.of(emprunt));
+
+        try {
+            iEmpruntService.prolongerEmprunt(emprunt.getId(), utilisateurBean.getId());
+        }catch (CannotExtendBorrowingException e){
+            assertThat(e.getMessage()).isEqualTo("CannotExtendBorrowingException01");
+        }
     }
 
     @Test
-    public void findById(){
-        Optional<Emprunt> emprunt = iEmpruntService.findById(2L);
-        assertThat(emprunt.get().getCopie().getIsbn()).isEqualTo(4221);
-        assertThat(emprunt.get().getIdUtilisateur()).isEqualTo(1L);
+    public void testProlongerEmpruntDejaProlonge(){
+
+        UtilisateurBean utilisateurBean = new UtilisateurBean();
+        utilisateurBean.setId(2L);
+
+        Emprunt emprunt = new Emprunt();
+        emprunt.setId(4L);
+        emprunt.setDateDeFinEmprunt(new GregorianCalendar(2020,9,02).getTime());
+        emprunt.setProlongerEmprunt(true);
+
+        Mockito.when(iUserbeanService.findById(utilisateurBean.getId())).thenReturn(utilisateurBean);
+        Mockito.when(iEmpruntDao.findById(emprunt.getId())).thenReturn(Optional.of(emprunt));
+
+        try {
+            iEmpruntService.prolongerEmprunt(emprunt.getId(), utilisateurBean.getId());
+        }catch (CannotExtendBorrowingException e){
+            assertThat(e.getMessage()).isEqualTo("CannotExtendBorrowingException02");
+        }
     }
 
     @Test
-    public void relance(){
-        List<Emprunt> lst = iEmpruntService.relance(new GregorianCalendar(2019, 07, 04).getTime());
-        assertThat(lst.size()).isEqualTo(3);
-
+    public void testAdd4Weeks(){
+        Date date = new GregorianCalendar(2020,04,02).getTime();
+        iEmpruntService.add4Weeks(date);
+        assertThat(date).isEqualTo("2020-05-02");
     }
 
 }

@@ -2,7 +2,6 @@ package com.bibliotheque.microservicemylibrary.service.livre;
 
 import com.bibliotheque.microservicemylibrary.model.Livre;
 import org.springframework.data.repository.query.Param;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.*;
 

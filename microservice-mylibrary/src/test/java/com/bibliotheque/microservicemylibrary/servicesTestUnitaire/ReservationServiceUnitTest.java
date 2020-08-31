@@ -3,11 +3,12 @@ package com.bibliotheque.microservicemylibrary.servicesTestUnitaire;
 
 import com.bibliotheque.microservicemylibrary.beans.UtilisateurBean;
 import com.bibliotheque.microservicemylibrary.dao.IReservationDao;
-import com.bibliotheque.microservicemylibrary.model.Livre;
-import com.bibliotheque.microservicemylibrary.model.Reservation;
-import com.bibliotheque.microservicemylibrary.model.StateEnum;
+import com.bibliotheque.microservicemylibrary.exeptions.CannotAddBookingException;
+import com.bibliotheque.microservicemylibrary.model.*;
+import com.bibliotheque.microservicemylibrary.service.emprunt.IEmpruntService;
+import com.bibliotheque.microservicemylibrary.service.livre.ILivreService;
 import com.bibliotheque.microservicemylibrary.service.reservation.IReservationServiceImpl;
-import org.junit.Before;
+import com.bibliotheque.microservicemylibrary.service.userbean.IUserbeanService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -28,113 +29,180 @@ public class ReservationServiceUnitTest {
     @Mock
     private IReservationDao iReservationDao;
 
+    @Mock
+    private IEmpruntService iEmpruntService;
+
+    @Mock
+    private ILivreService iLivreService;
+
+    @Mock
+    private IUserbeanService iUserbeanService;
+
     @Autowired
     @InjectMocks
     private IReservationServiceImpl iReservationService;
 
-    private List<Reservation> reservationList_Livre_1 = new ArrayList<>();
-    private List<Reservation> reservationList_Livre_2 = new ArrayList<>();
-    private List<Reservation> reservations = new ArrayList<>();
-    private List<Livre> livreList = new ArrayList<>();
+    @Test
+    public void testreserver(){
 
-    @Before
-    public void setUp(){
+        List<Reservation> reservationList = new ArrayList<>();
+        List<Copie> copieList = new ArrayList<>();
 
-        Livre livre_1 = new Livre();
-        livre_1.setId(1L);
-        livre_1.setTitre("a");
-        livreList.add(livre_1);
+        Livre livre = new Livre();
+        livre.setId(4L);
+        livre.setReservations(reservationList);
+        livre.setCopies(copieList);
 
-        Livre livre_2 = new Livre();
-        livre_2.setId(2L);
-        livre_2.setTitre("b");
-        livreList.add(livre_2);
+        Copie copie = new Copie();
+        copie.setDisponible(false);
+        copieList.add(copie);
 
-        UtilisateurBean utilisateurBean_1 = new UtilisateurBean();
-        utilisateurBean_1.setId(4L);
+        Reservation reservation = new Reservation();
+        reservation.setLivre(livre);
+        reservationList.add(reservation);
 
-        UtilisateurBean utilisateurBean_2 = new UtilisateurBean();
-        utilisateurBean_2.setId(5L);
+        UtilisateurBean user_1 = new UtilisateurBean();
+        user_1.setId(1L);
+
+        Mockito.when(iLivreService.findById(livre.getId())).thenReturn(Optional.of(livre));
+        Mockito.when(iUserbeanService.findById(user_1.getId())).thenReturn(user_1);
+
+        iReservationService.reserver(livre.getId(), user_1.getId());
+
+        assertThat(livre.getReservations().size()).isEqualTo(1);
+
+    }
+
+    @Test
+    public void testUtilisateurAdejaUneReservationEnCours(){
+        List<Reservation> reservations = new ArrayList<>();
+        List<Copie> copieList = new ArrayList<>();
+
+        UtilisateurBean user = new UtilisateurBean();
+        user.setId(2L);
+
+        Livre livre = new Livre();
+        livre.setId(4L);
+        livre.setCopies(copieList);
+
+        Copie copie = new Copie();
+        copie.setDisponible(false);
+        copieList.add(copie);
+
+        Reservation reservation = new Reservation();
+        reservation.setIdUtilisateur(user.getId());
+        reservation.setLivre(livre);
+        reservation.setStateEnums(StateEnum.enCours);
+        reservations.add(reservation);
+
+        Mockito.when(iLivreService.findById(livre.getId())).thenReturn(Optional.of(livre));
+        Mockito.when(iUserbeanService.findById(user.getId())).thenReturn(user);
+        Mockito.when(iReservationDao.findAllByIdUtilisateurAndStateEnumsOrderByDateDeReservationAsc(user.getId(), StateEnum.enCours)).thenReturn(reservations);
+
+        try {
+            iReservationService.reserver(livre.getId(), user.getId());
+        }catch (CannotAddBookingException e){
+            assertThat(e.getMessage()).isEqualTo("cannotBookingException01");
+        }
+    }
+
+    @Test
+    public void testUtilisateurAdejaUnEmpruntEnCours(){
+
+        List<Emprunt> empruntList = new ArrayList<>();
+        List<Copie> copieList = new ArrayList<>();
+        List<Reservation> reservationList = new ArrayList<>();
+
+        UtilisateurBean user = new UtilisateurBean();
+        user.setId(2L);
+
+        Livre livre = new Livre();
+        livre.setId(4L);
+        livre.setCopies(copieList);
+
+        Copie copie = new Copie();
+        copie.setLivre(livre);
+        copie.setId(1L);
+        copie.setDisponible(false);
+        copieList.add(copie);
+
+        Reservation reservation = new Reservation();
+        reservation.setLivre(livre);
+        reservation.setId(4L);
+        reservationList.add(reservation);
+
+        Emprunt emprunt = new Emprunt();
+        emprunt.setId(4L);
+        emprunt.setIdUtilisateur(user.getId());
+        emprunt.setCopie(copie);
+        empruntList.add(emprunt);
+
+        Mockito.when(iUserbeanService.findById(user.getId())).thenReturn(user);
+        Mockito.when(iReservationService.findById(reservation.getId())).thenReturn(Optional.of(reservation));
+        Mockito.when(iLivreService.findById(livre.getId())).thenReturn(Optional.of(livre));
+        Mockito.when(iReservationService.findAllByLivreAndStateEnumsOrderByDateDeReservationAsc(livre, StateEnum.enCours)).thenReturn(reservationList);
+        Mockito.when(iEmpruntService.findAllByIdUtilisateurAndDateRetourIsNull(user.getId())).thenReturn(empruntList);
+
+        try {
+            iReservationService.reserver(livre.getId(), user.getId());
+        }catch (CannotAddBookingException e){
+            assertThat(e.getMessage()).isEqualTo("cannotBookingException02");
+        }
+
+    }
+
+    @Test
+    public void testLaListeDeReservationEstComplete(){
+
+        List<Reservation> reservationArrayList = new ArrayList<>();
+        List<Copie> copieList = new ArrayList<>();
+
+
+        UtilisateurBean user_1 = new UtilisateurBean();
+        user_1.setId(1L);
+        UtilisateurBean user_2 = new UtilisateurBean();
+        user_2.setId(2L);
+        UtilisateurBean user_4 = new UtilisateurBean();
+        user_4.setId(5L);
+
+        Livre livre = new Livre();
+        livre.setId(1L);
+        livre.setCopies(copieList);
+        livre.setReservations(reservationArrayList);
+
+        Copie copie = new Copie();
+        copie.setId(2L);
+        copie.setDisponible(false);
+        copie.setLivre(livre);
+        copieList.add(copie);
 
         Reservation reservation_1 = new Reservation();
-        reservation_1.setId(1L);
-        reservation_1.setIdUtilisateur(4L);
-        reservation_1.setLivre(livre_2);
+        reservation_1.setId(4L);
+        reservation_1.setLivre(livre);
+        reservation_1.setIdUtilisateur(user_1.getId());
         reservation_1.setStateEnums(StateEnum.enCours);
-        reservation_1.setDateDeReservation(new Date());
-        reservation_1.setEmailEnvoyer(true);
-        reservationList_Livre_1.add(reservation_1);
-        reservations.add(reservation_1);
+        reservationArrayList.add(reservation_1);
 
         Reservation reservation_2 = new Reservation();
         reservation_2.setId(2L);
-        reservation_2.setIdUtilisateur(5L);
-        reservation_2.setLivre(livre_1);
+        reservation_1.setLivre(livre);
+        reservation_2.setIdUtilisateur(user_2.getId());
         reservation_2.setStateEnums(StateEnum.enCours);
-        reservation_2.setDateDeReservation(new GregorianCalendar(2020,7,05).getTime());
-        reservation_2.setEmailEnvoyer(true);
-        reservationList_Livre_2.add(reservation_2);
-        reservations.add(reservation_2);
+        reservationArrayList.add(reservation_2);
 
-        Mockito.when(iReservationDao.findAll()).thenReturn(reservations);
 
-        Mockito.when(iReservationDao.findById(reservation_1.getId())).thenReturn(Optional.of(reservation_1));
-        Mockito.when(iReservationDao.findById(reservation_2.getId())).thenReturn(Optional.of(reservation_2));
+        Mockito.when(iUserbeanService.findById(user_4.getId())).thenReturn(user_4);
+        Mockito.when(iUserbeanService.findById(user_2.getId())).thenReturn(user_2);
+        Mockito.when(iUserbeanService.findById(user_1.getId())).thenReturn(user_1);
+        Mockito.when(iLivreService.findById(livre.getId())).thenReturn(Optional.of(livre));
+        Mockito.when(iReservationService.findByLivreAndStateEnumsOrderByDateDeReservationAsc(livre, StateEnum.enCours)).thenReturn(reservationArrayList);
 
-        Mockito.when(iReservationDao.findAllByIdUtilisateurAndStateEnumsOrderByDateDeReservationAsc(4L, StateEnum.enCours)).thenReturn(reservationList_Livre_1);
-        Mockito.when(iReservationDao.findAllByIdUtilisateurAndStateEnumsOrderByDateDeReservationAsc(5L, StateEnum.enCours)).thenReturn(reservationList_Livre_2);
-
-        Mockito.when(iReservationDao.findAllByLivreAndStateEnumsOrderByDateDeReservationAsc(livre_1, StateEnum.enCours)).thenReturn(reservationList_Livre_1);
-        Mockito.when(iReservationDao.findAllByLivreAndStateEnumsOrderByDateDeReservationAsc(livre_2, StateEnum.enCours)).thenReturn(reservationList_Livre_2);
-
-        Mockito.when(iReservationDao.findByEmailEnvoyerAndStateEnums(true, StateEnum.enCours)).thenReturn(reservations);
-
-    }
-
-    @Test
-    public void findById(){
-        Optional<Reservation> reservation_1 = iReservationService.findById(1L);
-        assertThat(reservation_1.get().getLivre().getTitre()).isEqualTo("b");
-        assertThat(reservation_1.get().getLivre().getTitre()).isNotEqualTo("a");
-
-        Optional<Reservation> reservation_2 = iReservationService.findById(2L);
-        assertThat(reservation_2.get().getLivre().getTitre()).isEqualTo("a");
-        assertThat(reservation_2.get().getLivre().getTitre()).isNotEqualTo("b");
-    }
-
-    @Test
-    public void findAllByIdUtilisateurAndStateEnumsOrderByDateDeReservationAsc(){
-        List<Reservation> reservations = iReservationService.findAllByIdUtilisateurAndStateEnumsOrderByDateDeReservationAsc(4L, StateEnum.enCours);
-        assertThat(reservations.size()).isEqualTo(1);
-        assertThat(reservations.size()).isNotNull();
-
-        List<Reservation> reservation_2 = iReservationService.findAllByIdUtilisateurAndStateEnumsOrderByDateDeReservationAsc(5L, StateEnum.enCours);
-        assertThat(reservation_2.size()).isEqualTo(1);
-        assertThat(reservation_2.size()).isNotNull();
-    }
-
-    @Test
-    public void findAllByLivreAndStateEnumsOrderByDateDeReservationAsc(){
-        List<Reservation> reservations = iReservationService.findAllByLivreAndStateEnumsOrderByDateDeReservationAsc(livreList.get(0), StateEnum.enCours);
-        assertThat(reservations.size()).isNotNull();
-        assertThat(reservations.size()).isEqualTo(1);
-
-        List<Reservation> reservation_2 = iReservationService.findAllByLivreAndStateEnumsOrderByDateDeReservationAsc(livreList.get(1), StateEnum.enCours);
-        assertThat(reservation_2.size()).isNotNull();
-        assertThat(reservation_2.size()).isEqualTo(1);
-    }
-
-    @Test
-    public void findByEmailEnvoyerAndStateEnums(){
-        List<Reservation> reservations = iReservationService.findByEmailEnvoyerAndStateEnums(true,StateEnum.enCours);
-        assertThat(reservations.size()).isEqualTo(2);
-        assertThat(reservations.size()).isNotNull();
-    }
-
-    @Test
-    public void findAll(){
-        List<Reservation> reservationList = iReservationDao.findAll();
-        assertThat(reservationList.size()).isEqualTo(2);
+        assertThat(reservationArrayList.size()).isEqualTo(2);
+        try {
+            iReservationService.reserver(livre.getId(), user_4.getId());
+        }catch (CannotAddBookingException e){
+            assertThat(e.getMessage()).isEqualTo("cannotBookingException03");
+        }
     }
 
 }
