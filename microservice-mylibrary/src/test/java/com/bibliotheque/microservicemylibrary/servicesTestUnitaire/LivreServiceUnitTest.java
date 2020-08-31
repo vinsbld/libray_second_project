@@ -1,5 +1,6 @@
 package com.bibliotheque.microservicemylibrary.servicesTestUnitaire;
 
+import com.bibliotheque.microservicemylibrary.dao.ILivreDao;
 import com.bibliotheque.microservicemylibrary.exeptions.LivresNotFoundException;
 import com.bibliotheque.microservicemylibrary.model.Copie;
 import com.bibliotheque.microservicemylibrary.model.Emprunt;
@@ -9,9 +10,11 @@ import com.bibliotheque.microservicemylibrary.service.emprunt.IEmpruntService;
 import com.bibliotheque.microservicemylibrary.service.livre.ILivreServiceImpl;
 import org.junit.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,7 +25,7 @@ import java.util.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
-@ExtendWith(MockitoExtension.class)
+@RunWith(MockitoJUnitRunner.class)
 public class LivreServiceUnitTest {
 
     @Mock
@@ -31,20 +34,24 @@ public class LivreServiceUnitTest {
     @Mock
     private IEmpruntService iEmpruntServiceMock;
 
+    @Mock
+    private ILivreDao iLivreDao;
+
 
     @Autowired
     @InjectMocks
     private ILivreServiceImpl iLivreServiceMock;
 
 
-
     @Test
     public void testEmptyLivres(){
         List<Livre> lvrs = new ArrayList<>();
+
+        Mockito.when(iLivreDao.findAll()).thenReturn(lvrs);
         try {
-            lvrs.get(0);
+            iLivreServiceMock.livres();
         }catch (LivresNotFoundException e){
-            assertThat(e.getMessage()).isEqualTo(("Il n'y a pas de livres"));
+            assertThat(e.getMessage()).isEqualTo("Il n'y a pas de livres");
         }
     }
 
