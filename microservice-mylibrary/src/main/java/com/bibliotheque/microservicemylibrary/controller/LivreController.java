@@ -32,7 +32,6 @@ public class LivreController {
     @RequestMapping(value = "/addLivre", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public String ajouterUnLivre(@RequestBody Livre livre){
         iLivreService.save(livre);
-        logger.info("ajout d'une demande de reservation pour un livre");
         return "ok";
     }
 

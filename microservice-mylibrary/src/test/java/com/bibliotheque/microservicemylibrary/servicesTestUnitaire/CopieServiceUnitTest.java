@@ -115,24 +115,5 @@ public class CopieServiceUnitTest {
         assertThat(copie_2.get().isDisponible()).isEqualTo(true);
     }
 
-    @Test
-    public void getCopieDisponibles_ByIdLivre(){
-        List<Copie> copies = iCopieServiceMock.getCopieLivresDisponibles(1L);
-        assertThat(copies.size()).isEqualTo(1);
 
-        List<Copie> copies1 = iCopieServiceMock.getCopieLivresDisponibles(2L);
-        assertThat(copies1.size()).isEqualTo(1);
-    }
-
-    @Test
-    public void getCopiesIndisponibles_ByIdLivre(){
-
-        List<Copie> copiesIndisponibles_Livre_1 = iCopieServiceMock.getCopieLivresIndisponibles(1L);
-        assertThat(copiesIndisponibles_Livre_1.size()).isNotEqualTo(2);
-        assertThat(copiesIndisponibles_Livre_1.size()).isEqualTo(1);
-
-        List<Copie> copiesIndisponibles_Livre_2 = iCopieServiceMock.getCopieLivresIndisponibles(2L);
-        assertThat(copiesIndisponibles_Livre_2.size()).isNotEqualTo(4);
-        assertThat(copiesIndisponibles_Livre_2.size()).isEqualTo(1);
-    }
 }

@@ -23,7 +23,6 @@ public class CopieController {
     return iCopieService.afficherLesCopies(id);
     }
 
-
     @RequestMapping(value = "/copie/{id}")
     public CopieDTO afficherUneCopie(@PathVariable("id")Long id){
     return iCopieService.voirCopie(id);
