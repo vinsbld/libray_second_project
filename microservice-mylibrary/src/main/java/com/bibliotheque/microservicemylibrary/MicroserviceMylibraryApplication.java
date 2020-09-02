@@ -131,15 +131,15 @@ public class MicroserviceMylibraryApplication {
 
 		Reservation reservationLivreLmdMondesR_1 = new Reservation();
 		reservationLivreLmdMondesR_1.setLivre(livreLmdMondes);
-		reservationLivreLmdMondesR_1.setDateDeReservation(new Date());
+		reservationLivreLmdMondesR_1.setDateDeReservation(new GregorianCalendar(2020,7,8).getTime());
 		reservationLivreLmdMondesR_1.setStateEnums(StateEnum.enCours);
 		reservationLivreLmdMondesR_1.setIdUtilisateur(3L);
-		reservationLivreLmdMondesR_1.setPosition(3);
+		reservationLivreLmdMondesR_1.setPosition(1);
 		iReservationService.save(reservationLivreLmdMondesR_1);
 
 		Reservation reservationLivreLmdMondesR_2 = new Reservation();
 		reservationLivreLmdMondesR_2.setLivre(livreLmdMondes);
-		reservationLivreLmdMondesR_2.setDateDeReservation(new GregorianCalendar(2020,7,05).getTime());
+		reservationLivreLmdMondesR_2.setDateDeReservation(new GregorianCalendar(2020,7,5).getTime());
 		reservationLivreLmdMondesR_2.setStateEnums(StateEnum.enCours);
 		reservationLivreLmdMondesR_2.setIdUtilisateur(4L);
 		reservationLivreLmdMondesR_2.setPosition(2);
@@ -147,12 +147,12 @@ public class MicroserviceMylibraryApplication {
 
 		Reservation reservationLivreLmdMondesR_3 = new Reservation();
 		reservationLivreLmdMondesR_3.setLivre(livreLmdMondes);
-		reservationLivreLmdMondesR_3.setDateDeReservation(new GregorianCalendar(2020,7,07).getTime());
+		reservationLivreLmdMondesR_3.setDateDeReservation(new GregorianCalendar(2020,7,7).getTime());
 		reservationLivreLmdMondesR_3.setStateEnums(StateEnum.enCours);
 		reservationLivreLmdMondesR_3.setIdUtilisateur(5L);
-		reservationLivreLmdMondesR_3.setPosition(1);
-		reservationLivreLmdMondesR_3.setDateEnvoiEmail(new GregorianCalendar(2020,5,07).getTime());
+		reservationLivreLmdMondesR_3.setDateEnvoiEmail(new GregorianCalendar(2020,5,7).getTime());
 		reservationLivreLmdMondesR_3.setEmailEnvoyer(true);
+		reservationLivreLmdMondesR_3.setPosition(3);
 		iReservationService.save(reservationLivreLmdMondesR_3);
 
 

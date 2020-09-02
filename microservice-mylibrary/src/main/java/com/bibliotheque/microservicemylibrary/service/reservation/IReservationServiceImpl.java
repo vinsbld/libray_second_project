@@ -135,7 +135,8 @@ public class IReservationServiceImpl implements IReservationService{
 
         List<Reservation> reservations = iReservationDao.findByLivreAndStateEnumsOrderByDateDeReservationAsc(reservation.getLivre(), StateEnum.enCours);
         for (int i = 0; i <= reservations.size(); i++){
-            reservation.setPosition(i + 1);
+            int position = i + 1;
+            reservation.setPosition(position);
         }
 
         /*
